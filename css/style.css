@@ -797,6 +797,14 @@ html.dark .badge-expense {
     color: var(--expense);
 }
 
+.empty-state {
+    text-align: center;
+    padding: 32px 20px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-style: italic;
+}
+
 /* ===== Dashboard charts (mobile-first: 1 column) ===== */
 .dashboard-charts {
     display: grid;
@@ -1061,5 +1069,421 @@ html.dark .badge-expense {
 
     .dash-main {
         padding: 24px 32px;
+    }
+}
+
+/* ===== Admin Dashboard Sections ===== */
+.admin-section {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: background 0.3s;
+}
+
+.admin-section-header {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.admin-section-header h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.admin-section-title-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.admin-section-criteria {
+    font-size: 0.75rem;
+    font-style: italic;
+    color: var(--text-secondary);
+    margin-top: 2px;
+    opacity: 0.8;
+}
+
+.admin-section-filters {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: stretch;
+    flex-wrap: wrap;
+}
+
+.admin-section-filters label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.admin-section-filters select {
+    padding: 6px 10px;
+    border: 1.5px solid var(--primary);
+    border-radius: var(--radius);
+    background: var(--input-bg);
+    color: var(--text);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+}
+
+.admin-section-filters select:hover,
+.admin-section-filters select:focus {
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.25);
+    outline: none;
+}
+
+.admin-section-filters .btn-primary {
+    padding: 6px 16px;
+    font-size: 0.8rem;
+    align-self: flex-start;
+}
+
+/* ===== Stat Cards with change indicator ===== */
+.stat-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.stat-card {
+    background: var(--input-bg);
+    border-radius: var(--radius);
+    padding: 14px;
+    text-align: center;
+    transition: background 0.3s;
+}
+
+.stat-card-label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.stat-card-value {
+    display: block;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+}
+
+.stat-card-change {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-top: 4px;
+    padding: 2px 6px;
+    border-radius: 10px;
+}
+
+.stat-card-change.up {
+    color: var(--income);
+    background: rgba(5, 150, 105, 0.1);
+}
+
+.stat-card-change.down {
+    color: var(--expense);
+    background: rgba(220, 38, 38, 0.1);
+}
+
+.stat-card-change.neutral {
+    color: var(--text-secondary);
+    background: var(--border);
+}
+
+html.dark .stat-card-change.up {
+    background: rgba(52, 211, 153, 0.12);
+}
+
+html.dark .stat-card-change.down {
+    background: rgba(248, 113, 113, 0.12);
+}
+
+/* ===== Mini tables for top users ===== */
+.mini-tables {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+.mini-table-card {
+    background: var(--input-bg);
+    border-radius: var(--radius);
+    padding: 14px;
+    overflow-x: auto;
+}
+
+.mini-table-card h4 {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.mini-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.mini-table th {
+    text-align: left;
+    padding: 4px 8px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border);
+}
+
+.mini-table td {
+    padding: 5px 8px;
+    font-size: 0.82rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+}
+
+.mini-table tr:last-child td {
+    border-bottom: none;
+}
+
+.mini-table .rank {
+    font-weight: 700;
+    color: var(--primary);
+    width: 24px;
+}
+
+.mini-table .user-name {
+    font-weight: 500;
+}
+
+.mini-table .user-value {
+    font-weight: 700;
+    text-align: right;
+    white-space: nowrap;
+}
+
+/* ===== Activity distribution bars ===== */
+.activity-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.activity-row {
+    display: grid;
+    grid-template-columns: 90px 1fr 45px 35px;
+    gap: 8px;
+    align-items: center;
+}
+
+.activity-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.activity-bar {
+    height: 20px;
+    background: var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.activity-bar-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.5s ease;
+    min-width: 2px;
+}
+
+.activity-bar-fill.frecuente {
+    background: var(--primary);
+}
+
+.activity-bar-fill.regular {
+    background: var(--income);
+}
+
+.activity-bar-fill.ocasional {
+    background: #f59e0b;
+}
+
+.activity-bar-fill.inactivo {
+    background: var(--text-secondary);
+}
+
+.activity-percent {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text);
+    text-align: right;
+}
+
+.activity-count {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-align: right;
+}
+
+.activity-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+}
+
+.activity-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.activity-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.activity-dot.frecuente { background: var(--primary); }
+.activity-dot.regular { background: var(--income); }
+.activity-dot.ocasional { background: #f59e0b; }
+.activity-dot.inactivo { background: var(--text-secondary); }
+
+/* ===== Money movement cards ===== */
+.money-cards {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+.money-card {
+    background: var(--input-bg);
+    border-radius: var(--radius);
+    padding: 18px;
+    text-align: center;
+    transition: background 0.3s;
+}
+
+.money-card-label {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+
+.money-card-value {
+    display: block;
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+/* ===== Averages grid ===== */
+.averages-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+}
+
+.avg-card {
+    background: var(--input-bg);
+    border-radius: var(--radius);
+    padding: 14px;
+    text-align: center;
+    transition: background 0.3s;
+}
+
+.avg-card-label {
+    display: block;
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.avg-card-value {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.avg-card-divider {
+    grid-column: 1 / -1;
+    height: 1px;
+    background: var(--border);
+    margin: 4px 0;
+}
+
+/* ===== Tablet: stat cards 3 cols ===== */
+@media (min-width: 641px) {
+    .stat-cards {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .admin-section-filters {
+        flex-direction: row;
+        align-items: flex-end;
+        flex-wrap: wrap;
+    }
+
+    .mini-tables {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .money-cards {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .averages-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .activity-row {
+        grid-template-columns: 100px 1fr 50px 40px;
+    }
+}
+
+/* ===== Desktop ===== */
+@media (min-width: 1024px) {
+    .admin-section-header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .stat-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .averages-grid {
+        grid-template-columns: repeat(3, 1fr);
     }
 }

@@ -22,6 +22,7 @@ let dashDateTo = '';
 let txPage = 0;
 let txTransactions = [];
 let txPagination = null;
+let txAdminUserId = 0;
 
 // Subcategories section
 let subPage = 0;
@@ -34,20 +35,50 @@ let catCategories = [];
 let catPagination = null;
 
 // Admin section
-let adminPeriodMode = 'month';
-let adminMonthFrom = new Date().getMonth() + 1;
-let adminYearFrom = new Date().getFullYear();
-let adminMonthTo = new Date().getMonth() + 1;
-let adminYearTo = new Date().getFullYear();
-let adminUserId = 0;
 let adminUsers = [];
-let adminCategoryFilter = null;
+let adminLastUpdate = null;
+
+// Section 1: User evolution
+let sec1MonthFrom = new Date().getMonth() + 1;
+let sec1YearFrom = new Date().getFullYear();
+let sec1MonthTo = new Date().getMonth() + 1;
+let sec1YearTo = new Date().getFullYear();
+let chartUserGrowth = null;
+
+// Section 2: Transaction evolution
+let sec2MonthFrom = new Date().getMonth() + 1;
+let sec2YearFrom = new Date().getFullYear();
+let sec2MonthTo = new Date().getMonth() + 1;
+let sec2YearTo = new Date().getFullYear();
+let sec2UserId = 0;
+let chartIncomeVsExpense = null;
+
+// Section 3: Money movement
+let sec3UserId = 0;
+
+// Section 4: Averages
+let sec4UserId = 0;
+
+// Section 5: Top users
+let sec5MonthFrom = new Date().getMonth() + 1;
+let sec5YearFrom = new Date().getFullYear();
+let sec5MonthTo = new Date().getMonth() + 1;
+let sec5YearTo = new Date().getFullYear();
+
+// Section 6: Activity distribution
+let sec6Month = new Date().getMonth() + 1;
+let sec6Year = new Date().getFullYear();
+
+// Expense breakdown (category + subcategory pie charts)
 let chartAdminCategory = null;
 let chartAdminSubcategory = null;
-let chartAdminAvgIncome = null;
-let chartAdminAvgExpense = null;
+let adminCategoryFilter = null;
 let adminCategoryChartData = [];
-let adminLastUpdate = null;
+let expBreakdownUserId = 0;
+let expBreakdownMonthFrom = new Date().getMonth() + 1;
+let expBreakdownYearFrom = new Date().getFullYear();
+let expBreakdownMonthTo = new Date().getMonth() + 1;
+let expBreakdownYearTo = new Date().getFullYear();
 
 // ===================================================================
 // UTILITIES
@@ -311,10 +342,10 @@ function destroyChart(ref) {
     if (ref === 'category' && chartCategory) { chartCategory.destroy(); chartCategory = null; }
     else if (ref === 'subcategory' && chartSubcategory) { chartSubcategory.destroy(); chartSubcategory = null; }
     else if (ref === 'balance' && chartBalance) { chartBalance.destroy(); chartBalance = null; }
+    else if (ref === 'userGrowth' && chartUserGrowth) { chartUserGrowth.destroy(); chartUserGrowth = null; }
+    else if (ref === 'incomeVsExpense' && chartIncomeVsExpense) { chartIncomeVsExpense.destroy(); chartIncomeVsExpense = null; }
     else if (ref === 'adminCategory' && chartAdminCategory) { chartAdminCategory.destroy(); chartAdminCategory = null; }
     else if (ref === 'adminSubcategory' && chartAdminSubcategory) { chartAdminSubcategory.destroy(); chartAdminSubcategory = null; }
-    else if (ref === 'adminAvgIncome' && chartAdminAvgIncome) { chartAdminAvgIncome.destroy(); chartAdminAvgIncome = null; }
-    else if (ref === 'adminAvgExpense' && chartAdminAvgExpense) { chartAdminAvgExpense.destroy(); chartAdminAvgExpense = null; }
 }
 
 function generateColors(count) {
@@ -773,148 +804,366 @@ async function refreshDashboardIfActive() {
 // ADMIN DASHBOARD
 // ===================================================================
 function renderAdminDashboardSection() {
-    const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-    const monthOptionsFrom = months.map((name, i) =>
-        `<option value="${i+1}"${adminMonthFrom === i+1 ? ' selected' : ''}>${name}</option>`
-    ).join('');
-    const monthOptionsTo = months.map((name, i) =>
-        `<option value="${i+1}"${adminMonthTo === i+1 ? ' selected' : ''}>${name}</option>`
-    ).join('');
-    const yearOptionsFrom = [];
-    for (let y = adminYearFrom - 5; y <= adminYearFrom + 1; y++) {
-        yearOptionsFrom.push(`<option value="${y}"${adminYearFrom === y ? ' selected' : ''}>${y}</option>`);
-    }
-    const yearOptionsTo = [];
-    for (let y = adminYearTo - 5; y <= adminYearTo + 1; y++) {
-        yearOptionsTo.push(`<option value="${y}"${adminYearTo === y ? ' selected' : ''}>${y}</option>`);
-    }
+    const now = new Date();
+    const monthNames = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 
     document.getElementById('dashContent').innerHTML = `
-        <div class="section-header-row">
-            <div class="section-header">
-                <h2>Panel de Administraci&oacute;n</h2>
-                <p id="adminDashboardSubtitle"></p>
-                <p id="adminDashboardTimestamp" style="font-size:0.75rem;color:var(--text-secondary);margin-top:4px;"></p>
-            </div>
-            <div class="filter-section">
-                <div class="filter-controls" id="adminFilters">
-                <label>Periodo
-                    <select id="adminPeriodType" onchange="window.handleAdminPeriodToggle()">
-                        <option value="month">Mes</option>
-                        <option value="range">Rango</option>
-                    </select>
-                </label>
-                <label>Desde
-                    <select id="adminMonthFrom">${monthOptionsFrom}</select>
-                    <select id="adminYearFrom">${yearOptionsFrom}</select>
-                </label>
-                <span id="adminRangeTo" style="display:none">
-                    <label>Hasta
-                        <select id="adminMonthTo">${monthOptionsTo}</select>
-                        <select id="adminYearTo">${yearOptionsTo}</select>
-                    </label>
-                </span>
-                <label>Usuario
-                    <select id="adminUserSelect">
-                        <option value="0">Todos</option>
-                    </select>
-                </label>
-                <button class="btn-primary" onclick="window.handleAdminApplyFilters()">Actualizar</button>
-            </div>
-            </div>
+        <div class="section-header">
+            <h2>Panel de Administraci&oacute;n</h2>
+            <p id="adminDashboardTimestamp" style="font-size:0.75rem;color:var(--text-secondary);margin-top:4px;"></p>
         </div>
-        <div class="summary-cards" id="adminStats">
-            <div class="summary-card">
-                <span class="summary-label">Usuarios activos</span>
-                <span class="summary-value" id="adminUsersValue">—</span>
-            </div>
-            <div class="summary-card">
-                <span class="summary-label">Transacciones registradas</span>
-                <span class="summary-value" id="adminTxValue">—</span>
-            </div>
-        </div>
-        <div class="dashboard-charts">
-            <div class="chart-card">
-                <h4 class="chart-title">Gastos por categor&iacute;a</h4>
-                <div class="chart-wrapper"><canvas id="adminCategoryChart"></canvas></div>
-            </div>
-            <div class="chart-card">
-                <div class="chart-header">
-                    <div>
-                        <h4 class="chart-title" style="margin:0">Gastos por subcategor&iacute;a</h4>
-                        <span id="adminSubcategoryLabel" class="chart-sub-label"></span>
-                    </div>
-                    <select id="adminCategoryFilter" onchange="window.handleAdminCategoryFilterChange()">
-                        <option value="">Seleccionar</option>
-                    </select>
+
+        <div class="admin-section" id="sec1">
+            <div class="admin-section-header">
+                <div class="admin-section-title-group">
+                    <h3>Evoluci&oacute;n de Usuarios</h3>
+                    <p class="admin-section-criteria" id="sec1Criteria"></p>
                 </div>
-                <div class="chart-wrapper"><canvas id="adminSubcategoryChart"></canvas></div>
+                <div class="admin-section-filters" id="sec1Filters"></div>
             </div>
-            <div class="chart-card">
-                <h4 class="chart-title">Promedio mensual ingresos</h4>
-                <div class="chart-wrapper"><canvas id="adminAvgIncomeChart"></canvas></div>
+            <div class="stat-cards" id="sec1Cards"><div class="loading-message">Cargando…</div></div>
+            <div class="chart-card" style="margin-top:12px"><div class="chart-wrapper"><canvas id="sec1Chart"></canvas></div></div>
+        </div>
+
+        <div class="admin-section" id="sec2">
+            <div class="admin-section-header">
+                <div class="admin-section-title-group">
+                    <h3>Evoluci&oacute;n de Transacciones</h3>
+                    <p class="admin-section-criteria" id="sec2Criteria"></p>
+                </div>
+                <div class="admin-section-filters" id="sec2Filters"></div>
             </div>
-            <div class="chart-card">
-                <h4 class="chart-title">Promedio mensual gastos</h4>
-                <div class="chart-wrapper"><canvas id="adminAvgExpenseChart"></canvas></div>
+            <div class="stat-cards" id="sec2Cards"><div class="loading-message">Cargando…</div></div>
+            <div class="chart-card" style="margin-top:12px"><div class="chart-wrapper"><canvas id="sec2Chart"></canvas></div></div>
+        </div>
+
+        <div class="admin-section" id="secExpBreakdown">
+            <div class="admin-section-header">
+                <div class="admin-section-title-group">
+                    <h3>Desglose de Gastos</h3>
+                    <p class="admin-section-criteria" id="expBreakdownCriteria"></p>
+                </div>
+                <div class="admin-section-filters" id="expBreakdownFilters"></div>
             </div>
+            <div class="dashboard-charts">
+                <div class="chart-card">
+                    <h4 class="chart-title">Gastos por categor&iacute;a</h4>
+                    <div class="chart-wrapper"><canvas id="adminCategoryChart"></canvas></div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div>
+                            <h4 class="chart-title" style="margin:0">Gastos por subcategor&iacute;a</h4>
+                            <span id="adminSubcategoryLabel" class="chart-sub-label"></span>
+                        </div>
+                        <select id="adminCategoryFilter" onchange="window.handleAdminCategoryFilterChange()">
+                            <option value="">Seleccionar</option>
+                        </select>
+                    </div>
+                    <div class="chart-wrapper"><canvas id="adminSubcategoryChart"></canvas></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-section" id="sec3">
+            <div class="admin-section-header">
+                <div class="admin-section-title-group">
+                    <h3>Movimientos de Dinero</h3>
+                    <p class="admin-section-criteria" id="sec3Criteria"></p>
+                </div>
+                <div class="admin-section-filters" id="sec3Filters"></div>
+            </div>
+            <div class="money-cards" id="sec3Cards"><div class="loading-message">Cargando…</div></div>
+        </div>
+
+        <div class="admin-section" id="sec4">
+            <div class="admin-section-header">
+                <div class="admin-section-title-group">
+                    <h3>Promedios</h3>
+                    <p class="admin-section-criteria" id="sec4Criteria"></p>
+                </div>
+                <div class="admin-section-filters" id="sec4Filters"></div>
+            </div>
+            <div class="averages-grid" id="sec4Cards"><div class="loading-message">Cargando…</div></div>
+        </div>
+
+        <div class="admin-section" id="sec5">
+            <div class="admin-section-header">
+                <div class="admin-section-title-group">
+                    <h3>Usuarios con Mayor Actividad</h3>
+                    <p class="admin-section-criteria" id="sec5Criteria"></p>
+                </div>
+                <div class="admin-section-filters" id="sec5Filters"></div>
+            </div>
+            <div class="mini-tables" id="sec5Cards"><div class="loading-message">Cargando…</div></div>
+        </div>
+
+        <div class="admin-section" id="sec6">
+            <div class="admin-section-header">
+                <div class="admin-section-title-group">
+                    <h3>Distribuci&oacute;n de Usuarios por Actividad</h3>
+                    <p class="admin-section-criteria" id="sec6Criteria"></p>
+                </div>
+                <div class="admin-section-filters" id="sec6Filters"></div>
+            </div>
+            <div id="sec6Cards"><div class="loading-message">Cargando…</div></div>
         </div>`;
 
-    loadAdminData();
+    renderSec1Filters();
+    renderSec2Filters();
+    renderExpBreakdownFilters();
+    renderSec3Filters();
+    renderSec4Filters();
+    renderSec5Filters();
+    renderSec6Filters();
+    loadAdminAllData();
 }
 
-async function loadAdminUsers() {
-    try {
-        const res = await apiRequest('GET', '/admin/users?role=USER&status=ACTIVE&size=100&sort=name,asc');
-        adminUsers = res?.content || [];
-        const sel = document.getElementById('adminUserSelect');
-        if (!sel) return;
-        sel.innerHTML = '<option value="0">Todos</option>';
-        adminUsers.forEach(u => {
-            const opt = document.createElement('option');
-            opt.value = u.id;
-            opt.textContent = u.name || u.email;
-            sel.appendChild(opt);
-        });
-        sel.value = adminUserId;
-    } catch {}
+// ===================================================================
+// ADMIN DASHBOARD — HELPERS
+// ===================================================================
+function buildMonthOptions(selected) {
+    const names = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    return names.map((n, i) => `<option value="${i+1}"${i+1 === selected ? ' selected' : ''}>${n}</option>`).join('');
 }
 
-async function loadAdminData() {
+function buildYearOptions(selected) {
+    const year = new Date().getFullYear();
+    let html = '';
+    for (let y = year - 5; y <= year + 1; y++) {
+        html += `<option value="${y}"${y === selected ? ' selected' : ''}>${y}</option>`;
+    }
+    return html;
+}
+
+function renderComparisonIndicator(current, previous) {
+    const pct = previous === 0 ? (current === 0 ? 0 : 100) : ((current - previous) / previous * 100);
+    const rounded = Math.round(pct * 10) / 10;
+    if (rounded > 0) return `<span class="stat-card-change up">&#x25B2; ${rounded}%</span>`;
+    if (rounded < 0) return `<span class="stat-card-change down">&#x25BC; ${Math.abs(rounded)}%</span>`;
+    return `<span class="stat-card-change neutral">— 0%</span>`;
+}
+
+const MONTH_NAMES_FULL = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+function criteriaPeriod(mFrom, yFrom, mTo, yTo) {
+    return `Periodo: ${MONTH_NAMES_FULL[mFrom - 1]} ${yFrom} – ${MONTH_NAMES_FULL[mTo - 1]} ${yTo}`;
+}
+
+function criteriaUser(userId) {
+    const name = userId === 0 ? 'Todos' : (adminUsers.find(u => u.id === userId)?.name || 'Todos');
+    return `Usuario: ${name}`;
+}
+
+function criteriaMonth(m, y) {
+    return `Mes: ${MONTH_NAMES_FULL[m - 1]} ${y}`;
+}
+
+function showEmptyState(containerId) {
+    const el = document.getElementById(containerId);
+    if (el) el.innerHTML = '<div class="empty-state">Sin informaci&oacute;n para mostrar</div>';
+}
+
+function updateSec1Criteria() {
+    const el = document.getElementById('sec1Criteria');
+    if (el) el.textContent = criteriaPeriod(sec1MonthFrom, sec1YearFrom, sec1MonthTo, sec1YearTo);
+}
+
+function updateSec2Criteria() {
+    const el = document.getElementById('sec2Criteria');
+    if (el) el.textContent = `${criteriaUser(sec2UserId)} | ${criteriaPeriod(sec2MonthFrom, sec2YearFrom, sec2MonthTo, sec2YearTo)}`;
+}
+
+function updateExpBreakdownCriteria() {
+    const el = document.getElementById('expBreakdownCriteria');
+    if (el) el.textContent = `${criteriaUser(expBreakdownUserId)} | ${criteriaPeriod(expBreakdownMonthFrom, expBreakdownYearFrom, expBreakdownMonthTo, expBreakdownYearTo)}`;
+}
+
+function updateSec3Criteria() {
+    const el = document.getElementById('sec3Criteria');
+    if (el) el.textContent = criteriaUser(sec3UserId);
+}
+
+function updateSec4Criteria() {
+    const el = document.getElementById('sec4Criteria');
+    if (el) el.textContent = sec4UserId === 0 ? 'Todos' : criteriaUser(sec4UserId);
+}
+
+function updateSec5Criteria() {
+    const el = document.getElementById('sec5Criteria');
+    if (el) el.textContent = criteriaPeriod(sec5MonthFrom, sec5YearFrom, sec5MonthTo, sec5YearTo);
+}
+
+function updateSec6Criteria() {
+    const el = document.getElementById('sec6Criteria');
+    if (el) el.textContent = criteriaMonth(sec6Month, sec6Year);
+}
+
+function renderSec1Filters() {
+    document.getElementById('sec1Filters').innerHTML = `
+        <label>Desde
+            <select id="sec1MonthFrom">${buildMonthOptions(sec1MonthFrom)}</select>
+            <select id="sec1YearFrom">${buildYearOptions(sec1YearFrom)}</select>
+        </label>
+        <label id="sec1RangeTo">Hasta
+            <select id="sec1MonthTo">${buildMonthOptions(sec1MonthTo)}</select>
+            <select id="sec1YearTo">${buildYearOptions(sec1YearTo)}</select>
+        </label>
+        <button class="btn-primary" onclick="window.handleApplySec1()">Actualizar</button>`;
+    updateSec1Criteria();
+}
+
+function renderSec2Filters() {
+    document.getElementById('sec2Filters').innerHTML = `
+        <label>Usuario
+            <select id="sec2UserSelect"><option value="0">Todos</option></select>
+        </label>
+        <label>Desde
+            <select id="sec2MonthFrom">${buildMonthOptions(sec2MonthFrom)}</select>
+            <select id="sec2YearFrom">${buildYearOptions(sec2YearFrom)}</select>
+        </label>
+        <label id="sec2RangeTo">Hasta
+            <select id="sec2MonthTo">${buildMonthOptions(sec2MonthTo)}</select>
+            <select id="sec2YearTo">${buildYearOptions(sec2YearTo)}</select>
+        </label>
+        <button class="btn-primary" onclick="window.handleApplySec2()">Actualizar</button>`;
+    populateUserSelect('sec2UserSelect', sec2UserId);
+    updateSec2Criteria();
+}
+
+function renderSec3Filters() {
+    document.getElementById('sec3Filters').innerHTML = `
+        <label>Usuario
+            <select id="sec3UserSelect"><option value="0">Todos</option></select>
+        </label>
+        <button class="btn-primary" onclick="window.handleApplySec3()">Actualizar</button>`;
+    populateUserSelect('sec3UserSelect', sec3UserId);
+    updateSec3Criteria();
+}
+
+function renderSec4Filters() {
+    document.getElementById('sec4Filters').innerHTML = `
+        <label>Usuario
+            <select id="sec4UserSelect"><option value="0">Todos</option></select>
+        </label>
+        <button class="btn-primary" onclick="window.handleApplySec4()">Actualizar</button>`;
+    populateUserSelect('sec4UserSelect', sec4UserId);
+    updateSec4Criteria();
+}
+
+function renderSec5Filters() {
+    document.getElementById('sec5Filters').innerHTML = `
+        <label>Desde
+            <select id="sec5MonthFrom">${buildMonthOptions(sec5MonthFrom)}</select>
+            <select id="sec5YearFrom">${buildYearOptions(sec5YearFrom)}</select>
+        </label>
+        <label id="sec5RangeTo">Hasta
+            <select id="sec5MonthTo">${buildMonthOptions(sec5MonthTo)}</select>
+            <select id="sec5YearTo">${buildYearOptions(sec5YearTo)}</select>
+        </label>
+        <button class="btn-primary" onclick="window.handleApplySec5()">Actualizar</button>`;
+    updateSec5Criteria();
+}
+
+function renderSec6Filters() {
+    document.getElementById('sec6Filters').innerHTML = `
+        <label>Mes
+            <select id="sec6Month">${buildMonthOptions(sec6Month)}</select>
+            <select id="sec6Year">${buildYearOptions(sec6Year)}</select>
+        </label>
+        <button class="btn-primary" onclick="window.handleApplySec6()">Actualizar</button>`;
+    updateSec6Criteria();
+}
+
+function populateUserSelect(selectId, selectedValue, defaultLabel) {
+    const sel = document.getElementById(selectId);
+    if (!sel) return;
+    sel.innerHTML = `<option value="0">${defaultLabel || 'Todos'}</option>`;
+    adminUsers.forEach(u => {
+        const opt = document.createElement('option');
+        opt.value = u.id;
+        opt.textContent = u.name || u.email;
+        sel.appendChild(opt);
+    });
+    sel.value = selectedValue;
+}
+
+// ===================================================================
+// EXPENSE BREAKDOWN — CATEGORY & SUBCATEGORY PIE CHARTS
+// ===================================================================
+function renderExpBreakdownFilters() {
+    const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    document.getElementById('expBreakdownFilters').innerHTML = `
+        <label>Usuario
+            <select id="expBreakdownUser"><option value="0">Todos</option></select>
+        </label>
+        <label>Desde
+            <select id="expBreakdownMonthFrom">${buildMonthOptions(expBreakdownMonthFrom)}</select>
+            <select id="expBreakdownYearFrom">${buildYearOptions(expBreakdownYearFrom)}</select>
+        </label>
+        <label>Hasta
+            <select id="expBreakdownMonthTo">${buildMonthOptions(expBreakdownMonthTo)}</select>
+            <select id="expBreakdownYearTo">${buildYearOptions(expBreakdownYearTo)}</select>
+        </label>
+        <button class="btn-primary" onclick="window.handleApplyExpBreakdown()">Actualizar</button>`;
+    populateUserSelect('expBreakdownUser', expBreakdownUserId);
+    updateExpBreakdownCriteria();
+}
+
+function handleApplyExpBreakdown() {
+    expBreakdownUserId = parseInt(document.getElementById('expBreakdownUser').value);
+    expBreakdownMonthFrom = parseInt(document.getElementById('expBreakdownMonthFrom').value);
+    expBreakdownYearFrom = parseInt(document.getElementById('expBreakdownYearFrom').value);
+    expBreakdownMonthTo = parseInt(document.getElementById('expBreakdownMonthTo').value);
+    expBreakdownYearTo = parseInt(document.getElementById('expBreakdownYearTo').value);
+    if (expBreakdownYearTo < expBreakdownYearFrom || (expBreakdownYearTo === expBreakdownYearFrom && expBreakdownMonthTo < expBreakdownMonthFrom)) {
+        showToast('El periodo "Hasta" debe ser posterior o igual a "Desde"', 'error');
+        return;
+    }
+    updateExpBreakdownCriteria();
+    loadExpBreakdownData();
+}
+
+async function loadExpBreakdownData() {
     try {
-        await ensureCategoryCache();
-
-        if (adminUsers.length === 0) {
-            await loadAdminUsers();
-        }
-
-        const statsEl = document.getElementById('adminUsersValue');
-        if (statsEl && statsEl.textContent === '—') {
-            const stats = await apiRequest('GET', '/dashboard/admin/stats');
-            renderAdminStats(stats);
-        }
-
-        const userId = adminUserId;
-        const mf = adminMonthFrom, yf = adminYearFrom;
-        const mt = adminPeriodMode === 'month' ? mf : adminMonthTo;
-        const yt = adminPeriodMode === 'month' ? yf : adminYearTo;
-
-        const params = `userId=${userId}&monthFrom=${mf}&yearFrom=${yf}&monthTo=${mt}&yearTo=${yt}`;
-        const expenseCats = cachedCategories.filter(c => c.type === 'EXPENSE');
-
-        const [catExpenses, avgIncome, avgExpense] = await Promise.all([
-            apiRequest('GET', `/dashboard/admin/expenses-by-category?${params}`),
-            apiRequest('GET', `/dashboard/admin/avg-income?userId=${userId}`),
-            apiRequest('GET', `/dashboard/admin/avg-expense?userId=${userId}`)
-        ]);
-
-        updateAdminTitle(userId, mf, yf, mt, yt);
-        adminLastUpdate = new Date();
-        updateAdminTimestamp();
-
+        const uid = expBreakdownUserId;
+        const mf = expBreakdownMonthFrom, yf = expBreakdownYearFrom;
+        const mt = expBreakdownMonthTo, yt = expBreakdownYearTo;
+        const catExpenses = await apiRequest('GET', `/dashboard/admin/expenses-by-category?userId=${uid}&monthFrom=${mf}&yearFrom=${yf}&monthTo=${mt}&yearTo=${yt}`);
         adminCategoryChartData = Array.isArray(catExpenses) ? catExpenses : [];
+
+        if (adminCategoryChartData.length === 0) {
+            destroyChart('adminCategory');
+            destroyChart('adminSubcategory');
+            const chartsEl = document.querySelector('#secExpBreakdown .dashboard-charts');
+            if (chartsEl) chartsEl.innerHTML = '<div class="empty-state">Sin informaci&oacute;n para mostrar</div>';
+            return;
+        }
+
+        const chartsEl = document.querySelector('#secExpBreakdown .dashboard-charts');
+        if (chartsEl && chartsEl.querySelector('.empty-state')) {
+            chartsEl.innerHTML = `
+                <div class="chart-card">
+                    <h4 class="chart-title">Gastos por categor&iacute;a</h4>
+                    <div class="chart-wrapper"><canvas id="adminCategoryChart"></canvas></div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <div>
+                            <h4 class="chart-title" style="margin:0">Gastos por subcategor&iacute;a</h4>
+                            <span id="adminSubcategoryLabel" class="chart-sub-label"></span>
+                        </div>
+                        <select id="adminCategoryFilter" onchange="window.handleAdminCategoryFilterChange()">
+                            <option value="">Seleccionar</option>
+                        </select>
+                    </div>
+                    <div class="chart-wrapper"><canvas id="adminSubcategoryChart"></canvas></div>
+                </div>`;
+        }
+
         renderAdminCategoryChart(adminCategoryChartData);
 
+        const expenseCats = cachedCategories.filter(c => c.type === 'EXPENSE');
         const catSelect = document.getElementById('adminCategoryFilter');
         if (catSelect) {
             catSelect.innerHTML = '<option value="">Seleccionar</option>';
@@ -932,25 +1181,11 @@ async function loadAdminData() {
                 adminCategoryFilter = null;
             }
             updateAdminSubcategoryLabel();
-            await loadAdminSubcategoryChart();
+            loadAdminSubcategoryChart();
         }
-
-        renderAdminAvgIncomeChart(Array.isArray(avgIncome) ? avgIncome : []);
-        renderAdminAvgExpenseChart(Array.isArray(avgExpense) ? avgExpense : []);
-    } catch (err) {
-        const s = document.getElementById('adminDashboardSubtitle');
-        if (s && s.closest('#dashContent')) {
-            showToast('Error al cargar datos del panel', 'error');
-        }
-    }
-}
-
-function renderAdminStats(stats) {
-    const usersEl = document.getElementById('adminUsersValue');
-    const txEl = document.getElementById('adminTxValue');
-    if (stats) {
-        if (usersEl) usersEl.textContent = Number(stats.totalUsers).toLocaleString('es-ES');
-        if (txEl) txEl.textContent = Number(stats.totalTransactions).toLocaleString('es-ES');
+    } catch {
+        destroyChart('adminCategory');
+        destroyChart('adminSubcategory');
     }
 }
 
@@ -1004,14 +1239,11 @@ async function loadAdminSubcategoryChart() {
         return;
     }
     try {
-        const userId = adminUserId;
-        const mf = adminMonthFrom, yf = adminYearFrom;
-        const mt = adminPeriodMode === 'month' ? mf : adminMonthTo;
-        const yt = adminPeriodMode === 'month' ? yf : adminYearTo;
-
-        const res = await apiRequest(
-            'GET',
-            `/dashboard/admin/expenses-by-subcategory?userId=${userId}&categoryId=${adminCategoryFilter}&monthFrom=${mf}&yearFrom=${yf}&monthTo=${mt}&yearTo=${yt}`
+        const uid = expBreakdownUserId;
+        const mf = expBreakdownMonthFrom, yf = expBreakdownYearFrom;
+        const mt = expBreakdownMonthTo, yt = expBreakdownYearTo;
+        const res = await apiRequest('GET',
+            `/dashboard/admin/expenses-by-subcategory?userId=${uid}&categoryId=${adminCategoryFilter}&monthFrom=${mf}&yearFrom=${yf}&monthTo=${mt}&yearTo=${yt}`
         );
         renderAdminSubcategoryChart(Array.isArray(res) ? res : []);
     } catch {
@@ -1047,170 +1279,12 @@ function renderAdminSubcategoryChart(data) {
     });
 }
 
-function renderAdminAvgIncomeChart(data) {
-    destroyChart('adminAvgIncome');
-    const canvas = document.getElementById('adminAvgIncomeChart');
-    if (!canvas || !data.length) return;
-
-    const sorted = [...data].sort((a, b) => a.year - b.year || a.month - b.month);
-    const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-    const labels = sorted.map(d => months[d.month - 1] + ' ' + d.year);
-    const values = sorted.map(d => d.average);
-    const textColor = getChartTextColor();
-    const gridColor = getChartGridColor();
-
-    chartAdminAvgIncome = new Chart(canvas.getContext('2d'), {
-        type: 'line',
-        data: {
-            labels,
-            datasets: [{
-                label: 'Promedio ingresos',
-                data: values,
-                borderColor: '#10b981',
-                backgroundColor: 'rgba(16,185,129,0.06)',
-                fill: true,
-                tension: 0.3,
-                pointRadius: 3
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: { color: textColor, boxWidth: 12, padding: 12 }
-                }
-            },
-            scales: {
-                x: {
-                    ticks: { color: textColor },
-                    grid: { color: gridColor }
-                },
-                y: {
-                    ticks: { color: textColor },
-                    grid: { color: gridColor }
-                }
-            }
-        }
-    });
-}
-
-function renderAdminAvgExpenseChart(data) {
-    destroyChart('adminAvgExpense');
-    const canvas = document.getElementById('adminAvgExpenseChart');
-    if (!canvas || !data.length) return;
-
-    const sorted = [...data].sort((a, b) => a.year - b.year || a.month - b.month);
-    const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-    const labels = sorted.map(d => months[d.month - 1] + ' ' + d.year);
-    const values = sorted.map(d => d.average);
-    const textColor = getChartTextColor();
-    const gridColor = getChartGridColor();
-
-    chartAdminAvgExpense = new Chart(canvas.getContext('2d'), {
-        type: 'line',
-        data: {
-            labels,
-            datasets: [{
-                label: 'Promedio gastos',
-                data: values,
-                borderColor: '#ef4444',
-                backgroundColor: 'rgba(239,68,68,0.06)',
-                fill: true,
-                tension: 0.3,
-                pointRadius: 3
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: { color: textColor, boxWidth: 12, padding: 12 }
-                }
-            },
-            scales: {
-                x: {
-                    ticks: { color: textColor },
-                    grid: { color: gridColor }
-                },
-                y: {
-                    ticks: { color: textColor },
-                    grid: { color: gridColor }
-                }
-            }
-        }
-    });
-}
-
-function updateAdminTitle(userId, mf, yf, mt, yt) {
-    const userLabel = userId === 0 ? 'Todos' : (adminUsers.find(u => u.id === userId)?.name || '—');
-    const mNames = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
-    const periodLabel = (mf === mt && yf === yt)
-        ? `${mNames[mf-1]} ${yf}`
-        : `${mNames[mf-1]} ${yf} - ${mNames[mt-1]} ${yt}`;
-    const el = document.getElementById('adminDashboardSubtitle');
-    if (el) el.textContent = `Usuario: ${userLabel} | Periodo: ${periodLabel}`;
-}
-
-function updateAdminTimestamp() {
-    const el = document.getElementById('adminDashboardTimestamp');
-    if (!el || !adminLastUpdate) return;
-    const d = adminLastUpdate;
-    const pad = n => String(n).padStart(2, '0');
-    el.textContent = `Última actualización: ${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
-}
-
 function updateAdminSubcategoryLabel() {
     const el = document.getElementById('adminSubcategoryLabel');
     if (!el) return;
-    if (!adminCategoryFilter) {
-        el.textContent = '';
-        return;
-    }
+    if (!adminCategoryFilter) { el.textContent = ''; return; }
     const cat = cachedCategories.find(c => c.id === adminCategoryFilter);
     el.textContent = cat ? `Categoría: ${cat.name}` : '';
-}
-
-function handleAdminPeriodToggle() {
-    const sel = document.getElementById('adminPeriodType');
-    const rangeTo = document.getElementById('adminRangeTo');
-    if (!sel || !rangeTo) return;
-    rangeTo.style.display = sel.value === 'range' ? '' : 'none';
-}
-
-function handleAdminApplyFilters() {
-    const periodTypeEl = document.getElementById('adminPeriodType');
-    const monthFromEl = document.getElementById('adminMonthFrom');
-    const yearFromEl = document.getElementById('adminYearFrom');
-    const monthToEl = document.getElementById('adminMonthTo');
-    const yearToEl = document.getElementById('adminYearTo');
-    const userEl = document.getElementById('adminUserSelect');
-
-    if (!periodTypeEl || !monthFromEl || !yearFromEl || !userEl) return;
-
-    adminPeriodMode = periodTypeEl.value;
-    adminMonthFrom = parseInt(monthFromEl.value);
-    adminYearFrom = parseInt(yearFromEl.value);
-    adminUserId = parseInt(userEl.value);
-
-    if (adminPeriodMode === 'range') {
-        if (!monthToEl || !yearToEl) return;
-        adminMonthTo = parseInt(monthToEl.value);
-        adminYearTo = parseInt(yearToEl.value);
-
-        if (adminYearTo < adminYearFrom || (adminYearTo === adminYearFrom && adminMonthTo < adminMonthFrom)) {
-            showToast('El periodo "Hasta" debe ser posterior o igual a "Desde"', 'error');
-            return;
-        }
-    } else {
-        adminMonthTo = adminMonthFrom;
-        adminYearTo = adminYearFrom;
-    }
-
-    loadAdminData();
 }
 
 function handleAdminCategoryFilterChange() {
@@ -1222,48 +1296,518 @@ function handleAdminCategoryFilterChange() {
 }
 
 // ===================================================================
+// ADMIN DASHBOARD — LOAD ALL
+// ===================================================================
+async function loadAdminAllData() {
+    try {
+        await ensureCategoryCache();
+        if (adminUsers.length === 0) await loadAdminUsers();
+        adminLastUpdate = new Date();
+        updateAdminTimestamp();
+
+        populateUserSelect('sec2UserSelect', sec2UserId);
+        populateUserSelect('sec3UserSelect', sec3UserId);
+        populateUserSelect('sec4UserSelect', sec4UserId);
+        populateUserSelect('expBreakdownUser', expBreakdownUserId);
+
+        const mf1 = sec1MonthFrom, yf1 = sec1YearFrom, mt1 = sec1MonthTo, yt1 = sec1YearTo;
+        const mf2 = sec2MonthFrom, yf2 = sec2YearFrom, mt2 = sec2MonthTo, yt2 = sec2YearTo;
+        const mf5 = sec5MonthFrom, yf5 = sec5YearFrom, mt5 = sec5MonthTo, yt5 = sec5YearTo;
+
+        const [sec1Data, sec2Data, sec3Data, sec4Data, sec5Data, sec6Data] = await Promise.all([
+            apiRequest('GET', `/dashboard/admin/user-evolution?monthFrom=${mf1}&yearFrom=${yf1}&monthTo=${mt1}&yearTo=${yt1}`),
+            apiRequest('GET', `/dashboard/admin/transaction-evolution?monthFrom=${mf2}&yearFrom=${yf2}&monthTo=${mt2}&yearTo=${yt2}&userId=${sec2UserId}`),
+            apiRequest('GET', `/dashboard/admin/money-movement?userId=${sec3UserId}`),
+            apiRequest('GET', `/dashboard/admin/averages?userId=${sec4UserId}`),
+            apiRequest('GET', `/dashboard/admin/top-users?monthFrom=${mf5}&yearFrom=${yf5}&monthTo=${mt5}&yearTo=${yt5}`),
+            apiRequest('GET', `/dashboard/admin/activity-distribution?month=${sec6Month}&year=${sec6Year}`)
+        ]);
+
+        renderSec1(sec1Data);
+        renderSec2(sec2Data);
+        renderSec3(sec3Data);
+        renderSec4(sec4Data);
+        renderSec5(sec5Data);
+        renderSec6(sec6Data);
+        loadExpBreakdownData();
+    } catch (err) {
+        showToast('Error al cargar datos del panel', 'error');
+    }
+}
+
+async function loadAdminUsers() {
+    try {
+        const res = await apiRequest('GET', '/admin/users?role=USER&status=ACTIVE&size=100&sort=name,asc');
+        adminUsers = res?.content || [];
+    } catch {}
+}
+
+function updateAdminTimestamp() {
+    const el = document.getElementById('adminDashboardTimestamp');
+    if (!el || !adminLastUpdate) return;
+    const d = adminLastUpdate;
+    const pad = n => String(n).padStart(2, '0');
+    el.textContent = `Última actualización: ${pad(d.getDate())}/${pad(d.getMonth()+1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+
+// ===================================================================
+// SECTION 1 — EVOLUCIÓN DE USUARIOS
+// ===================================================================
+function handleApplySec1() {
+    sec1MonthFrom = parseInt(document.getElementById('sec1MonthFrom').value);
+    sec1YearFrom = parseInt(document.getElementById('sec1YearFrom').value);
+    sec1MonthTo = parseInt(document.getElementById('sec1MonthTo').value);
+    sec1YearTo = parseInt(document.getElementById('sec1YearTo').value);
+    if (sec1YearTo < sec1YearFrom || (sec1YearTo === sec1YearFrom && sec1MonthTo < sec1MonthFrom)) {
+        showToast('El periodo "Hasta" debe ser posterior o igual a "Desde"', 'error');
+        return;
+    }
+    updateSec1Criteria();
+    loadSec1Data();
+}
+
+async function loadSec1Data() {
+    try {
+        const data = await apiRequest('GET', `/dashboard/admin/user-evolution?monthFrom=${sec1MonthFrom}&yearFrom=${sec1YearFrom}&monthTo=${sec1MonthTo}&yearTo=${sec1YearTo}`);
+        renderSec1(data);
+    } catch { document.getElementById('sec1Cards').innerHTML = '<div class="error-message">Error al cargar</div>'; }
+}
+
+function renderSec1(data) {
+    if (!data) return;
+    const monthly = data.monthly || [];
+    const hasData = monthly.some(d => d.activeUsers > 0 || d.registeredUsers > 0);
+    if (!hasData) {
+        destroyChart('userGrowth');
+        showEmptyState('sec1Cards');
+        return;
+    }
+    const s = data.summary;
+    document.getElementById('sec1Cards').innerHTML = `
+        <div class="stat-card">
+            <span class="stat-card-label">Usuarios activos</span>
+            <span class="stat-card-value">${Number(s.activeUsers.current).toLocaleString('es-ES')}</span>
+            ${renderComparisonIndicator(s.activeUsers.current, s.activeUsers.previous)}
+        </div>
+        <div class="stat-card">
+            <span class="stat-card-label">Registrados</span>
+            <span class="stat-card-value">${Number(s.registeredUsers.current).toLocaleString('es-ES')}</span>
+            ${renderComparisonIndicator(s.registeredUsers.current, s.registeredUsers.previous)}
+        </div>`;
+
+    renderSec1Chart(monthly);
+}
+
+function renderSec1Chart(monthly) {
+    const canvas = document.getElementById('sec1Chart');
+    if (!canvas) return;
+    const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    const labels = monthly.map(d => months[d.month - 1] + ' ' + d.year);
+    const textColor = getChartTextColor();
+    const gridColor = getChartGridColor();
+
+    if (chartUserGrowth) {
+        chartUserGrowth.data.labels = labels;
+        chartUserGrowth.data.datasets[0].data = monthly.map(d => d.activeUsers);
+        chartUserGrowth.data.datasets[1].data = monthly.map(d => d.registeredUsers);
+        chartUserGrowth.options.scales.x.ticks.color = textColor;
+        chartUserGrowth.options.scales.x.grid.color = gridColor;
+        chartUserGrowth.options.scales.y.ticks.color = textColor;
+        chartUserGrowth.options.scales.y.grid.color = gridColor;
+        chartUserGrowth.options.plugins.legend.labels.color = textColor;
+        chartUserGrowth.update();
+    } else {
+        chartUserGrowth = new Chart(canvas.getContext('2d'), {
+            type: 'line',
+            data: {
+                labels,
+                datasets: [
+                    { label: 'Activos', data: monthly.map(d => d.activeUsers), borderColor: '#4f46e5', backgroundColor: 'rgba(79,70,229,0.06)', fill: false, tension: 0.3, pointRadius: 3 },
+                    { label: 'Registrados', data: monthly.map(d => d.registeredUsers), borderColor: '#059669', backgroundColor: 'rgba(5,150,105,0.06)', fill: false, tension: 0.3, pointRadius: 3 }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: true,
+                plugins: { legend: { position: 'bottom', labels: { color: textColor, boxWidth: 12, padding: 12 } } },
+                scales: {
+                    x: { ticks: { color: textColor }, grid: { color: gridColor } },
+                    y: { ticks: { color: textColor }, grid: { color: gridColor }, beginAtZero: true }
+                }
+            }
+        });
+    }
+}
+
+// ===================================================================
+// SECTION 2 — EVOLUCIÓN DE TRANSACCIONES
+// ===================================================================
+function handleApplySec2() {
+    sec2UserId = parseInt(document.getElementById('sec2UserSelect').value);
+    sec2MonthFrom = parseInt(document.getElementById('sec2MonthFrom').value);
+    sec2YearFrom = parseInt(document.getElementById('sec2YearFrom').value);
+    sec2MonthTo = parseInt(document.getElementById('sec2MonthTo').value);
+    sec2YearTo = parseInt(document.getElementById('sec2YearTo').value);
+    if (sec2YearTo < sec2YearFrom || (sec2YearTo === sec2YearFrom && sec2MonthTo < sec2MonthFrom)) {
+        showToast('El periodo "Hasta" debe ser posterior o igual a "Desde"', 'error');
+        return;
+    }
+    updateSec2Criteria();
+    loadSec2Data();
+}
+
+async function loadSec2Data() {
+    try {
+        const data = await apiRequest('GET', `/dashboard/admin/transaction-evolution?monthFrom=${sec2MonthFrom}&yearFrom=${sec2YearFrom}&monthTo=${sec2MonthTo}&yearTo=${sec2YearTo}&userId=${sec2UserId}`);
+        renderSec2(data);
+    } catch { document.getElementById('sec2Cards').innerHTML = '<div class="error-message">Error al cargar</div>'; }
+}
+
+function renderSec2(data) {
+    if (!data) return;
+    const monthly = data.monthly || [];
+    const hasData = monthly.some(d => d.txCount > 0 || Number(d.incomeTotal) > 0 || Number(d.expenseTotal) > 0);
+    if (!hasData) {
+        destroyChart('incomeVsExpense');
+        showEmptyState('sec2Cards');
+        return;
+    }
+    const s = data.summary;
+    document.getElementById('sec2Cards').innerHTML = `
+        <div class="stat-card">
+            <span class="stat-card-label">Transacciones / mes</span>
+            <span class="stat-card-value">${Number(s.transactionsPerMonth.current).toLocaleString('es-ES')}</span>
+            ${renderComparisonIndicator(s.transactionsPerMonth.current, s.transactionsPerMonth.previous)}
+        </div>
+        <div class="stat-card">
+            <span class="stat-card-label">Promedio / usuario</span>
+            <span class="stat-card-value">${Number(s.avgPerUser.current).toLocaleString('es-ES', {minimumFractionDigits:1,maximumFractionDigits:1})}</span>
+            ${renderComparisonIndicator(s.avgPerUser.current, s.avgPerUser.previous)}
+        </div>`;
+
+    renderSec2Chart(monthly);
+}
+
+function renderSec2Chart(monthly) {
+    const canvasTx = document.getElementById('sec2Chart');
+    if (!canvasTx) return;
+    const months = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+    const labels = monthly.map(d => months[d.month - 1] + ' ' + d.year);
+    const textColor = getChartTextColor();
+    const gridColor = getChartGridColor();
+
+    if (chartIncomeVsExpense) {
+        chartIncomeVsExpense.data.labels = labels;
+        chartIncomeVsExpense.data.datasets[0].data = monthly.map(d => Number(d.incomeTotal));
+        chartIncomeVsExpense.data.datasets[1].data = monthly.map(d => Number(d.expenseTotal));
+        chartIncomeVsExpense.options.scales.x.ticks.color = textColor;
+        chartIncomeVsExpense.options.scales.x.grid.color = gridColor;
+        chartIncomeVsExpense.options.scales.y.ticks.color = textColor;
+        chartIncomeVsExpense.options.scales.y.grid.color = gridColor;
+        chartIncomeVsExpense.options.plugins.legend.labels.color = textColor;
+        chartIncomeVsExpense.update();
+    } else {
+        chartIncomeVsExpense = new Chart(canvasTx.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels,
+                datasets: [
+                    { label: 'Ingresos', data: monthly.map(d => Number(d.incomeTotal)), backgroundColor: 'rgba(5,150,105,0.7)', borderRadius: 4 },
+                    { label: 'Gastos', data: monthly.map(d => Number(d.expenseTotal)), backgroundColor: 'rgba(220,38,38,0.7)', borderRadius: 4 }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: true,
+                plugins: { legend: { position: 'bottom', labels: { color: textColor, boxWidth: 12, padding: 12 } } },
+                scales: {
+                    x: { ticks: { color: textColor }, grid: { color: gridColor } },
+                    y: { ticks: { color: textColor }, grid: { color: gridColor }, beginAtZero: true }
+                }
+            }
+        });
+    }
+}
+
+// ===================================================================
+// SECTION 3 — MOVIMIENTOS DE DINERO
+// ===================================================================
+function handleApplySec3() {
+    sec3UserId = parseInt(document.getElementById('sec3UserSelect').value);
+    updateSec3Criteria();
+    loadSec3Data();
+}
+
+async function loadSec3Data() {
+    try {
+        const data = await apiRequest('GET', `/dashboard/admin/money-movement?userId=${sec3UserId}`);
+        renderSec3(data);
+    } catch { document.getElementById('sec3Cards').innerHTML = '<div class="error-message">Error al cargar</div>'; }
+}
+
+function renderSec3(data) {
+    if (!data) return;
+    const hasData = Number(data.totalIncome) > 0 || Number(data.totalExpense) > 0;
+    if (!hasData) {
+        showEmptyState('sec3Cards');
+        return;
+    }
+    document.getElementById('sec3Cards').innerHTML = `
+        <div class="money-card">
+            <span class="money-card-label">Total Income</span>
+            <span class="money-card-value income">${formatMoney(data.totalIncome)}</span>
+        </div>
+        <div class="money-card">
+            <span class="money-card-label">Total Expense</span>
+            <span class="money-card-value expense">${formatMoney(data.totalExpense)}</span>
+        </div>
+        <div class="money-card">
+            <span class="money-card-label">Total Balance</span>
+            <span class="money-card-value" style="color:${Number(data.totalBalance) >= 0 ? 'var(--income)' : 'var(--expense)'}">${formatMoney(data.totalBalance)}</span>
+        </div>`;
+}
+
+// ===================================================================
+// SECTION 4 — PROMEDIOS
+// ===================================================================
+function handleApplySec4() {
+    sec4UserId = parseInt(document.getElementById('sec4UserSelect').value);
+    updateSec4Criteria();
+    loadSec4Data();
+}
+
+async function loadSec4Data() {
+    try {
+        const data = await apiRequest('GET', `/dashboard/admin/averages?userId=${sec4UserId}`);
+        renderSec4(data);
+    } catch { document.getElementById('sec4Cards').innerHTML = '<div class="error-message">Error al cargar</div>'; }
+}
+
+function renderSec4(data) {
+    if (!data) return;
+    const hasData = Number(data.globalAvgIncomePerUser) > 0 || Number(data.globalAvgExpensePerUser) > 0 || Number(data.globalAvgTransactionsPerUser) > 0;
+    if (!hasData) {
+        showEmptyState('sec4Cards');
+        return;
+    }
+    let html = `
+        <div class="avg-card">
+            <span class="avg-card-label">Avg Income / usuario</span>
+            <span class="avg-card-value income">${formatMoney(data.globalAvgIncomePerUser)}</span>
+        </div>
+        <div class="avg-card">
+            <span class="avg-card-label">Avg Expense / usuario</span>
+            <span class="avg-card-value expense">${formatMoney(data.globalAvgExpensePerUser)}</span>
+        </div>
+        <div class="avg-card">
+            <span class="avg-card-label">Avg Transacciones / usuario</span>
+            <span class="avg-card-value">${Number(data.globalAvgTransactionsPerUser).toLocaleString('es-ES', {minimumFractionDigits:1,maximumFractionDigits:1})}</span>
+        </div>`;
+
+    if (data.filteredAvgIncome !== null && data.filteredAvgExpense !== null) {
+        html += `
+            <div class="avg-card-divider"></div>
+            <div class="avg-card">
+                <span class="avg-card-label">Avg Income (filtrado)</span>
+                <span class="avg-card-value income">${formatMoney(data.filteredAvgIncome)}</span>
+            </div>
+            <div class="avg-card">
+                <span class="avg-card-label">Avg Expense (filtrado)</span>
+                <span class="avg-card-value expense">${formatMoney(data.filteredAvgExpense)}</span>
+            </div>`;
+    }
+
+    document.getElementById('sec4Cards').innerHTML = html;
+}
+
+// ===================================================================
+// SECTION 5 — TOP USUARIOS
+// ===================================================================
+function handleApplySec5() {
+    sec5MonthFrom = parseInt(document.getElementById('sec5MonthFrom').value);
+    sec5YearFrom = parseInt(document.getElementById('sec5YearFrom').value);
+    sec5MonthTo = parseInt(document.getElementById('sec5MonthTo').value);
+    sec5YearTo = parseInt(document.getElementById('sec5YearTo').value);
+    if (sec5YearTo < sec5YearFrom || (sec5YearTo === sec5YearFrom && sec5MonthTo < sec5MonthFrom)) {
+        showToast('El periodo "Hasta" debe ser posterior o igual a "Desde"', 'error');
+        return;
+    }
+    updateSec5Criteria();
+    loadSec5Data();
+}
+
+async function loadSec5Data() {
+    try {
+        const data = await apiRequest('GET', `/dashboard/admin/top-users?monthFrom=${sec5MonthFrom}&yearFrom=${sec5YearFrom}&monthTo=${sec5MonthTo}&yearTo=${sec5YearTo}`);
+        renderSec5(data);
+    } catch { document.getElementById('sec5Cards').innerHTML = '<div class="error-message">Error al cargar</div>'; }
+}
+
+function renderSec5(data) {
+    if (!data) return;
+    const txList = data.topByTransactions || [];
+    const expList = data.topByExpenses || [];
+    const incList = data.topByIncome || [];
+    const hasData = txList.length > 0 || expList.length > 0 || incList.length > 0;
+    if (!hasData) {
+        showEmptyState('sec5Cards');
+        return;
+    }
+    document.getElementById('sec5Cards').innerHTML = `
+        <div class="mini-table-card">
+            <h4>Top Transacciones</h4>
+            ${buildMiniTable(txList)}
+        </div>
+        <div class="mini-table-card">
+            <h4>Top Gastos</h4>
+            ${buildMiniTable(expList, true)}
+        </div>
+        <div class="mini-table-card">
+            <h4>Top Ingresos</h4>
+            ${buildMiniTable(incList, true)}
+        </div>`;
+}
+
+function buildMiniTable(entries, isMoney) {
+    if (!entries.length) return '<p style="font-size:0.8rem;color:var(--text-secondary)">Sin datos</p>';
+    let html = '<table class="mini-table"><thead><tr><th>#</th><th>Usuario</th><th style="text-align:right">Valor</th></tr></thead><tbody>';
+    entries.forEach((e, i) => {
+        const val = isMoney ? formatMoney(e.value) : Number(e.value).toLocaleString('es-ES');
+        html += `<tr><td class="rank">${i + 1}</td><td class="user-name">${escHtml(e.userName)}</td><td class="user-value">${val}</td></tr>`;
+    });
+    html += '</tbody></table>';
+    return html;
+}
+
+// ===================================================================
+// SECTION 6 — DISTRIBUCIÓN POR ACTIVIDAD
+// ===================================================================
+function handleApplySec6() {
+    sec6Month = parseInt(document.getElementById('sec6Month').value);
+    sec6Year = parseInt(document.getElementById('sec6Year').value);
+    updateSec6Criteria();
+    loadSec6Data();
+}
+
+async function loadSec6Data() {
+    try {
+        const data = await apiRequest('GET', `/dashboard/admin/activity-distribution?month=${sec6Month}&year=${sec6Year}`);
+        renderSec6(data);
+    } catch { document.getElementById('sec6Cards').innerHTML = '<div class="error-message">Error al cargar</div>'; }
+}
+
+function renderSec6(data) {
+    if (!data) return;
+    const cats = [
+        { key: 'frecuente', label: 'Frecuente', desc: '>20 tx', cls: 'frecuente' },
+        { key: 'regular', label: 'Regular', desc: '5–20 tx', cls: 'regular' },
+        { key: 'ocasional', label: 'Ocasional', desc: '1–4 tx', cls: 'ocasional' },
+        { key: 'inactivo', label: 'Inactivo', desc: '0 tx', cls: 'inactivo' }
+    ];
+    const hasData = cats.some(c => (data[c.key]?.count || 0) > 0);
+    if (!hasData) {
+        showEmptyState('sec6Cards');
+        return;
+    }
+    let html = '<div class="activity-bars">';
+    cats.forEach(c => {
+        const cat = data[c.key] || { count: 0, percentage: 0 };
+        html += `
+            <div class="activity-row">
+                <span class="activity-label">${c.label}</span>
+                <div class="activity-bar"><div class="activity-bar-fill ${c.cls}" style="width:${cat.percentage}%"></div></div>
+                <span class="activity-percent">${cat.percentage}%</span>
+                <span class="activity-count">(${cat.count})</span>
+            </div>`;
+    });
+    html += '</div>';
+    html += `<div class="activity-legend">
+        <span class="activity-legend-item"><span class="activity-dot frecuente"></span> Frecuente: m&aacute;s de 20 transacciones</span>
+        <span class="activity-legend-item"><span class="activity-dot regular"></span> Regular: 5–20 transacciones</span>
+        <span class="activity-legend-item"><span class="activity-dot ocasional"></span> Ocasional: 1–4 transacciones</span>
+        <span class="activity-legend-item"><span class="activity-dot inactivo"></span> Inactivo: 0 transacciones (registrados en el mes)</span>
+    </div>`;
+    document.getElementById('sec6Cards').innerHTML = html;
+}
+
+// ===================================================================
 // TRANSACTIONS SECTION
 // ===================================================================
-function renderTransactionsSection() {
+async function renderTransactionsSection() {
     txPage = 0;
+    txAdminUserId = 0;
 
-    document.getElementById('dashContent').innerHTML = `
-        <div class="section-header">
-            <h2>Transacciones</h2>
-            <p>${getMonthLabel()}</p>
-        </div>
-        <div class="section-actions">
-            <button class="btn-primary" onclick="window.showTxForm()">+ Nueva transacci&oacute;n</button>
-        </div>
-        <div class="table-scroll">
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Fecha</th>
-                        <th>Categoría</th>
-                        <th>Subcategoría</th>
-                        <th>Descripción</th>
-                        <th>Monto</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="txBody">
-                    <tr><td colspan="6" class="empty-state">Cargando…</td></tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="pagination" id="txPagination"></div>`;
-
-    loadTransactionsData();
+    if (isAdmin()) {
+        if (adminUsers.length === 0) await loadAdminUsers();
+        document.getElementById('dashContent').innerHTML = `
+            <div class="section-header">
+                <h2>Transacciones</h2>
+            </div>
+            <div class="admin-section-filters" style="margin-bottom:16px">
+                <label>Usuario
+                    <select id="txAdminUserSelect" onchange="window.handleTxAdminUserChange()">
+                        <option value="0">Seleccionar...</option>
+                    </select>
+                </label>
+            </div>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Categor&iacute;a</th>
+                            <th>Subcategor&iacute;a</th>
+                            <th>Descripci&oacute;n</th>
+                            <th>Monto</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="txBody">
+                        <tr><td colspan="6" class="empty-state">Seleccion&aacute; un usuario para ver sus transacciones</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination" id="txPagination"></div>`;
+        populateUserSelect('txAdminUserSelect', txAdminUserId, 'Seleccionar...');
+    } else {
+        document.getElementById('dashContent').innerHTML = `
+            <div class="section-header">
+                <h2>Transacciones</h2>
+                <p>${getMonthLabel()}</p>
+            </div>
+            <div class="section-actions">
+                <button class="btn-primary" onclick="window.showTxForm()">+ Nueva transacci&oacute;n</button>
+            </div>
+            <div class="table-scroll">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Categor&iacute;a</th>
+                            <th>Subcategor&iacute;a</th>
+                            <th>Descripci&oacute;n</th>
+                            <th>Monto</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="txBody">
+                        <tr><td colspan="6" class="empty-state">Cargando…</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="pagination" id="txPagination"></div>`;
+        loadTransactionsData();
+    }
 }
 
 async function loadTransactionsData() {
     try {
-        const md = getMonthDates();
-        const res = await apiRequest(
-            'GET',
-            `/transactions/date-range?from=${md.from}&to=${md.to}&page=${txPage}&size=20&sort=transactionDate,desc`
-        );
+        let url = `/transactions/date-range?page=${txPage}&size=20&sort=transactionDate,desc`;
+        if (isAdmin() && txAdminUserId > 0) {
+            url += `&userId=${txAdminUserId}`;
+        } else {
+            const md = getMonthDates();
+            url += `&from=${md.from}&to=${md.to}`;
+        }
+        const res = await apiRequest('GET', url);
         txTransactions = res?.content || [];
         txPagination = res?.pagination || null;
 
@@ -1281,6 +1825,7 @@ function renderTxTable() {
         tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No hay transacciones en este per&iacute;odo</td></tr>';
         return;
     }
+    const admin = isAdmin();
     tbody.innerHTML = txTransactions.map(tx => {
         const type = getCategoryType(tx.categoryId);
         return `<tr>
@@ -1290,8 +1835,11 @@ function renderTxTable() {
             <td>${escHtml(tx.description || '—')}</td>
             <td class="amount ${type === 'INCOME' ? 'income' : 'expense'}">${formatMoney(tx.amount)}</td>
             <td class="actions-cell">
-                <button class="btn-icon" onclick="window.editTx(${tx.id})" title="Editar">&#x270E;</button>
-                <button class="btn-icon btn-icon-danger" onclick="window.deleteTx(${tx.id})" title="Eliminar">&#x2715;</button>
+                ${admin
+                    ? `<button class="btn-icon btn-icon-danger" onclick="window.deleteTx(${tx.id})" title="Eliminar">&#x2715;</button>`
+                    : `<button class="btn-icon" onclick="window.editTx(${tx.id})" title="Editar">&#x270E;</button>
+                       <button class="btn-icon btn-icon-danger" onclick="window.deleteTx(${tx.id})" title="Eliminar">&#x2715;</button>`
+                }
             </td>
         </tr>`;
     }).join('');
@@ -1309,6 +1857,21 @@ function renderTxPagination() {
 function changeTxPage(page) {
     txPage = page;
     loadTransactionsData();
+}
+
+function handleTxAdminUserChange() {
+    const sel = document.getElementById('txAdminUserSelect');
+    if (!sel) return;
+    txAdminUserId = parseInt(sel.value);
+    txPage = 0;
+    if (txAdminUserId > 0) {
+        loadTransactionsData();
+    } else {
+        txTransactions = [];
+        txPagination = null;
+        renderTxTable();
+        renderTxPagination();
+    }
 }
 
 // ---- Transaction CRUD ----
@@ -1757,6 +2320,7 @@ window.showTxForm = showTxForm;
 window.editTx = editTx;
 window.deleteTx = deleteTx;
 window.changeTxPage = changeTxPage;
+window.handleTxAdminUserChange = handleTxAdminUserChange;
 
 window.showSubForm = showSubForm;
 window.editSub = editSub;
@@ -1774,7 +2338,7 @@ function refreshChartTheme() {
     const textColor = getChartTextColor();
     const gridColor = getChartGridColor();
 
-    [chartCategory, chartSubcategory, chartBalance, chartAdminCategory, chartAdminSubcategory, chartAdminAvgIncome, chartAdminAvgExpense].forEach(chart => {
+    [chartCategory, chartSubcategory, chartBalance, chartUserGrowth, chartIncomeVsExpense, chartAdminCategory, chartAdminSubcategory].forEach(chart => {
         if (!chart) return;
 
         const legendLabels = chart.options.plugins?.legend?.labels;
@@ -1794,6 +2358,11 @@ function refreshChartTheme() {
     });
 }
 window.refreshChartTheme = refreshChartTheme;
-window.handleAdminPeriodToggle = handleAdminPeriodToggle;
-window.handleAdminApplyFilters = handleAdminApplyFilters;
+window.handleApplySec1 = handleApplySec1;
+window.handleApplySec2 = handleApplySec2;
+window.handleApplySec3 = handleApplySec3;
+window.handleApplySec4 = handleApplySec4;
+window.handleApplySec5 = handleApplySec5;
+window.handleApplySec6 = handleApplySec6;
+window.handleApplyExpBreakdown = handleApplyExpBreakdown;
 window.handleAdminCategoryFilterChange = handleAdminCategoryFilterChange;
