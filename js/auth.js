@@ -17,7 +17,7 @@ function renderLogin() {
                         <input type="password" id="loginPassword" required placeholder="Contraseña" autocomplete="current-password">
                     </div>
                     <p class="form-error" id="loginError"></p>
-                    <button type="submit" class="btn-primary btn-full">Iniciar sesión</button>
+                    <button type="submit" class="btn-primary">Iniciar sesión</button>
                 </form>
                 <p class="auth-footer">¿No tienes cuenta? <a href="#register">Regístrate</a></p>
             </div>
@@ -74,7 +74,7 @@ function renderRegister() {
                     </div>
                     <p class="form-error" id="registerError"></p>
                     <p class="form-success" id="registerSuccess"></p>
-                    <button type="submit" class="btn-primary btn-full">Crear cuenta</button>
+                    <button type="submit" class="btn-primary">Crear cuenta</button>
                 </form>
                 <p class="auth-footer">¿Ya tienes cuenta? <a href="#login">Inicia sesión</a></p>
             </div>
