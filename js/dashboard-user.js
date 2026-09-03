@@ -6,16 +6,16 @@ function renderDashboardSection() {
     const maxMonth = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
 
     document.getElementById('dashContent').innerHTML = `
-        <div class="comparison-cards" id="dashComparison">
+        <div class="comparison-cards" id="dashComparison" role="region" aria-label="Comparativa mensual">
             <div class="comparison-card" id="expenseComparisonCard">
-                <span class="comparison-icon expense">&darr;</span>
+                <span class="comparison-icon expense" aria-hidden="true">&darr;</span>
                 <div class="comparison-content">
                     <span class="comparison-period" id="expenseComparisonPeriod"></span>
                     <span class="comparison-text" id="expenseGlossary">Cargando...</span>
                 </div>
             </div>
             <div class="comparison-card" id="incomeComparisonCard">
-                <span class="comparison-icon income">&uarr;</span>
+                <span class="comparison-icon income" aria-hidden="true">&uarr;</span>
                 <div class="comparison-content">
                     <span class="comparison-period" id="incomeComparisonPeriod"></span>
                     <span class="comparison-text" id="incomeGlossary">Cargando...</span>
@@ -30,12 +30,12 @@ function renderDashboardSection() {
             <div class="filter-section">
                 <div class="filter-controls" id="dashFilters">
                 <label>Per&iacute;odo
-                    <input type="month" id="dashMonthInput" value="${dashYear}-${String(dashMonth).padStart(2, '0')}" max="${maxMonth}" onchange="window.handleFilterChange()">
+                    <input type="text" id="dashMonthInput" class="flatpickr-input" value="${dashYear}-${String(dashMonth).padStart(2, '0')}" onchange="window.handleFilterChange()">
                 </label>
             </div>
             </div>
         </div>
-        <div class="summary-cards" id="dashSummary">
+        <div class="summary-cards" id="dashSummary" role="group" aria-label="Resumen financiero">
             <div class="summary-card" id="incomeCard">
                 <span class="summary-label">Ingresos</span>
                 <span class="summary-value income" id="incomeValue">${CONFIG.CURRENCY_SYMBOL || '$'} 0</span>
@@ -49,54 +49,67 @@ function renderDashboardSection() {
                 <span class="summary-value" id="balanceValue">${CONFIG.CURRENCY_SYMBOL || '$'} 0</span>
             </div>
             <div class="summary-card" id="savingRateCard">
-                <span class="summary-label">Saving Rate</span>
+                <span class="summary-label">Tasa de ahorro</span>
                 <span class="summary-value" id="savingRateValue">0%</span>
             </div>
         </div>
-        <div class="dashboard-charts" id="chartsContainer">
-            <div class="chart-card">
-                <h4 class="chart-title">Gastos por categor&iacute;a</h4>
-                <div id="categoryChartEmpty" class="empty-state" style="display:none;padding:24px 0">Sin datos para este per&iacute;odo</div>
-                <div class="chart-wrapper"><canvas id="categoryChart"></canvas></div>
+        <div class="chart-card chart-card-full" style="margin-top:20px">
+            <div class="chart-header">
+                <p class="chart-title" style="margin:0">Balance mensual &uacute;ltimos <span id="balanceRangeLabel">${dashMonthsRange}</span> meses</p>
+                <fieldset class="range-checkboxes" style="border:none;padding:0">
+                    <legend class="sr-only">Rango de meses</legend>
+                    <label class="range-label"><input type="radio" name="dashMonthsRange" value="3"${dashMonthsRange === 3 ? ' checked' : ''} onchange="window.handleRangeChange(3)"> 3m</label>
+                    <label class="range-label"><input type="radio" name="dashMonthsRange" value="6"${dashMonthsRange === 6 ? ' checked' : ''} onchange="window.handleRangeChange(6)"> 6m</label>
+                    <label class="range-label"><input type="radio" name="dashMonthsRange" value="12"${dashMonthsRange === 12 ? ' checked' : ''} onchange="window.handleRangeChange(12)"> 12m</label>
+                </fieldset>
             </div>
-            <div class="chart-card">
-                <div class="chart-header">
-                    <div>
-                        <h4 class="chart-title" style="margin:0">Gastos por subcategor&iacute;a</h4>
-                        <span id="subcategoryCategoryLabel" class="chart-sub-label"></span>
-                    </div>
-                    <select id="subcategoryCategoryFilter" onchange="window.handleCategoryFilterChange()">
-                        <option value="">Seleccionar categor&iacute;a</option>
-                    </select>
-                </div>
-                <div id="subcategoryChartEmpty" class="empty-state" style="display:none;padding:24px 0">Sin datos para este per&iacute;odo</div>
-                <div class="chart-wrapper"><canvas id="subcategoryChart"></canvas></div>
-            </div>
-            <div class="top-expenses-section">
-                <div class="chart-card top-card">
-                    <h4 class="chart-title">Top 3 categor&iacute;as con m&aacute;s gasto</h4>
-                    <span class="top-card-period" id="topCategoriesPeriod"></span>
-                    <div id="topCategoriesContent"><p class="empty-state">Cargando...</p></div>
-                </div>
-                <div class="chart-card top-card">
-                    <h4 class="chart-title">Top 3 subcategor&iacute;as con m&aacute;s gasto</h4>
-                    <span class="top-card-period" id="topSubcategoriesPeriod"></span>
-                    <div id="topSubcategoriesContent"><p class="empty-state">Cargando...</p></div>
+            <div class="balance-section">
+                <div class="chart-wrapper" style="flex:1;min-width:0"><canvas id="balanceChart" role="img" aria-label="Gráfico de balance mensual"></canvas></div>
+                <div class="monthly-summary-table" id="monthlySummaryTable">
+                    <p class="empty-state">Cargando...</p>
                 </div>
             </div>
-            <div class="chart-card chart-card-full">
-                <div class="chart-header">
-                    <h4 class="chart-title" style="margin:0">Balance mensual &uacute;ltimos <span id="balanceRangeLabel">${dashMonthsRange}</span> meses</h4>
-                    <div class="range-checkboxes">
-                        <label class="range-label"><input type="radio" name="dashMonthsRange" value="3"${dashMonthsRange === 3 ? ' checked' : ''} onchange="window.handleRangeChange(3)"> 3m</label>
-                        <label class="range-label"><input type="radio" name="dashMonthsRange" value="6"${dashMonthsRange === 6 ? ' checked' : ''} onchange="window.handleRangeChange(6)"> 6m</label>
-                        <label class="range-label"><input type="radio" name="dashMonthsRange" value="12"${dashMonthsRange === 12 ? ' checked' : ''} onchange="window.handleRangeChange(12)"> 12m</label>
-                    </div>
-                </div>
-                <div class="balance-section">
-                    <div class="chart-wrapper" style="flex:1;min-width:0"><canvas id="balanceChart"></canvas></div>
-                    <div class="monthly-summary-table" id="monthlySummaryTable">
-                        <p class="empty-state">Cargando...</p>
+        </div>
+        <div class="admin-accordion" id="userChartsAccordion" style="margin-top:20px">
+            <div class="accordion-item" data-accordion="userGastos">
+                <button class="accordion-header" onclick="window.toggleUserAccordion('userGastos')" aria-expanded="false">
+                    <span class="accordion-title">Gastos</span>
+                    <span class="accordion-chevron">&#x25BC;</span>
+                </button>
+                <div class="accordion-panel">
+                    <div class="accordion-content">
+                        <div class="dashboard-charts">
+                            <div class="chart-card">
+                                <p class="chart-title">Gastos por categor&iacute;a</p>
+                                <div id="categoryChartEmpty" class="empty-state" style="display:none;padding:24px 0">Sin datos para este per&iacute;odo</div>
+                                <div class="chart-wrapper"><canvas id="categoryChart" role="img" aria-label="Gráfico de gastos por categoría"></canvas></div>
+                            </div>
+                            <div class="chart-card">
+                                <div class="chart-header">
+                                    <div>
+                                        <p class="chart-title" style="margin:0">Gastos por subcategor&iacute;a</p>
+                                        <span id="subcategoryCategoryLabel" class="chart-sub-label"></span>
+                                    </div>
+                                    <select id="subcategoryCategoryFilter" onchange="window.handleCategoryFilterChange()">
+                                        <option value="">Seleccionar categor&iacute;a</option>
+                                    </select>
+                                </div>
+                                <div id="subcategoryChartEmpty" class="empty-state" style="display:none;padding:24px 0">Sin datos para este per&iacute;odo</div>
+                                <div class="chart-wrapper"><canvas id="subcategoryChart" role="img" aria-label="Gráfico de gastos por subcategoría"></canvas></div>
+                            </div>
+                        </div>
+                        <div class="top-expenses-section">
+                            <div class="chart-card top-card">
+                                <p class="chart-title">Top 3 categor&iacute;as con m&aacute;s gasto</p>
+                                <span class="top-card-period" id="topCategoriesPeriod"></span>
+                                <div id="topCategoriesContent"><p class="empty-state">Cargando...</p></div>
+                            </div>
+                            <div class="chart-card top-card">
+                                <p class="chart-title">Top 3 subcategor&iacute;as con m&aacute;s gasto</p>
+                                <span class="top-card-period" id="topSubcategoriesPeriod"></span>
+                                <div id="topSubcategoriesContent"><p class="empty-state">Cargando...</p></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -115,7 +128,9 @@ function renderDashboardSection() {
 }
 
 async function loadDashboardData() {
+    const summaryEl = document.getElementById('dashSummary');
     try {
+        if (summaryEl) summaryEl.setAttribute('aria-busy', 'true');
         await ensureCategoryCache();
 
         const expenseCats = cachedCategories.filter(c => c.type === 'EXPENSE');
@@ -175,6 +190,14 @@ async function loadDashboardData() {
     } catch (err) {
         const s = document.getElementById('dashSummary');
         if (s) s.innerHTML = `<p class="error-message">Error al cargar: ${escHtml(err.message)}</p>`;
+        const compEl = document.getElementById('dashComparison');
+        if (compEl) compEl.innerHTML = `<p class="error-message">Error al cargar comparativa</p>`;
+        const topCatEl = document.getElementById('topCategoriesContent');
+        if (topCatEl) topCatEl.innerHTML = `<p class="error-message">Error al cargar datos</p>`;
+        const topSubEl = document.getElementById('topSubcategoriesContent');
+        if (topSubEl) topSubEl.innerHTML = `<p class="error-message">Error al cargar datos</p>`;
+    } finally {
+        if (summaryEl) summaryEl.removeAttribute('aria-busy');
     }
 }
 
@@ -221,7 +244,8 @@ function renderMonthlySummaryTable(data) {
         return;
     }
     let html = `<table class="summary-mini-table">
-        <thead><tr><th>Mes</th><th>Ingreso</th><th>Gasto</th><th>Saving Rate</th></tr></thead><tbody>`;
+        <caption>Resumen mensual de ingresos, gastos y tasa de ahorro</caption>
+        <thead><tr><th>Mes</th><th>Ingreso</th><th>Gasto</th><th>Tasa de ahorro</th></tr></thead><tbody>`;
     data.forEach(d => {
         const srClass = d.savingRate >= 0 ? 'income' : 'expense';
         html += `<tr>
@@ -249,27 +273,27 @@ function renderTopExpenses(data) {
         if (!data?.topCategories?.length) {
             catContainer.innerHTML = '<p class="empty-state">Sin datos para este per&iacute;odo</p>';
         } else {
-            catContainer.innerHTML = data.topCategories.map(c => `
-                <div class="top-entry">
+            catContainer.innerHTML = '<ol class="top-list">' + data.topCategories.map(c => `
+                <li class="top-entry">
                     <span class="top-rank">${data.topCategories.indexOf(c) + 1}.</span>
                     <span class="top-name">${escHtml(c.name)}</span>
                     <span class="top-amount">${formatMoney(c.amount)}</span>
                     <span class="top-pct">${c.percentage.toFixed(1)}%</span>
-                </div>
-            `).join('');
+                </li>
+            `).join('') + '</ol>';
         }
     }
     if (subContainer) {
         if (!data?.topSubcategories?.length) {
             subContainer.innerHTML = '<p class="empty-state">Sin datos para este per&iacute;odo</p>';
         } else {
-            subContainer.innerHTML = data.topSubcategories.map((s, i) => `
-                <div class="top-entry">
+            subContainer.innerHTML = '<ol class="top-list">' + data.topSubcategories.map((s, i) => `
+                <li class="top-entry">
                     <span class="top-rank">${i + 1}.</span>
                     <span class="top-name">${escHtml(s.name)}</span>
                     <span class="top-amount">${formatMoney(s.amount)}</span>
-                </div>
-            `).join('');
+                </li>
+            `).join('') + '</ol>';
         }
     }
 }
@@ -322,9 +346,15 @@ function renderBalanceChart(data) {
 
     if (!data.length) {
         canvas.style.display = 'none';
+        const wrapper = canvas.parentElement;
+        if (wrapper && !wrapper.querySelector('.empty-state')) {
+            wrapper.insertAdjacentHTML('afterbegin', '<p class="empty-state">Sin datos para este período</p>');
+        }
         return;
     }
     canvas.style.display = '';
+    const existingEmpty = canvas.parentElement?.querySelector('.empty-state');
+    if (existingEmpty) existingEmpty.remove();
 
     const sorted = [...data].sort((a, b) => a.year - b.year || a.month - b.month);
     const labels = sorted.map(d => MONTH_NAMES_SHORT[d.month - 1] + ' ' + d.year);
@@ -494,3 +524,13 @@ window.handleFilterChange = handleFilterChange;
 window.handleCategoryFilterChange = handleCategoryFilterChange;
 window.handleRangeChange = handleRangeChange;
 window.refreshDashboardIfActive = refreshDashboardIfActive;
+
+function toggleUserAccordion(sectionId) {
+    const item = document.querySelector(`[data-accordion="${sectionId}"]`);
+    if (!item) return;
+    const wasOpen = item.classList.contains('open');
+    item.classList.toggle('open');
+    const btn = item.querySelector('.accordion-header');
+    if (btn) btn.setAttribute('aria-expanded', !wasOpen);
+}
+window.toggleUserAccordion = toggleUserAccordion;

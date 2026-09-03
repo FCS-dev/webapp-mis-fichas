@@ -1,7 +1,14 @@
 function renderLogin() {
+    const isDark = document.documentElement.classList.contains('dark');
     document.getElementById('app').innerHTML = `
         <div class="auth-container">
-            <button class="theme-toggle auth-theme-toggle" onclick="window.toggleTheme()" title="Cambiar tema" aria-label="Cambiar tema día/noche">${getThemeIcon()}</button>
+            <button class="theme-toggle auth-theme-toggle" onclick="window.toggleTheme()" title="Cambiar tema" aria-label="Cambiar tema" aria-pressed="${isDark}">
+                <span class="toggle-track">
+                    <span class="toggle-thumb"></span>
+                    <span class="toggle-icon toggle-icon--light">&#x2600;</span>
+                    <span class="toggle-icon toggle-icon--dark">&#x263E;</span>
+                </span>
+            </button>
             <div class="auth-card">
                 <div class="auth-header">
                     <img class="logo" src="assets/logo/mis-fichas-logo-modo-claro.png" alt="Mis Fichas" style="height:256px;width:auto;margin-bottom:8px">
@@ -16,7 +23,7 @@ function renderLogin() {
                         <label for="loginPassword">Contraseña</label>
                         <input type="password" id="loginPassword" required placeholder="Contraseña" autocomplete="current-password">
                     </div>
-                    <p class="form-error" id="loginError"></p>
+                    <p class="form-error" id="loginError" role="alert" aria-live="polite"></p>
                     <button type="submit" class="btn-primary">Iniciar sesión</button>
                 </form>
                 <p class="auth-footer">¿No tienes cuenta? <a href="#register">Regístrate</a></p>
@@ -50,9 +57,16 @@ async function handleLoginSubmit(e) {
 }
 
 function renderRegister() {
+    const isDark = document.documentElement.classList.contains('dark');
     document.getElementById('app').innerHTML = `
         <div class="auth-container">
-            <button class="theme-toggle auth-theme-toggle" onclick="window.toggleTheme()" title="Cambiar tema" aria-label="Cambiar tema día/noche">${getThemeIcon()}</button>
+            <button class="theme-toggle auth-theme-toggle" onclick="window.toggleTheme()" title="Cambiar tema" aria-label="Cambiar tema" aria-pressed="${isDark}">
+                <span class="toggle-track">
+                    <span class="toggle-thumb"></span>
+                    <span class="toggle-icon toggle-icon--light">&#x2600;</span>
+                    <span class="toggle-icon toggle-icon--dark">&#x263E;</span>
+                </span>
+            </button>
             <div class="auth-card">
                 <div class="auth-header">
                     <img class="logo" src="assets/logo/mis-fichas-logo-modo-claro.png" alt="Mis Fichas" style="height:256px;width:auto;margin-bottom:8px">
@@ -72,8 +86,8 @@ function renderRegister() {
                         <label for="regPassword">Contraseña</label>
                         <input type="password" id="regPassword" required minlength="6" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
                     </div>
-                    <p class="form-error" id="registerError"></p>
-                    <p class="form-success" id="registerSuccess"></p>
+                    <p class="form-error" id="registerError" role="alert" aria-live="polite"></p>
+                    <p class="form-success" id="registerSuccess" role="status" aria-live="polite"></p>
                     <button type="submit" class="btn-primary">Crear cuenta</button>
                 </form>
                 <p class="auth-footer">¿Ya tienes cuenta? <a href="#login">Inicia sesión</a></p>

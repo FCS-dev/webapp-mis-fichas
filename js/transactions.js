@@ -1,12 +1,12 @@
 // TRANSACTIONS SECTION
 // ===================================================================
 async function renderTransactionsSection() {
-    txPage = 0;
-    txAdminUserId = 0;
+  txPage = 0;
+  txAdminUserId = 0;
 
-    if (isAdmin()) {
-        if (adminUsers.length === 0) await loadAdminUsers();
-        document.getElementById('dashContent').innerHTML = `
+  if (isAdmin()) {
+    if (adminUsers.length === 0) await loadAdminUsers();
+    document.getElementById("dashContent").innerHTML = `
             <div class="section-header">
                 <h2>Transacciones</h2>
             </div>
@@ -19,6 +19,7 @@ async function renderTransactionsSection() {
             </div>
             <div class="table-scroll">
                 <table class="data-table">
+                    <caption>Transacciones del usuario</caption>
                     <thead>
                         <tr>
                             <th>Fecha</th>
@@ -35,19 +36,23 @@ async function renderTransactionsSection() {
                 </table>
             </div>
             <div class="pagination" id="txPagination"></div>`;
-        populateUserSelect('txAdminUserSelect', txAdminUserId, 'Seleccionar...');
-    } else {
-        document.getElementById('dashContent').innerHTML = `
-            <button class="btn-back-dashboard" onclick="window.navigateTo('dashboard')">&#x2190; Volver al panel</button>
+    populateUserSelect("txAdminUserSelect", txAdminUserId, "Seleccionar...");
+  } else {
+    // <button class="btn-back-dashboard" onclick="window.navigateTo('dashboard')">&#x2190; Volver al panel</button>
+    // <div class="section-actions">
+    //   <button class="btn-primary" onclick="window.showTxForm()">
+    //     + Nueva transacci&oacute;n
+    //   </button>
+    // </div>;
+    document.getElementById("dashContent").innerHTML = `
             <div class="section-header">
                 <h2>Transacciones</h2>
-                <p>${getMonthLabel()}</p>
+                <p>Todas las transacciones</p>
             </div>
-            <div class="section-actions">
-                <button class="btn-primary" onclick="window.showTxForm()">+ Nueva transacci&oacute;n</button>
-            </div>
+            
             <div class="table-scroll">
                 <table class="data-table">
+                    <caption>Mis transacciones</caption>
                     <thead>
                         <tr>
                             <th>Fecha</th>
@@ -64,109 +69,120 @@ async function renderTransactionsSection() {
                 </table>
             </div>
             <div class="pagination" id="txPagination"></div>`;
-        loadTransactionsData();
-    }
+    loadTransactionsData();
+  }
 }
 
 async function loadTransactionsData() {
-    try {
-        let url = `/transactions/date-range?page=${txPage}&size=20&sort=transactionDate,desc`;
-        if (isAdmin() && txAdminUserId > 0) {
-            url += `&userId=${txAdminUserId}`;
-        } else {
-            const md = getMonthDates();
-            url += `&from=${md.from}&to=${md.to}`;
-        }
-        const res = await apiRequest('GET', url);
-        txTransactions = res?.content || [];
-        txPagination = res?.pagination || null;
-
-        renderTxTable();
-        renderTxPagination();
-    } catch (err) {
-        document.getElementById('txBody').innerHTML =
-            `<tr><td colspan="6" class="empty-state">Error: ${escHtml(err.message)}</td></tr>`;
+  try {
+    let url = `/transactions/date-range?page=${txPage}&size=20&sort=transactionDate,desc`;
+    if (isAdmin() && txAdminUserId > 0) {
+      url += `&userId=${txAdminUserId}`;
     }
+    const res = await apiRequest("GET", url);
+    txTransactions = res?.content || [];
+    txPagination = res?.pagination || null;
+
+    renderTxTable();
+    renderTxPagination();
+  } catch (err) {
+    document.getElementById("txBody").innerHTML =
+      `<tr><td colspan="6" class="empty-state">Error: ${escHtml(err.message)}</td></tr>`;
+  }
 }
 
 function renderTxTable() {
-    const tbody = document.getElementById('txBody');
-    if (!txTransactions.length) {
-        tbody.innerHTML = '<tr><td colspan="6" class="empty-state">No hay transacciones en este per&iacute;odo</td></tr>';
-        return;
-    }
-    const admin = isAdmin();
-    tbody.innerHTML = txTransactions.map(tx => {
-        const type = getCategoryType(tx.categoryId);
-        return `<tr>
+  const tbody = document.getElementById("txBody");
+  if (!txTransactions.length) {
+    tbody.innerHTML =
+      '<tr><td colspan="6" class="empty-state">No hay transacciones en este per&iacute;odo</td></tr>';
+    return;
+  }
+  const admin = isAdmin();
+  tbody.innerHTML = txTransactions
+    .map((tx) => {
+      const type = getCategoryType(tx.categoryId);
+      return `<tr>
             <td>${formatDate(tx.transactionDate)}</td>
-            <td>${escHtml(tx.categoryName || '—')}</td>
-            <td>${escHtml(tx.subcategoryName || '—')}</td>
-            <td>${escHtml(tx.description || '—')}</td>
-            <td class="amount ${type === 'INCOME' ? 'income' : 'expense'}">${formatMoney(tx.amount)}</td>
+            <td>${escHtml(tx.categoryName || "—")}</td>
+            <td>${escHtml(tx.subcategoryName || "—")}</td>
+            <td>${escHtml(tx.description || "—")}</td>
+            <td class="amount ${type === "INCOME" ? "income" : "expense"}">${formatMoney(tx.amount)}</td>
             <td class="actions-cell">
-                ${admin
-                    ? `<button class="btn-icon btn-icon-danger" onclick="window.deleteTx(${tx.id})" title="Eliminar">&#x2715;</button>`
-                    : `<button class="btn-icon" onclick="window.editTx(${tx.id})" title="Editar">&#x270E;</button>
-                       <button class="btn-icon btn-icon-danger" onclick="window.deleteTx(${tx.id})" title="Eliminar">&#x2715;</button>`
+                ${
+                  admin
+                    ? `<button class="btn-icon btn-icon-danger" onclick="window.deleteTx(${tx.id})" title="Eliminar" aria-label="Eliminar transacción">&#x2715;</button>`
+                    : `<button class="btn-icon" onclick="window.editTx(${tx.id})" title="Editar" aria-label="Editar transacción">&#x270E;</button>
+                       <button class="btn-icon btn-icon-danger" onclick="window.deleteTx(${tx.id})" title="Eliminar" aria-label="Eliminar transacción">&#x2715;</button>`
                 }
             </td>
         </tr>`;
-    }).join('');
+    })
+    .join("");
 }
 
 function renderTxPagination() {
-    const el = document.getElementById('txPagination');
-    if (!txPagination || txPagination.totalPages <= 1) {
-        el.innerHTML = '';
-        return;
-    }
-    el.innerHTML = buildPaginationHtml(txPagination, 'window.changeTxPage');
+  const el = document.getElementById("txPagination");
+  if (!txPagination || txPagination.totalPages <= 1) {
+    el.innerHTML = "";
+    return;
+  }
+  el.innerHTML = buildPaginationHtml(txPagination, "window.changeTxPage");
 }
 
 function changeTxPage(page) {
-    txPage = page;
-    loadTransactionsData();
+  txPage = page;
+  const tbody = document.getElementById("txBody");
+  if (tbody)
+    tbody.innerHTML =
+      '<tr><td colspan="6" class="loading-spinner">Cargando…</td></tr>';
+  loadTransactionsData();
 }
 
 function handleTxAdminUserChange() {
-    const sel = document.getElementById('txAdminUserSelect');
-    if (!sel) return;
-    txAdminUserId = parseInt(sel.value);
-    txPage = 0;
-    if (txAdminUserId > 0) {
-        loadTransactionsData();
-    } else {
-        txTransactions = [];
-        txPagination = null;
-        renderTxTable();
-        renderTxPagination();
-    }
+  const sel = document.getElementById("txAdminUserSelect");
+  if (!sel) return;
+  txAdminUserId = parseInt(sel.value);
+  txPage = 0;
+  if (txAdminUserId > 0) {
+    loadTransactionsData();
+  } else {
+    txTransactions = [];
+    txPagination = null;
+    renderTxTable();
+    renderTxPagination();
+  }
 }
 
 // ---- Transaction CRUD ----
 async function showTxForm(txId) {
-    await ensureCategoryCache();
+  await ensureCategoryCache();
 
-    const tx = txId ? txTransactions.find(t => t.id === txId) : null;
+  const tx = txId ? txTransactions.find((t) => t.id === txId) : null;
 
-    const today = new Date().toISOString().split('T')[0];
+  const today = new Date().toISOString().split("T")[0];
 
-    const catOptions = cachedCategories.map(c =>
-        `<option value="${c.id}"${tx?.categoryId === c.id ? ' selected' : ''}>${escHtml(c.name)}</option>`
-    ).join('');
+  const catOptions = cachedCategories
+    .map(
+      (c) =>
+        `<option value="${c.id}"${tx?.categoryId === c.id ? " selected" : ""}>${escHtml(c.name)}</option>`,
+    )
+    .join("");
 
-    let subOptions = '';
-    if (tx) {
-        const subs = await fetchSubcategoriesByCategory(tx.categoryId);
-        subOptions = subs.map(s =>
-            `<option value="${s.id}"${tx.subcategoryId === s.id ? ' selected' : ''}>${escHtml(s.name)}</option>`
-        ).join('');
-    }
+  let subOptions = "";
+  if (tx) {
+    const subs = await fetchSubcategoriesByCategory(tx.categoryId);
+    subOptions = subs
+      .map(
+        (s) =>
+          `<option value="${s.id}"${tx.subcategoryId === s.id ? " selected" : ""}>${escHtml(s.name)}</option>`,
+      )
+      .join("");
+  }
 
-    showModal({
-        title: tx ? 'Editar transaccion' : 'Nueva transaccion',
-        bodyHtml: `
+  showModal({
+    title: tx ? "Editar transacción" : "Nueva transacción",
+    bodyHtml: `
             <form id="txForm">
                 <div class="form-row">
                     <div class="form-group">
@@ -187,7 +203,7 @@ async function showTxForm(txId) {
                 <div class="form-row">
                     <div class="form-group">
                         <label for="txAmount">Monto</label>
-                        <input type="number" id="txAmount" step="0.01" min="0.01" required placeholder="0.00" value="${tx ? tx.amount : ''}">
+                        <input type="number" id="txAmount" step="0.01" min="0.01" required placeholder="0.00" value="${tx ? tx.amount : ""}">
                     </div>
                     <div class="form-group">
                         <label for="txDate">Fecha</label>
@@ -196,98 +212,99 @@ async function showTxForm(txId) {
                 </div>
                 <div class="form-group">
                     <label for="txDesc">Descripci&oacute;n (opcional)</label>
-                    <input type="text" id="txDesc" placeholder="Descripci&oacute;n" value="${tx ? escHtml(tx.description || '') : ''}">
+                    <input type="text" id="txDesc" placeholder="Descripci&oacute;n" value="${tx ? escHtml(tx.description || "") : ""}">
                 </div>
                 <div class="form-actions">
                     <button type="button" class="btn-secondary" onclick="window.hideModal()">Cancelar</button>
-                    <button type="submit" class="btn-primary">${tx ? 'Guardar cambios' : 'Crear transacci&oacute;n'}</button>
+                    <button type="submit" class="btn-primary">${tx ? "Guardar cambios" : "Crear transacci&oacute;n"}</button>
                 </div>
-                <p class="form-error" id="txFormError"></p>
-            </form>`
+                <p class="form-error" id="txFormError" role="alert" aria-live="polite"></p>
+            </form>`,
+  });
+
+  const catSelect = document.getElementById("txCategory");
+  const subcatSelect = document.getElementById("txSubcategory");
+
+  const updateSubs = async () => {
+    const catId = parseInt(catSelect.value);
+    subcatSelect.innerHTML = '<option value="">Cargando…</option>';
+    if (!catId) {
+      subcatSelect.innerHTML = '<option value="">Seleccionar</option>';
+      return;
+    }
+    const subs = await fetchSubcategoriesByCategory(catId);
+    subcatSelect.innerHTML = '<option value="">Seleccionar</option>';
+    subs.forEach((s) => {
+      const opt = document.createElement("option");
+      opt.value = s.id;
+      opt.textContent = s.name;
+      if (tx?.subcategoryId === s.id && tx.categoryId === catId)
+        opt.selected = true;
+      subcatSelect.appendChild(opt);
     });
+  };
 
-    const catSelect = document.getElementById('txCategory');
-    const subcatSelect = document.getElementById('txSubcategory');
+  catSelect.addEventListener("change", updateSubs);
+  if (!tx) updateSubs();
 
-    const updateSubs = async () => {
-        const catId = parseInt(catSelect.value);
-        subcatSelect.innerHTML = '<option value="">Cargando…</option>';
-        if (!catId) {
-            subcatSelect.innerHTML = '<option value="">Seleccionar</option>';
-            return;
-        }
-        const subs = await fetchSubcategoriesByCategory(catId);
-        subcatSelect.innerHTML = '<option value="">Seleccionar</option>';
-        subs.forEach(s => {
-            const opt = document.createElement('option');
-            opt.value = s.id;
-            opt.textContent = s.name;
-            if (tx?.subcategoryId === s.id && tx.categoryId === catId) opt.selected = true;
-            subcatSelect.appendChild(opt);
-        });
-    };
-
-    catSelect.addEventListener('change', updateSubs);
-    if (!tx) updateSubs();
-
-    document.getElementById('txForm').addEventListener('submit', handleTxSubmit);
+  document.getElementById("txForm").addEventListener("submit", handleTxSubmit);
 }
 
 async function handleTxSubmit(e) {
-    e.preventDefault();
-    const errorEl = document.getElementById('txFormError');
-    errorEl.textContent = '';
-    const btn = e.target.querySelector('button[type="submit"]');
-    btn.disabled = true;
-    btn.textContent = 'Guardando…';
+  e.preventDefault();
+  const errorEl = document.getElementById("txFormError");
+  errorEl.textContent = "";
+  const btn = e.target.querySelector('button[type="submit"]');
+  btn.disabled = true;
+  btn.textContent = "Guardando…";
 
-    const payload = {
-        amount: parseFloat(document.getElementById('txAmount').value),
-        categoryId: parseInt(document.getElementById('txCategory').value),
-        subcategoryId: parseInt(document.getElementById('txSubcategory').value),
-        description: document.getElementById('txDesc').value.trim(),
-        transactionDate: document.getElementById('txDate').value
-    };
+  const payload = {
+    amount: parseFloat(document.getElementById("txAmount").value),
+    categoryId: parseInt(document.getElementById("txCategory").value),
+    subcategoryId: parseInt(document.getElementById("txSubcategory").value),
+    description: document.getElementById("txDesc").value.trim(),
+    transactionDate: document.getElementById("txDate").value,
+  };
 
-    const isEdit = !!window.__editingTxId;
+  const isEdit = !!window.__editingTxId;
 
-    try {
-        if (isEdit) {
-            await apiRequest('PUT', `/transactions/${window.__editingTxId}`, payload);
-        } else {
-            await apiRequest('POST', '/transactions', payload);
-        }
-        hideModal();
-        window.__editingTxId = null;
-        txPage = 0;
-        showToast('Transaccion guardada correctamente', 'success');
-        await loadTransactionsData();
-        await refreshDashboardIfActive();
-    } catch (err) {
-        errorEl.textContent = err.message;
-    } finally {
-        btn.disabled = false;
-        btn.textContent = isEdit ? 'Guardar cambios' : 'Crear transaccion';
+  try {
+    if (isEdit) {
+      await apiRequest("PUT", `/transactions/${window.__editingTxId}`, payload);
+    } else {
+      await apiRequest("POST", "/transactions", payload);
     }
+    hideModal();
+    window.__editingTxId = null;
+    txPage = 0;
+    showToast("Transacción guardada correctamente", "success");
+    await loadTransactionsData();
+    await refreshDashboardIfActive();
+  } catch (err) {
+    errorEl.textContent = err.message;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = isEdit ? "Guardar cambios" : "Crear transacción";
+  }
 }
 
 async function editTx(id) {
-    window.__editingTxId = id;
-    await showTxForm(id);
+  window.__editingTxId = id;
+  await showTxForm(id);
 }
 
 function deleteTx(id) {
-    showConfirm('Eliminar esta transaccion?', async () => {
-        try {
-            await apiRequest('DELETE', `/transactions/${id}`);
-            showToast('Transaccion eliminada', 'success');
-            txPage = 0;
-            await loadTransactionsData();
-            await refreshDashboardIfActive();
-        } catch (err) {
-            showToast(err.message, 'error');
-        }
-    });
+  showConfirm("¿Eliminar esta transacción?", async () => {
+    try {
+      await apiRequest("DELETE", `/transactions/${id}`);
+      showToast("Transacción eliminada", "success");
+      txPage = 0;
+      await loadTransactionsData();
+      await refreshDashboardIfActive();
+    } catch (err) {
+      showToast(err.message, "error");
+    }
+  });
 }
 
 window.showTxForm = showTxForm;

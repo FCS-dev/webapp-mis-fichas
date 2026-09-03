@@ -14,7 +14,7 @@ function toggleTheme() {
     const isDark = document.documentElement.classList.contains('dark');
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
     document.querySelectorAll('.theme-toggle').forEach(btn => {
-        btn.textContent = getThemeIcon();
+        btn.setAttribute('aria-pressed', isDark);
     });
     if (window.refreshChartTheme) window.refreshChartTheme();
     updateLogoSrc();
@@ -34,7 +34,16 @@ function router() {
     window.location.hash = '#login';
 }
 
-window.addEventListener('hashchange', router);
+let hashChangePending = false;
+window.addEventListener('hashchange', () => {
+    if (!hashChangePending) {
+        requestAnimationFrame(() => {
+            router();
+            hashChangePending = false;
+        });
+        hashChangePending = true;
+    }
+});
 window.addEventListener('load', () => {
     initTheme();
     router();

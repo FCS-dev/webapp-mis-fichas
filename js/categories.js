@@ -11,6 +11,7 @@ function renderCategoriesSection() {
         </div>
         <div class="table-scroll">
             <table class="data-table">
+                <caption>Categorías activas</caption>
                 <thead>
                     <tr>
                         <th>Nombre</th>
@@ -70,6 +71,8 @@ function renderCatPagination() {
 
 function changeCatPage(page) {
     catPage = page;
+    const tbody = document.getElementById('catBody');
+    if (tbody) tbody.innerHTML = '<tr><td colspan="2" class="loading-spinner">Cargando…</td></tr>';
     loadCategoriesData();
 }
 

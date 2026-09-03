@@ -4,6 +4,7 @@ function renderSubcategoriesSection() {
     subPage = 0;
 
     document.getElementById('dashContent').innerHTML = `
+        <button class="btn-back-dashboard" onclick="window.navigateTo('dashboard')">&#x2190; Volver al panel</button>
         <div class="section-header">
             <h2>Subcategor&iacute;as</h2>
             <p>Gesti&oacute;n de subcategor&iacute;as</p>
@@ -13,6 +14,7 @@ function renderSubcategoriesSection() {
         </div>
         <div class="table-scroll">
             <table class="data-table">
+                <caption>Gestión de subcategorías</caption>
                 <thead>
                     <tr>
                         <th>Nombre</th>
@@ -60,8 +62,8 @@ function renderSubTable() {
             <td>${escHtml(s.categoryName || getCategoryName(s.categoryId))}</td>
             <td>${escHtml(s.comments || '—')}</td>
             <td class="actions-cell">
-                <button class="btn-icon" onclick="window.editSub(${s.id})" title="Editar">&#x270E;</button>
-                <button class="btn-icon btn-icon-danger" onclick="window.deleteSub(${s.id})" title="Eliminar">&#x2715;</button>
+                <button class="btn-icon" onclick="window.editSub(${s.id})" title="Editar" aria-label="Editar subcategoría">&#x270E;</button>
+                <button class="btn-icon btn-icon-danger" onclick="window.deleteSub(${s.id})" title="Eliminar" aria-label="Eliminar subcategoría">&#x2715;</button>
             </td>
         </tr>`
     ).join('');
@@ -78,6 +80,8 @@ function renderSubPagination() {
 
 function changeSubPage(page) {
     subPage = page;
+    const tbody = document.getElementById('subBody');
+    if (tbody) tbody.innerHTML = '<tr><td colspan="4" class="loading-spinner">Cargando…</td></tr>';
     loadSubcategoriesData();
 }
 
@@ -92,7 +96,7 @@ async function showSubForm(subId) {
     ).join('');
 
     showModal({
-        title: sub ? 'Editar subcategoria' : 'Nueva subcategoria',
+        title: sub ? 'Editar subcategoría' : 'Nueva subcategoría',
         bodyHtml: `
             <form id="subForm">
                 <div class="form-group">
@@ -114,7 +118,7 @@ async function showSubForm(subId) {
                     <button type="button" class="btn-secondary" onclick="window.hideModal()">Cancelar</button>
                     <button type="submit" class="btn-primary">${sub ? 'Guardar cambios' : 'Crear subcategor&iacute;a'}</button>
                 </div>
-                <p class="form-error" id="subFormError"></p>
+                <p class="form-error" id="subFormError" role="alert" aria-live="polite"></p>
             </form>`
     });
 
@@ -145,13 +149,13 @@ async function handleSubSubmit(e) {
         hideModal();
         window.__editingSubId = null;
         subPage = 0;
-        showToast('Subcategoria guardada correctamente', 'success');
+        showToast('Subcategoría guardada correctamente', 'success');
         await loadSubcategoriesData();
     } catch (err) {
         errorEl.textContent = err.message;
     } finally {
         btn.disabled = false;
-        btn.textContent = window.__editingSubId ? 'Guardar cambios' : 'Crear subcategor&iacute;a';
+        btn.textContent = window.__editingSubId ? 'Guardar cambios' : 'Crear subcategoría';
     }
 }
 
@@ -161,10 +165,10 @@ async function editSub(id) {
 }
 
 function deleteSub(id) {
-    showConfirm('Eliminar esta subcategoria?', async () => {
+    showConfirm('¿Eliminar esta subcategoría?', async () => {
         try {
             await apiRequest('DELETE', `/subcategories/${id}`);
-            showToast('Subcategoria eliminada', 'success');
+            showToast('Subcategoría eliminada', 'success');
             subPage = 0;
             await loadSubcategoriesData();
         } catch (err) {

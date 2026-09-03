@@ -1,6 +1,10 @@
 // ===================================================================
 // CHARTS
 // ===================================================================
+function getCssVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
 const CHART_COLORS = [
     '#4f46e5', '#059669', '#dc2626', '#f59e0b', '#8b5cf6',
     '#ec4899', '#14b8a6', '#f97316', '#6366f1', '#84cc16',
@@ -8,11 +12,11 @@ const CHART_COLORS = [
 ];
 
 function getChartTextColor() {
-    return document.documentElement.classList.contains('dark') ? '#e2e8f0' : '#475569';
+    return document.documentElement.classList.contains('dark') ? getCssVar('--text') : '#475569';
 }
 
 function getChartGridColor() {
-    return document.documentElement.classList.contains('dark') ? '#334155' : '#e2e8f0';
+    return document.documentElement.classList.contains('dark') ? getCssVar('--border') : '#e2e8f0';
 }
 
 function destroyChart(ref) {
@@ -74,7 +78,7 @@ Chart.register({
             if (!value) return;
             const pos = el.tooltipPosition();
             ctx.font = 'bold 11px sans-serif';
-            ctx.fillStyle = isDark ? '#e2e8f0' : '#1e293b';
+            ctx.fillStyle = isDark ? getCssVar('--text') : '#1e293b';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.shadowColor = isDark ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.6)';

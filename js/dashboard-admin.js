@@ -13,101 +13,143 @@ function renderAdminDashboardSection() {
             <p id="adminDashboardTimestamp" style="font-size:0.75rem;color:var(--text-secondary);margin-top:4px;"></p>
         </div>
 
-        <div class="admin-section" id="sec1">
-            <div class="admin-section-header">
-                <div class="admin-section-title-group">
-                    <h3>Evoluci&oacute;n de Usuarios</h3>
+        <div class="admin-hero-cards" id="adminHeroCards">
+            <div class="admin-hero-card"><div class="skeleton skeleton-text"></div></div>
+            <div class="admin-hero-card"><div class="skeleton skeleton-text"></div></div>
+            <div class="admin-hero-card"><div class="skeleton skeleton-text"></div></div>
+            <div class="admin-hero-card"><div class="skeleton skeleton-text"></div></div>
+        </div>
+
+        <div class="admin-accordion" id="adminAccordion">
+            <div class="accordion-item open" data-accordion="sec1">
+                <button class="accordion-header" onclick="window.toggleAccordion('sec1')" aria-expanded="true">
+                    <span class="accordion-title">Evoluci&oacute;n de Usuarios</span>
+                    <span class="accordion-chevron">&#x25BC;</span>
+                </button>
+                <div class="accordion-panel">
                     <p class="admin-section-criteria" id="sec1Criteria"></p>
-                </div>
-                <div class="admin-section-filters" id="sec1Filters"></div>
-            </div>
-            <div class="stat-cards" id="sec1Cards"><div class="loading-message">Cargando…</div></div>
-            <div class="chart-card" style="margin-top:12px"><div class="chart-wrapper"><canvas id="sec1Chart"></canvas></div></div>
-        </div>
-
-        <div class="admin-section" id="sec2">
-            <div class="admin-section-header">
-                <div class="admin-section-title-group">
-                    <h3>Evoluci&oacute;n de Transacciones</h3>
-                    <p class="admin-section-criteria" id="sec2Criteria"></p>
-                </div>
-                <div class="admin-section-filters" id="sec2Filters"></div>
-            </div>
-            <div class="stat-cards" id="sec2Cards"><div class="loading-message">Cargando…</div></div>
-            <div class="chart-card" style="margin-top:12px"><div class="chart-wrapper"><canvas id="sec2Chart"></canvas></div></div>
-        </div>
-
-        <div class="admin-section" id="sec5">
-            <div class="admin-section-header">
-                <div class="admin-section-title-group">
-                    <h3>Usuarios con Mayor Actividad</h3>
-                    <p class="admin-section-criteria" id="sec5Criteria"></p>
-                </div>
-                <div class="admin-section-filters" id="sec5Filters"></div>
-            </div>
-            <div class="mini-tables" id="sec5Cards"><div class="loading-message">Cargando…</div></div>
-        </div>
-
-        <div class="admin-section" id="sec6">
-            <div class="admin-section-header">
-                <div class="admin-section-title-group">
-                    <h3>Distribuci&oacute;n de Usuarios por Actividad</h3>
-                    <p class="admin-section-criteria" id="sec6Criteria"></p>
-                </div>
-                <div class="admin-section-filters" id="sec6Filters"></div>
-            </div>
-            <div id="sec6Cards"><div class="loading-message">Cargando…</div></div>
-        </div>
-
-        <div class="admin-section" id="secExpBreakdown">
-            <div class="admin-section-header">
-                <div class="admin-section-title-group">
-                    <h3>Desglose de Gastos</h3>
-                    <p class="admin-section-criteria" id="expBreakdownCriteria"></p>
-                </div>
-                <div class="admin-section-filters" id="expBreakdownFilters"></div>
-            </div>
-            <div class="dashboard-charts">
-                <div class="chart-card">
-                    <h4 class="chart-title">Gastos por categor&iacute;a</h4>
-                    <div class="chart-wrapper"><canvas id="adminCategoryChart"></canvas></div>
-                </div>
-                <div class="chart-card">
-                    <div class="chart-header">
-                        <div>
-                            <h4 class="chart-title" style="margin:0">Gastos por subcategor&iacute;a</h4>
-                            <span id="adminSubcategoryLabel" class="chart-sub-label"></span>
-                        </div>
-                        <select id="adminCategoryFilter" onchange="window.handleAdminCategoryFilterChange()">
-                            <option value="">Seleccionar</option>
-                        </select>
+                    <div class="admin-section-filters" id="sec1Filters"></div>
+                    <div class="stat-cards" id="sec1Cards">
+                        <div class="stat-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
+                        <div class="stat-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
                     </div>
-                    <div class="chart-wrapper"><canvas id="adminSubcategoryChart"></canvas></div>
+                    <div class="chart-card" style="margin-top:12px"><div class="chart-wrapper"><canvas id="sec1Chart" role="img" aria-label="Gráfico de evolución de usuarios"></canvas></div></div>
                 </div>
             </div>
-        </div>
 
-        <div class="admin-section" id="sec3">
-            <div class="admin-section-header">
-                <div class="admin-section-title-group">
-                    <h3>Movimientos de Dinero</h3>
+            <div class="accordion-item" data-accordion="sec2">
+                <button class="accordion-header" onclick="window.toggleAccordion('sec2')" aria-expanded="false">
+                    <span class="accordion-title">Evoluci&oacute;n de Transacciones</span>
+                    <span class="accordion-chevron">&#x25BC;</span>
+                </button>
+                <div class="accordion-panel">
+                    <p class="admin-section-criteria" id="sec2Criteria"></p>
+                    <div class="admin-section-filters" id="sec2Filters"></div>
+                    <div class="stat-cards" id="sec2Cards">
+                        <div class="stat-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
+                        <div class="stat-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
+                    </div>
+                    <div class="chart-card" style="margin-top:12px"><div class="chart-wrapper"><canvas id="sec2Chart" role="img" aria-label="Gráfico de evolución de transacciones"></canvas></div></div>
+                </div>
+            </div>
+
+            <div class="accordion-item" data-accordion="sec5">
+                <button class="accordion-header" onclick="window.toggleAccordion('sec5')" aria-expanded="false">
+                    <span class="accordion-title">Usuarios con Mayor Actividad</span>
+                    <span class="accordion-chevron">&#x25BC;</span>
+                </button>
+                <div class="accordion-panel">
+                    <p class="admin-section-criteria" id="sec5Criteria"></p>
+                    <div class="admin-section-filters" id="sec5Filters"></div>
+                    <div class="mini-tables" id="sec5Cards">
+                        <div class="mini-table-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
+                        <div class="mini-table-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
+                        <div class="mini-table-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item" data-accordion="sec6">
+                <button class="accordion-header" onclick="window.toggleAccordion('sec6')" aria-expanded="false">
+                    <span class="accordion-title">Distribuci&oacute;n de Usuarios por Actividad</span>
+                    <span class="accordion-chevron">&#x25BC;</span>
+                </button>
+                <div class="accordion-panel">
+                    <p class="admin-section-criteria" id="sec6Criteria"></p>
+                    <div class="admin-section-filters" id="sec6Filters"></div>
+                    <div id="sec6Cards"><div class="loading-message">Cargando…</div></div>
+                </div>
+            </div>
+
+            <div class="accordion-item" data-accordion="secExpBreakdown">
+                <button class="accordion-header" onclick="window.toggleAccordion('secExpBreakdown')" aria-expanded="false">
+                    <span class="accordion-title">Desglose de Gastos</span>
+                    <span class="accordion-chevron">&#x25BC;</span>
+                </button>
+                <div class="accordion-panel">
+                    <p class="admin-section-criteria" id="expBreakdownCriteria"></p>
+                    <div class="admin-section-filters" id="expBreakdownFilters"></div>
+                    <div class="dashboard-charts">
+                        <div class="chart-card">
+                            <p class="chart-title">Gastos por categor&iacute;a</p>
+                            <div class="chart-wrapper"><canvas id="adminCategoryChart" role="img" aria-label="Gráfico de gastos por categoría"></canvas></div>
+                        </div>
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <div>
+                                    <p class="chart-title" style="margin:0">Gastos por subcategor&iacute;a</p>
+                                    <span id="adminSubcategoryLabel" class="chart-sub-label"></span>
+                                </div>
+                                <select id="adminCategoryFilter" onchange="window.handleAdminCategoryFilterChange()">
+                                    <option value="">Seleccionar</option>
+                                </select>
+                            </div>
+                            <div class="chart-wrapper"><canvas id="adminSubcategoryChart" role="img" aria-label="Gráfico de gastos por subcategoría"></canvas></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item" data-accordion="sec3">
+                <button class="accordion-header" onclick="window.toggleAccordion('sec3')" aria-expanded="false">
+                    <span class="accordion-title">Movimientos de Dinero</span>
+                    <span class="accordion-chevron">&#x25BC;</span>
+                </button>
+                <div class="accordion-panel">
                     <p class="admin-section-criteria" id="sec3Criteria"></p>
+                    <div class="admin-section-filters" id="sec3Filters"></div>
+                    <div class="money-cards" id="sec3Cards">
+                        <div class="money-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
+                        <div class="money-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
+                        <div class="money-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
+                    </div>
                 </div>
-                <div class="admin-section-filters" id="sec3Filters"></div>
             </div>
-            <div class="money-cards" id="sec3Cards"><div class="loading-message">Cargando…</div></div>
-        </div>
 
-        <div class="admin-section" id="sec4">
-            <div class="admin-section-header">
-                <div class="admin-section-title-group">
-                    <h3>Promedios</h3>
+            <div class="accordion-item" data-accordion="sec4">
+                <button class="accordion-header" onclick="window.toggleAccordion('sec4')" aria-expanded="false">
+                    <span class="accordion-title">Promedios</span>
+                    <span class="accordion-chevron">&#x25BC;</span>
+                </button>
+                <div class="accordion-panel">
                     <p class="admin-section-criteria" id="sec4Criteria"></p>
+                    <div class="admin-section-filters" id="sec4Filters"></div>
+                    <div class="averages-grid" id="sec4Cards">
+                        <div class="avg-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
+                        <div class="avg-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
+                        <div class="avg-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
+                    </div>
                 </div>
-                <div class="admin-section-filters" id="sec4Filters"></div>
             </div>
-            <div class="averages-grid" id="sec4Cards"><div class="loading-message">Cargando…</div></div>
         </div>`;
+
+    document.querySelectorAll('.accordion-panel').forEach(panel => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'accordion-content';
+        wrapper.innerHTML = panel.innerHTML;
+        panel.innerHTML = '';
+        panel.appendChild(wrapper);
+    });
 
     renderSec1Filters();
     renderSec2Filters();
@@ -118,6 +160,17 @@ function renderAdminDashboardSection() {
     renderSec6Filters();
     loadAdminAllData();
 }
+
+function toggleAccordion(sectionId) {
+    const item = document.querySelector(`[data-accordion="${sectionId}"]`);
+    if (!item) return;
+    const wasOpen = item.classList.contains('open');
+    item.classList.toggle('open');
+    const btn = item.querySelector('.accordion-header');
+    if (btn) btn.setAttribute('aria-expanded', !wasOpen);
+}
+
+window.toggleAccordion = toggleAccordion;
 
 // ===================================================================
 // ADMIN DASHBOARD — HELPERS
@@ -164,8 +217,8 @@ function getMonthPickerValue(selector) {
 function renderComparisonIndicator(current, previous) {
     const pct = previous === 0 ? (current === 0 ? 0 : 100) : ((current - previous) / previous * 100);
     const rounded = Math.round(pct * 10) / 10;
-    if (rounded > 0) return `<span class="stat-card-change up">&#x25B2; ${rounded}%</span>`;
-    if (rounded < 0) return `<span class="stat-card-change down">&#x25BC; ${Math.abs(rounded)}%</span>`;
+    if (rounded > 0) return `<span class="stat-card-change up" aria-hidden="true">&#x25B2; ${rounded}%</span>`;
+    if (rounded < 0) return `<span class="stat-card-change down" aria-hidden="true">&#x25BC; ${Math.abs(rounded)}%</span>`;
     return `<span class="stat-card-change neutral">— 0%</span>`;
 }
 
@@ -347,20 +400,20 @@ async function loadExpBreakdownData(catExpenses) {
         if (chartsEl && chartsEl.querySelector('.empty-state')) {
             chartsEl.innerHTML = `
                 <div class="chart-card">
-                    <h4 class="chart-title">Gastos por categor&iacute;a</h4>
-                    <div class="chart-wrapper"><canvas id="adminCategoryChart"></canvas></div>
+                    <p class="chart-title">Gastos por categor&iacute;a</p>
+                    <div class="chart-wrapper"><canvas id="adminCategoryChart" role="img" aria-label="Gráfico de gastos por categoría"></canvas></div>
                 </div>
                 <div class="chart-card">
                     <div class="chart-header">
                         <div>
-                            <h4 class="chart-title" style="margin:0">Gastos por subcategor&iacute;a</h4>
+                            <p class="chart-title" style="margin:0">Gastos por subcategor&iacute;a</p>
                             <span id="adminSubcategoryLabel" class="chart-sub-label"></span>
                         </div>
                         <select id="adminCategoryFilter" onchange="window.handleAdminCategoryFilterChange()">
                             <option value="">Seleccionar</option>
                         </select>
                     </div>
-                    <div class="chart-wrapper"><canvas id="adminSubcategoryChart"></canvas></div>
+                    <div class="chart-wrapper"><canvas id="adminSubcategoryChart" role="img" aria-label="Gráfico de gastos por subcategoría"></canvas></div>
                 </div>`;
         }
 
@@ -490,6 +543,7 @@ async function loadAdminAllData() {
             apiRequest('GET', `/dashboard/admin/expenses-by-category?userId=${expBreakdownUserId}&monthFrom=${mfExp}&yearFrom=${yfExp}&monthTo=${mtExp}&yearTo=${ytExp}`)
         ]);
 
+        renderAdminHeroCards({ sec1Data, sec2Data, sec3Data, sec4Data, sec5Data, sec6Data, expBreakdownData });
         renderSec1(sec1Data);
         renderSec2(sec2Data);
         renderSec3(sec3Data);
@@ -499,7 +553,43 @@ async function loadAdminAllData() {
         loadExpBreakdownData(expBreakdownData);
     } catch (err) {
         showToast('Error al cargar datos del panel', 'error');
+        ['sec1Cards','sec2Cards','sec3Cards','sec4Cards','sec5Cards','sec6Cards'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.innerHTML = '<div class="error-message">Error al cargar datos</div>';
+        });
     }
+}
+
+function renderAdminHeroCards(allData) {
+    const el = document.getElementById('adminHeroCards');
+    if (!el) return;
+
+    const sec1 = allData.sec1Data;
+    const sec3 = allData.sec3Data;
+    const sec4 = allData.sec4Data;
+
+    const activeUsers = sec1?.summary?.activeUsers?.current ?? '—';
+    const totalIncome = sec3?.totalIncome != null ? formatMoney(sec3.totalIncome) : '—';
+    const totalExpense = sec3?.totalExpense != null ? formatMoney(sec3.totalExpense) : '—';
+    const avgIncome = sec4?.globalAvgIncomePerUser != null ? formatMoney(sec4.globalAvgIncomePerUser) : '—';
+
+    el.innerHTML = `
+        <div class="admin-hero-card">
+            <span class="admin-hero-label">Usuarios activos</span>
+            <span class="admin-hero-value">${Number(activeUsers).toLocaleString('es-ES')}</span>
+        </div>
+        <div class="admin-hero-card income">
+            <span class="admin-hero-label">Ingresos totales</span>
+            <span class="admin-hero-value">${totalIncome}</span>
+        </div>
+        <div class="admin-hero-card expense">
+            <span class="admin-hero-label">Gastos totales</span>
+            <span class="admin-hero-value">${totalExpense}</span>
+        </div>
+        <div class="admin-hero-card">
+            <span class="admin-hero-label">Ingreso promedio / usuario</span>
+            <span class="admin-hero-value">${avgIncome}</span>
+        </div>`;
 }
 
 async function loadAdminUsers() {
@@ -534,7 +624,7 @@ async function loadSec1Data() {
     try {
         const data = await apiRequest('GET', `/dashboard/admin/user-evolution?monthFrom=${sec1MonthFrom}&yearFrom=${sec1YearFrom}&monthTo=${sec1MonthTo}&yearTo=${sec1YearTo}`);
         renderSec1(data);
-    } catch { document.getElementById('sec1Cards').innerHTML = '<div class="error-message">Error al cargar</div>'; }
+    } catch { destroyChart('userGrowth'); document.getElementById('sec1Cards').innerHTML = '<div class="error-message">Error al cargar</div>'; }
 }
 
 function renderSec1(data) {
@@ -619,7 +709,7 @@ async function loadSec2Data() {
     try {
         const data = await apiRequest('GET', `/dashboard/admin/transaction-evolution?monthFrom=${sec2MonthFrom}&yearFrom=${sec2YearFrom}&monthTo=${sec2MonthTo}&yearTo=${sec2YearTo}&userId=${sec2UserId}`);
         renderSec2(data);
-    } catch { document.getElementById('sec2Cards').innerHTML = '<div class="error-message">Error al cargar</div>'; }
+    } catch { destroyChart('incomeVsExpense'); document.getElementById('sec2Cards').innerHTML = '<div class="error-message">Error al cargar</div>'; }
 }
 
 function renderSec2(data) {
@@ -711,15 +801,15 @@ function renderSec3(data) {
     }
     document.getElementById('sec3Cards').innerHTML = `
         <div class="money-card">
-            <span class="money-card-label">Total Income</span>
+            <span class="money-card-label">Ingresos totales</span>
             <span class="money-card-value income">${formatMoney(data.totalIncome)}</span>
         </div>
         <div class="money-card">
-            <span class="money-card-label">Total Expense</span>
+            <span class="money-card-label">Gastos totales</span>
             <span class="money-card-value expense">${formatMoney(data.totalExpense)}</span>
         </div>
         <div class="money-card">
-            <span class="money-card-label">Total Balance</span>
+            <span class="money-card-label">Balance total</span>
             <span class="money-card-value" style="color:${Number(data.totalBalance) >= 0 ? 'var(--income)' : 'var(--expense)'}">${formatMoney(data.totalBalance)}</span>
         </div>`;
 }
@@ -749,15 +839,15 @@ function renderSec4(data) {
     }
     let html = `
         <div class="avg-card">
-            <span class="avg-card-label">Avg Income / usuario</span>
+            <span class="avg-card-label">Ingreso promedio / usuario</span>
             <span class="avg-card-value income">${formatMoney(data.globalAvgIncomePerUser)}</span>
         </div>
         <div class="avg-card">
-            <span class="avg-card-label">Avg Expense / usuario</span>
+            <span class="avg-card-label">Gasto promedio / usuario</span>
             <span class="avg-card-value expense">${formatMoney(data.globalAvgExpensePerUser)}</span>
         </div>
         <div class="avg-card">
-            <span class="avg-card-label">Avg Transacciones / usuario</span>
+            <span class="avg-card-label">Transacciones promedio / usuario</span>
             <span class="avg-card-value">${Number(data.globalAvgTransactionsPerUser).toLocaleString('es-ES', {minimumFractionDigits:1,maximumFractionDigits:1})}</span>
         </div>`;
 
@@ -765,11 +855,11 @@ function renderSec4(data) {
         html += `
             <div class="avg-card-divider"></div>
             <div class="avg-card">
-                <span class="avg-card-label">Avg Income (filtrado)</span>
+                <span class="avg-card-label">Ingreso promedio (filtrado)</span>
                 <span class="avg-card-value income">${formatMoney(data.filteredAvgIncome)}</span>
             </div>
             <div class="avg-card">
-                <span class="avg-card-label">Avg Expense (filtrado)</span>
+                <span class="avg-card-label">Gasto promedio (filtrado)</span>
                 <span class="avg-card-value expense">${formatMoney(data.filteredAvgExpense)}</span>
             </div>`;
     }
@@ -809,15 +899,15 @@ function renderSec5(data) {
     }
     document.getElementById('sec5Cards').innerHTML = `
         <div class="mini-table-card">
-            <h4>Top Transacciones</h4>
+            <p style="font-weight:600;margin-bottom:8px">Top Transacciones</p>
             ${buildMiniTable(txList)}
         </div>
         <div class="mini-table-card">
-            <h4>Top Gastos</h4>
+            <p style="font-weight:600;margin-bottom:8px">Top Gastos</p>
             ${buildMiniTable(expList, true)}
         </div>
         <div class="mini-table-card">
-            <h4>Top Ingresos</h4>
+            <p style="font-weight:600;margin-bottom:8px">Top Ingresos</p>
             ${buildMiniTable(incList, true)}
         </div>`;
 }
@@ -869,7 +959,7 @@ function renderSec6(data) {
         html += `
             <div class="activity-row">
                 <span class="activity-label">${c.label}</span>
-                <div class="activity-bar"><div class="activity-bar-fill ${c.cls}" style="width:${cat.percentage}%"></div></div>
+                <div class="activity-bar"><div class="activity-bar-fill ${c.cls}" style="transform:scaleX(${cat.percentage / 100})"></div></div>
                 <span class="activity-percent">${cat.percentage}%</span>
                 <span class="activity-count">(${cat.count})</span>
             </div>`;
