@@ -666,7 +666,7 @@ html.dark .dash-header.shrink {
 
 /* ===== Footer ===== */
 .dash-footer {
-    padding: 16px 24px;
+    padding: 16px 16px;
     font-size: 0.8rem;
     color: var(--text-secondary);
     border-top: 1px solid var(--border);
@@ -1285,7 +1285,7 @@ html.dark .badge-expense {
 /* ===== Tablet: min-width 641px ===== */
 @media (min-width: 641px) {
     .dash-header {
-        padding: 24px 32px;
+        padding: 16px 16px;
     }
 
     .dash-header-right {
@@ -2179,7 +2179,7 @@ html.dark .stat-card-change.down {
 /* ===== Floating Action Button — Transacciones (USER) ===== */
 .fab-tx {
     position: fixed;
-    bottom: 28px;
+    bottom: 52px;
     right: 28px;
     height: 52px;
     padding: 0 22px;

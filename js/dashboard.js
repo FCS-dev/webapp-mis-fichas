@@ -150,15 +150,15 @@ function renderDashboardLayout() {
                 <div class="dash-header-left">
                     <button class="sidebar-toggle" onclick="window.toggleSidebar()" aria-label="Menú">&#x2630;</button>
                     <a href="#/" onclick="window.navigateTo('dashboard')" class="logo-desktop logo-link">
-                        <img class="logo" src="assets/logo/mis-fichas-logo-modo-claro.png" alt="Mis Fichas" style="height:128px;width:auto">
+                        <img class="logo" src="assets/logo/mis-fichas-logo-modo-claro.png" alt="Mis Fichas" style="height:96px;width:auto">
                     </a>
                 </div>
                 <div class="dash-header-center">
                     <a href="#/" onclick="window.navigateTo('dashboard')" class="logo-mobile logo-link">
-                        <img class="logo" src="assets/logo/mis-fichas-logo-modo-claro.png" alt="Mis Fichas" style="height:128px;width:auto">
+                        <img class="logo" src="assets/logo/mis-fichas-logo-modo-claro.png" alt="Mis Fichas" style="height:96px;width:auto">
                     </a>
                     <h1 class="header-user-info">
-                        ${!isAdmin() ? '<span class="header-welcome">Bienvenido,</span>' : ""}
+                        ${!isAdmin() ? '<span class="header-welcome">Bienvenido,&nbsp;</span>' : ""}
                         <span class="header-name">${escHtml(user?.name || "")}</span>
                         <span class="header-email">${escHtml(user?.email || "")}</span>
                     </h1>
