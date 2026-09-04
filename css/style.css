@@ -1739,12 +1739,13 @@ html.dark .comparison-icon.expense {
 
     .balance-section {
         flex-direction: row;
-        align-items: flex-start;
+        align-items: center;
+        gap: 48px;
     }
 
     .monthly-summary-table {
         min-width: 240px;
-        max-width: 280px;
+        max-width: 400px;
         flex-shrink: 0;
     }
 
@@ -2412,6 +2413,7 @@ html.dark .stat-card-change.down {
     color: var(--text-secondary);
     margin: 8px 0;
 }
+
 .page-size-select {
     padding: 4px 8px;
     border: 1px solid var(--border);
