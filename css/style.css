@@ -477,6 +477,10 @@ html.dark .dash-header.shrink {
     height: auto;
 }
 
+.logo-mobile img.logo {
+    height: 48px;
+}
+
 .logo-desktop {
     display: none;
 }
@@ -488,7 +492,7 @@ html.dark .dash-header.shrink {
 .dash-header-center {
     flex: 1;
     min-width: 0;
-    overflow: hidden;
+    overflow: visible;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -497,7 +501,7 @@ html.dark .dash-header.shrink {
 }
 
 .header-user-info {
-    font-size: 1.5rem;
+    font-size: 1.1rem;
     font-weight: 400;
     color: var(--text);
     display: flex;
@@ -508,13 +512,13 @@ html.dark .dash-header.shrink {
 }
 
 .header-welcome {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     font-weight: 400;
     color: var(--text-secondary);
 }
 
 .header-name {
-    font-size: 1.5rem;
+    font-size: 1.1rem;
     font-weight: 700;
     color: var(--text);
     margin: 0;
@@ -522,7 +526,7 @@ html.dark .dash-header.shrink {
 }
 
 .header-email {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     font-weight: 400;
     color: var(--text-secondary);
     margin: 0;
@@ -676,11 +680,13 @@ html.dark .dash-header.shrink {
 
 .footer-inner {
     display: flex;
+    flex-direction: column;
+    text-align: center;
     justify-content: space-between;
     align-items: center;
     max-width: 1200px;
     margin: 0 auto;
-    gap: 16px;
+    gap: 8px;
 }
 
 .footer-brand {
@@ -692,7 +698,7 @@ html.dark .dash-header.shrink {
 
 .footer-links {
     display: flex;
-    gap: 20px;
+    gap: 16px;
     align-items: center;
 }
 
@@ -710,42 +716,6 @@ html.dark .dash-header.shrink {
 .footer-copy {
     white-space: nowrap;
     font-size: 0.75rem;
-}
-
-@media (max-width: 640px) {
-    .header-user-info {
-        font-size: 1.1rem;
-    }
-
-    .header-name {
-        font-size: 1.1rem;
-    }
-
-    .header-welcome {
-        font-size: 0.75rem;
-    }
-
-    .header-email {
-        font-size: 0.75rem;
-    }
-
-    .logo-mobile img.logo {
-        height: 48px;
-    }
-
-    .dash-header-center {
-        overflow: visible;
-    }
-
-    .footer-inner {
-        flex-direction: column;
-        text-align: center;
-        gap: 8px;
-    }
-
-    .footer-links {
-        gap: 16px;
-    }
 }
 
 .section-header {
@@ -1375,6 +1345,36 @@ html.dark .badge-expense {
 
     .range-checkboxes {
         flex-direction: row;
+    }
+
+    .header-user-info {
+        font-size: 1.5rem;
+    }
+
+    .header-welcome {
+        font-size: 0.85rem;
+    }
+
+    .header-name {
+        font-size: 1.5rem;
+    }
+
+    .header-email {
+        font-size: 0.85rem;
+    }
+
+    .dash-header-center {
+        overflow: hidden;
+    }
+
+    .footer-inner {
+        flex-direction: row;
+        text-align: left;
+        gap: 16px;
+    }
+
+    .footer-links {
+        gap: 20px;
     }
 }
 
@@ -2179,8 +2179,8 @@ html.dark .stat-card-change.down {
 /* ===== Floating Action Button — Transacciones (USER) ===== */
 .fab-tx {
     position: fixed;
-    bottom: 52px;
-    right: 28px;
+    bottom: 16px;
+    right: 16px;
     height: 52px;
     padding: 0 22px;
     border-radius: 28px;
@@ -2213,10 +2213,10 @@ html.dark .stat-card-change.down {
     line-height: 1;
 }
 
-@media (max-width: 400px) {
+@media (min-width: 401px) {
     .fab-tx {
-        bottom: 16px;
-        right: 16px;
+        bottom: 52px;
+        right: 28px;
     }
 }
 
