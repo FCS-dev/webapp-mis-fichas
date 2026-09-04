@@ -17,6 +17,7 @@ async function renderTransactionsSection() {
                     </select>
                 </label>
             </div>
+            <div id="txPageSize"></div>
             <div class="table-scroll">
                 <table class="data-table">
                     <caption>Transacciones del usuario</caption>
@@ -38,21 +39,15 @@ async function renderTransactionsSection() {
             <div class="pagination" id="txPagination"></div>`;
     populateUserSelect("txAdminUserSelect", txAdminUserId, "Seleccionar...");
   } else {
-    // <button class="btn-back-dashboard" onclick="window.navigateTo('dashboard')">&#x2190; Volver al panel</button>
-    // <div class="section-actions">
-    //   <button class="btn-primary" onclick="window.showTxForm()">
-    //     + Nueva transacci&oacute;n
-    //   </button>
-    // </div>;
     document.getElementById("dashContent").innerHTML = `
             <div class="section-header">
-                <h2>Transacciones</h2>
+                <h2>Mis transacciones</h2>
                 <p>Todas las transacciones</p>
             </div>
             
+            <div id="txPageSize"></div>
             <div class="table-scroll">
                 <table class="data-table">
-                    <caption>Mis transacciones</caption>
                     <thead>
                         <tr>
                             <th>Fecha</th>
@@ -75,7 +70,7 @@ async function renderTransactionsSection() {
 
 async function loadTransactionsData() {
   try {
-    let url = `/transactions/date-range?page=${txPage}&size=20&sort=transactionDate,desc`;
+    let url = `/transactions/date-range?page=${txPage}&size=${txPageSize}&sort=transactionDate,desc`;
     if (isAdmin() && txAdminUserId > 0) {
       url += `&userId=${txAdminUserId}`;
     }
@@ -123,6 +118,12 @@ function renderTxTable() {
 
 function renderTxPagination() {
   const el = document.getElementById("txPagination");
+  const sizeEl = document.getElementById("txPageSize");
+  if (sizeEl)
+    sizeEl.innerHTML = buildPageSizeSelect(
+      txPageSize,
+      "window.handleTxPageSizeChange",
+    );
   if (!txPagination || txPagination.totalPages <= 1) {
     el.innerHTML = "";
     return;
@@ -136,6 +137,12 @@ function changeTxPage(page) {
   if (tbody)
     tbody.innerHTML =
       '<tr><td colspan="6" class="loading-spinner">Cargando…</td></tr>';
+  loadTransactionsData();
+}
+
+function handleTxPageSizeChange(value) {
+  txPageSize = parseInt(value);
+  txPage = 0;
   loadTransactionsData();
 }
 
@@ -162,7 +169,8 @@ async function showTxForm(txId) {
 
   const today = new Date().toISOString().split("T")[0];
 
-  const catOptions = cachedCategories
+  const catOptions = [...cachedCategories]
+    .sort((a, b) => a.id - b.id)
     .map(
       (c) =>
         `<option value="${c.id}"${tx?.categoryId === c.id ? " selected" : ""}>${escHtml(c.name)}</option>`,
@@ -311,4 +319,5 @@ window.showTxForm = showTxForm;
 window.editTx = editTx;
 window.deleteTx = deleteTx;
 window.changeTxPage = changeTxPage;
+window.handleTxPageSizeChange = handleTxPageSizeChange;
 window.handleTxAdminUserChange = handleTxAdminUserChange;

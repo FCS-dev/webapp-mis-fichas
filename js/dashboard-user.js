@@ -72,7 +72,7 @@ function renderDashboardSection() {
         </div>
         <div class="admin-accordion" id="userChartsAccordion" style="margin-top:20px">
             <div class="accordion-item" data-accordion="userGastos">
-                <button class="accordion-header" onclick="window.toggleUserAccordion('userGastos')" aria-expanded="false">
+                <button class="accordion-header" onclick="window.toggleAccordion('userGastos')" aria-expanded="false">
                     <span class="accordion-title">Gastos</span>
                     <span class="accordion-chevron">&#x25BC;</span>
                 </button>
@@ -456,11 +456,10 @@ async function loadSubcategoryChart() {
 }
 
 function renderSubcategoryChart(data) {
-    destroyChart('subcategory');
-    const canvas = document.getElementById('subcategoryChart');
+    renderSubcategoryDoughnut('subcategoryChart', 'subcategory', data);
     const emptyEl = document.getElementById('subcategoryChartEmpty');
+    const canvas = document.getElementById('subcategoryChart');
     if (!canvas) return;
-
     if (!data.length) {
         canvas.style.display = 'none';
         if (emptyEl) emptyEl.style.display = 'block';
@@ -468,8 +467,6 @@ function renderSubcategoryChart(data) {
     }
     canvas.style.display = '';
     if (emptyEl) emptyEl.style.display = 'none';
-
-    chartSubcategory = createDoughnutChart('subcategoryChart', data.map(d => d.subcategoryName), data.map(d => d.total));
 }
 
 function updateSubcategoryLabel() {
@@ -525,12 +522,4 @@ window.handleCategoryFilterChange = handleCategoryFilterChange;
 window.handleRangeChange = handleRangeChange;
 window.refreshDashboardIfActive = refreshDashboardIfActive;
 
-function toggleUserAccordion(sectionId) {
-    const item = document.querySelector(`[data-accordion="${sectionId}"]`);
-    if (!item) return;
-    const wasOpen = item.classList.contains('open');
-    item.classList.toggle('open');
-    const btn = item.querySelector('.accordion-header');
-    if (btn) btn.setAttribute('aria-expanded', !wasOpen);
-}
-window.toggleUserAccordion = toggleUserAccordion;
+window.toggleAccordion = toggleAccordion;

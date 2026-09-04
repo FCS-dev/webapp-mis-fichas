@@ -114,3 +114,14 @@ function refreshChartTheme() {
 }
 
 window.refreshChartTheme = refreshChartTheme;
+
+function renderSubcategoryDoughnut(canvasId, chartRefProp, data) {
+    if (chartRefProp === 'subcategory' && chartSubcategory) { chartSubcategory.destroy(); chartSubcategory = null; }
+    else if (chartRefProp === 'adminSubcategory' && chartAdminSubcategory) { chartAdminSubcategory.destroy(); chartAdminSubcategory = null; }
+    const canvas = document.getElementById(canvasId);
+    if (!canvas || !data.length) return null;
+    const chart = createDoughnutChart(canvasId, data.map(d => d.subcategoryName), data.map(d => d.total));
+    if (chartRefProp === 'subcategory') chartSubcategory = chart;
+    else if (chartRefProp === 'adminSubcategory') chartAdminSubcategory = chart;
+    return chart;
+}

@@ -9,6 +9,7 @@ function renderCategoriesSection() {
             <h2>Categor&iacute;as</h2>
             <p>Listado de categor&iacute;as activas</p>
         </div>
+        <div id="catPageSize"></div>
         <div class="table-scroll">
             <table class="data-table">
                 <caption>Categorías activas</caption>
@@ -32,7 +33,7 @@ async function loadCategoriesData() {
     try {
         const res = await apiRequest(
             'GET',
-            `/categories?page=${catPage}&size=20&sort=name,asc`
+            `/categories?page=${catPage}&size=${catPageSize}&sort=name,asc`
         );
         catCategories = res?.content || [];
         catPagination = res?.pagination || null;
@@ -62,6 +63,8 @@ function renderCatTable() {
 
 function renderCatPagination() {
     const el = document.getElementById('catPagination');
+    const sizeEl = document.getElementById('catPageSize');
+    if (sizeEl) sizeEl.innerHTML = buildPageSizeSelect(catPageSize, 'window.handleCatPageSizeChange');
     if (!catPagination || catPagination.totalPages <= 1) {
         el.innerHTML = '';
         return;
@@ -76,7 +79,14 @@ function changeCatPage(page) {
     loadCategoriesData();
 }
 
+function handleCatPageSizeChange(value) {
+    catPageSize = parseInt(value);
+    catPage = 0;
+    loadCategoriesData();
+}
+
 // ===================================================================
 // PAGINATION HELPER
 // ===================================================================
 window.changeCatPage = changeCatPage;
+window.handleCatPageSizeChange = handleCatPageSizeChange;

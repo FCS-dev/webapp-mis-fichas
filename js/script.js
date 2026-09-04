@@ -5,10 +5,6 @@ function initTheme() {
     }
 }
 
-function getThemeIcon() {
-    return document.documentElement.classList.contains('dark') ? '\u2600' : '\u263E';
-}
-
 function toggleTheme() {
     document.documentElement.classList.toggle('dark');
     const isDark = document.documentElement.classList.contains('dark');

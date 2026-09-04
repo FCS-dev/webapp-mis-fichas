@@ -21,20 +21,21 @@ function saveUserInfoFromToken(accessToken) {
     try {
         const base64Url = accessToken.split('.')[1];
         const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(
-            atob(base64).split('').map(c =>
-                '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-            ).join('')
-        );
-        const payload = JSON.parse(jsonPayload);
+        const bytes = Uint8Array.from(atob(base64), c => c.charCodeAt(0));
+        const payload = JSON.parse(new TextDecoder().decode(bytes));
         localStorage.setItem('userInfo', JSON.stringify({
             name: payload.name || payload.sub || '',
             email: payload.sub || '',
-            role: payload.role || 'USER'
+            role: payload.role || 'USER',
+            userId: payload.userId || null
         }));
     } catch {
-        localStorage.setItem('userInfo', JSON.stringify({ name: '', email: '', role: 'USER' }));
+        localStorage.setItem('userInfo', JSON.stringify({ name: '', email: '', role: 'USER', userId: null }));
     }
+}
+
+function getUserId() {
+    return getUserInfo()?.userId || null;
 }
 
 function isAdmin() {
@@ -80,7 +81,7 @@ async function apiRequest(method, path, body) {
             const text = await res.text().catch(() => '');
             throw new Error(`Error ${res.status}${text ? ': ' + text.slice(0, 200) : ' - El servidor no devolvió JSON'}`);
         }
-        if (res.status === 401) return null;
+        if (res.status === 401 || res.status === 403) return null;
         if (!json.success) throw new Error(json.message || `Error ${res.status}`);
         return json.data;
     };

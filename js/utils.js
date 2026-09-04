@@ -25,33 +25,8 @@ function escHtml(str) {
     return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
-function getMonthDates() {
-    const now = new Date();
-    const y = now.getFullYear();
-    const m = String(now.getMonth() + 1).padStart(2, '0');
-    const lastDay = new Date(y, now.getMonth() + 1, 0).getDate();
-    return {
-        from: `${y}-${m}-01`,
-        to: `${y}-${m}-${String(lastDay).padStart(2, '0')}`
-    };
-}
-
-function getMonthLabel() {
-    const now = new Date();
-    return `${MONTH_NAMES_FULL[now.getMonth()]} ${now.getFullYear()}`;
-}
-
 function getMonthFullName(m) {
     return MONTH_NAMES_FULL[m - 1] || '';
-}
-
-function getMonthDatesForFilter(month, year) {
-    const m = String(month).padStart(2, '0');
-    const lastDay = new Date(year, month, 0).getDate();
-    return {
-        from: `${year}-${m}-01`,
-        to: `${year}-${m}-${String(lastDay).padStart(2, '0')}`
-    };
 }
 
 function validatePeriod(fromYear, fromMonth, toYear, toMonth) {

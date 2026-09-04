@@ -175,19 +175,6 @@ window.toggleAccordion = toggleAccordion;
 // ===================================================================
 // ADMIN DASHBOARD — HELPERS
 // ===================================================================
-function buildMonthOptions(selected) {
-    return MONTH_NAMES_SHORT.map((n, i) => `<option value="${i+1}"${i+1 === selected ? ' selected' : ''}>${n}</option>`).join('');
-}
-
-function buildYearOptions(selected) {
-    const year = new Date().getFullYear();
-    let html = '';
-    for (let y = year - 5; y <= year + 1; y++) {
-        html += `<option value="${y}"${y === selected ? ' selected' : ''}>${y}</option>`;
-    }
-    return html;
-}
-
 function getMaxMonthValue() {
     const now = new Date();
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
@@ -240,39 +227,12 @@ function showEmptyState(containerId) {
     if (el) el.innerHTML = '<div class="empty-state">Sin informaci&oacute;n para mostrar</div>';
 }
 
-function updateSec1Criteria() {
-    const el = document.getElementById('sec1Criteria');
-    if (el) el.textContent = criteriaPeriod(sec1MonthFrom, sec1YearFrom, sec1MonthTo, sec1YearTo);
-}
-
-function updateSec2Criteria() {
-    const el = document.getElementById('sec2Criteria');
-    if (el) el.textContent = `${criteriaUser(sec2UserId)} | ${criteriaPeriod(sec2MonthFrom, sec2YearFrom, sec2MonthTo, sec2YearTo)}`;
-}
-
-function updateExpBreakdownCriteria() {
-    const el = document.getElementById('expBreakdownCriteria');
-    if (el) el.textContent = `${criteriaUser(expBreakdownUserId)} | ${criteriaPeriod(expBreakdownMonthFrom, expBreakdownYearFrom, expBreakdownMonthTo, expBreakdownYearTo)}`;
-}
-
-function updateSec3Criteria() {
-    const el = document.getElementById('sec3Criteria');
-    if (el) el.textContent = criteriaUser(sec3UserId);
-}
-
-function updateSec4Criteria() {
-    const el = document.getElementById('sec4Criteria');
-    if (el) el.textContent = sec4UserId === 0 ? 'Todos' : criteriaUser(sec4UserId);
-}
-
-function updateSec5Criteria() {
-    const el = document.getElementById('sec5Criteria');
-    if (el) el.textContent = criteriaPeriod(sec5MonthFrom, sec5YearFrom, sec5MonthTo, sec5YearTo);
-}
-
-function updateSec6Criteria() {
-    const el = document.getElementById('sec6Criteria');
-    if (el) el.textContent = criteriaMonth(sec6Month, sec6Year);
+function readPeriodRange(fromSel, toSel) {
+    const [yf, mf] = getMonthPickerValue(fromSel).split('-').map(Number);
+    const [yt, mt] = getMonthPickerValue(toSel).split('-').map(Number);
+    const err = validatePeriod(yf, mf, yt, mt);
+    if (err) { showToast(err, "error"); return null; }
+    return { yf, mf, yt, mt };
 }
 
 function renderSec1Filters() {
@@ -280,7 +240,7 @@ function renderSec1Filters() {
         <label>Desde ${buildMonthInput('sec1MonthFrom', sec1YearFrom, sec1MonthFrom)}</label>
         <label>Hasta ${buildMonthInput('sec1MonthTo', sec1YearTo, sec1MonthTo)}</label>
         <button class="btn-primary" onclick="window.handleApplySec1()">Actualizar</button>`;
-    updateSec1Criteria();
+    document.getElementById('sec1Criteria').textContent = criteriaPeriod(sec1MonthFrom, sec1YearFrom, sec1MonthTo, sec1YearTo);
     initMonthPicker('#sec1MonthFrom', sec1YearFrom, sec1MonthFrom, function() {});
     initMonthPicker('#sec1MonthTo', sec1YearTo, sec1MonthTo, function() {});
 }
@@ -294,7 +254,7 @@ function renderSec2Filters() {
         <label>Hasta ${buildMonthInput('sec2MonthTo', sec2YearTo, sec2MonthTo)}</label>
         <button class="btn-primary" onclick="window.handleApplySec2()">Actualizar</button>`;
     populateUserSelect('sec2UserSelect', sec2UserId);
-    updateSec2Criteria();
+    document.getElementById('sec2Criteria').textContent = `${criteriaUser(sec2UserId)} | ${criteriaPeriod(sec2MonthFrom, sec2YearFrom, sec2MonthTo, sec2YearTo)}`;
     initMonthPicker('#sec2MonthFrom', sec2YearFrom, sec2MonthFrom, function() {});
     initMonthPicker('#sec2MonthTo', sec2YearTo, sec2MonthTo, function() {});
 }
@@ -306,7 +266,7 @@ function renderSec3Filters() {
         </label>
         <button class="btn-primary" onclick="window.handleApplySec3()">Actualizar</button>`;
     populateUserSelect('sec3UserSelect', sec3UserId);
-    updateSec3Criteria();
+    document.getElementById('sec3Criteria').textContent = criteriaUser(sec3UserId);
 }
 
 function renderSec4Filters() {
@@ -316,7 +276,7 @@ function renderSec4Filters() {
         </label>
         <button class="btn-primary" onclick="window.handleApplySec4()">Actualizar</button>`;
     populateUserSelect('sec4UserSelect', sec4UserId);
-    updateSec4Criteria();
+    document.getElementById('sec4Criteria').textContent = sec4UserId === 0 ? 'Todos' : criteriaUser(sec4UserId);
 }
 
 function renderSec5Filters() {
@@ -324,7 +284,7 @@ function renderSec5Filters() {
         <label>Desde ${buildMonthInput('sec5MonthFrom', sec5YearFrom, sec5MonthFrom)}</label>
         <label>Hasta ${buildMonthInput('sec5MonthTo', sec5YearTo, sec5MonthTo)}</label>
         <button class="btn-primary" onclick="window.handleApplySec5()">Actualizar</button>`;
-    updateSec5Criteria();
+    document.getElementById('sec5Criteria').textContent = criteriaPeriod(sec5MonthFrom, sec5YearFrom, sec5MonthTo, sec5YearTo);
     initMonthPicker('#sec5MonthFrom', sec5YearFrom, sec5MonthFrom, function() {});
     initMonthPicker('#sec5MonthTo', sec5YearTo, sec5MonthTo, function() {});
 }
@@ -333,7 +293,7 @@ function renderSec6Filters() {
     document.getElementById('sec6Filters').innerHTML = `
         <label>Mes ${buildMonthInput('sec6Month', sec6Year, sec6Month)}</label>
         <button class="btn-primary" onclick="window.handleApplySec6()">Actualizar</button>`;
-    updateSec6Criteria();
+    document.getElementById('sec6Criteria').textContent = criteriaMonth(sec6Month, sec6Year);
     initMonthPicker('#sec6Month', sec6Year, sec6Month, function() {});
 }
 
@@ -362,19 +322,18 @@ function renderExpBreakdownFilters() {
         <label>Hasta ${buildMonthInput('expBreakdownMonthTo', expBreakdownYearTo, expBreakdownMonthTo)}</label>
         <button class="btn-primary" onclick="window.handleApplyExpBreakdown()">Actualizar</button>`;
     populateUserSelect('expBreakdownUser', expBreakdownUserId);
-    updateExpBreakdownCriteria();
+    document.getElementById('expBreakdownCriteria').textContent = `${criteriaUser(expBreakdownUserId)} | ${criteriaPeriod(expBreakdownMonthFrom, expBreakdownYearFrom, expBreakdownMonthTo, expBreakdownYearTo)}`;
     initMonthPicker('#expBreakdownMonthFrom', expBreakdownYearFrom, expBreakdownMonthFrom, function() {});
     initMonthPicker('#expBreakdownMonthTo', expBreakdownYearTo, expBreakdownMonthTo, function() {});
 }
 
 function handleApplyExpBreakdown() {
     expBreakdownUserId = parseInt(document.getElementById('expBreakdownUser').value);
-    const from = getMonthPickerValue('#expBreakdownMonthFrom').split('-');
-    const to = getMonthPickerValue('#expBreakdownMonthTo').split('-');
-    expBreakdownYearFrom = parseInt(from[0]); expBreakdownMonthFrom = parseInt(from[1]);
-    expBreakdownYearTo = parseInt(to[0]); expBreakdownMonthTo = parseInt(to[1]);
-    const periodErr = validatePeriod(expBreakdownYearFrom, expBreakdownMonthFrom, expBreakdownYearTo, expBreakdownMonthTo); if (periodErr) { showToast(periodErr, "error"); return; }
-    updateExpBreakdownCriteria();
+    const r = readPeriodRange('#expBreakdownMonthFrom', '#expBreakdownMonthTo');
+    if (!r) return;
+    expBreakdownMonthFrom = r.mf; expBreakdownYearFrom = r.yf;
+    expBreakdownMonthTo = r.mt; expBreakdownYearTo = r.yt;
+    document.getElementById('expBreakdownCriteria').textContent = `${criteriaUser(expBreakdownUserId)} | ${criteriaPeriod(r.mf, r.yf, r.mt, r.yt)}`;
     loadExpBreakdownData();
 }
 
@@ -489,11 +448,7 @@ async function loadAdminSubcategoryChart() {
 }
 
 function renderAdminSubcategoryChart(data) {
-    destroyChart('adminSubcategory');
-    const canvas = document.getElementById('adminSubcategoryChart');
-    if (!canvas || !data.length) return;
-
-    chartAdminSubcategory = createDoughnutChart('adminSubcategoryChart', data.map(d => d.subcategoryName), data.map(d => d.total));
+    renderSubcategoryDoughnut('adminSubcategoryChart', 'adminSubcategory', data);
 }
 
 function updateAdminSubcategoryLabel() {
@@ -611,12 +566,11 @@ function updateAdminTimestamp() {
 // SECTION 1 — EVOLUCIÓN DE USUARIOS
 // ===================================================================
 function handleApplySec1() {
-    const from = getMonthPickerValue('#sec1MonthFrom').split('-');
-    const to = getMonthPickerValue('#sec1MonthTo').split('-');
-    sec1YearFrom = parseInt(from[0]); sec1MonthFrom = parseInt(from[1]);
-    sec1YearTo = parseInt(to[0]); sec1MonthTo = parseInt(to[1]);
-    const periodErr = validatePeriod(sec1YearFrom, sec1MonthFrom, sec1YearTo, sec1MonthTo); if (periodErr) { showToast(periodErr, "error"); return; }
-    updateSec1Criteria();
+    const r = readPeriodRange('#sec1MonthFrom', '#sec1MonthTo');
+    if (!r) return;
+    sec1MonthFrom = r.mf; sec1YearFrom = r.yf;
+    sec1MonthTo = r.mt; sec1YearTo = r.yt;
+    document.getElementById('sec1Criteria').textContent = criteriaPeriod(r.mf, r.yf, r.mt, r.yt);
     loadSec1Data();
 }
 
@@ -696,12 +650,11 @@ function renderSec1Chart(monthly) {
 // ===================================================================
 function handleApplySec2() {
     sec2UserId = parseInt(document.getElementById('sec2UserSelect').value);
-    const from = getMonthPickerValue('#sec2MonthFrom').split('-');
-    const to = getMonthPickerValue('#sec2MonthTo').split('-');
-    sec2YearFrom = parseInt(from[0]); sec2MonthFrom = parseInt(from[1]);
-    sec2YearTo = parseInt(to[0]); sec2MonthTo = parseInt(to[1]);
-    const periodErr = validatePeriod(sec2YearFrom, sec2MonthFrom, sec2YearTo, sec2MonthTo); if (periodErr) { showToast(periodErr, "error"); return; }
-    updateSec2Criteria();
+    const r = readPeriodRange('#sec2MonthFrom', '#sec2MonthTo');
+    if (!r) return;
+    sec2MonthFrom = r.mf; sec2YearFrom = r.yf;
+    sec2MonthTo = r.mt; sec2YearTo = r.yt;
+    document.getElementById('sec2Criteria').textContent = `${criteriaUser(sec2UserId)} | ${criteriaPeriod(r.mf, r.yf, r.mt, r.yt)}`;
     loadSec2Data();
 }
 
@@ -781,7 +734,7 @@ function renderSec2Chart(monthly) {
 // ===================================================================
 function handleApplySec3() {
     sec3UserId = parseInt(document.getElementById('sec3UserSelect').value);
-    updateSec3Criteria();
+    document.getElementById('sec3Criteria').textContent = criteriaUser(sec3UserId);
     loadSec3Data();
 }
 
@@ -819,7 +772,7 @@ function renderSec3(data) {
 // ===================================================================
 function handleApplySec4() {
     sec4UserId = parseInt(document.getElementById('sec4UserSelect').value);
-    updateSec4Criteria();
+    document.getElementById('sec4Criteria').textContent = sec4UserId === 0 ? 'Todos' : criteriaUser(sec4UserId);
     loadSec4Data();
 }
 
@@ -871,12 +824,11 @@ function renderSec4(data) {
 // SECTION 5 — TOP USUARIOS
 // ===================================================================
 function handleApplySec5() {
-    const from = getMonthPickerValue('#sec5MonthFrom').split('-');
-    const to = getMonthPickerValue('#sec5MonthTo').split('-');
-    sec5YearFrom = parseInt(from[0]); sec5MonthFrom = parseInt(from[1]);
-    sec5YearTo = parseInt(to[0]); sec5MonthTo = parseInt(to[1]);
-    const periodErr = validatePeriod(sec5YearFrom, sec5MonthFrom, sec5YearTo, sec5MonthTo); if (periodErr) { showToast(periodErr, "error"); return; }
-    updateSec5Criteria();
+    const r = readPeriodRange('#sec5MonthFrom', '#sec5MonthTo');
+    if (!r) return;
+    sec5MonthFrom = r.mf; sec5YearFrom = r.yf;
+    sec5MonthTo = r.mt; sec5YearTo = r.yt;
+    document.getElementById('sec5Criteria').textContent = criteriaPeriod(r.mf, r.yf, r.mt, r.yt);
     loadSec5Data();
 }
 
@@ -927,9 +879,9 @@ function buildMiniTable(entries, isMoney) {
 // SECTION 6 — DISTRIBUCIÓN POR ACTIVIDAD
 // ===================================================================
 function handleApplySec6() {
-    const val = getMonthPickerValue('#sec6Month').split('-');
-    sec6Year = parseInt(val[0]); sec6Month = parseInt(val[1]);
-    updateSec6Criteria();
+    const [y, m] = getMonthPickerValue('#sec6Month').split('-').map(Number);
+    sec6Year = y; sec6Month = m;
+    document.getElementById('sec6Criteria').textContent = criteriaMonth(m, y);
     loadSec6Data();
 }
 

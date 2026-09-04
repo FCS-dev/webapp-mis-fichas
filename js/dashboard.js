@@ -25,17 +25,20 @@ let categoryChartData = [];
 
 // Transactions section
 let txPage = 0;
+let txPageSize = 10;
 let txTransactions = [];
 let txPagination = null;
 let txAdminUserId = 0;
 
 // Subcategories section
 let subPage = 0;
+let subPageSize = 15;
 let subSubcategories = [];
 let subPagination = null;
 
 // Categories section
 let catPage = 0;
+let catPageSize = 15;
 let catCategories = [];
 let catPagination = null;
 
@@ -100,15 +103,11 @@ async function ensureCategoryCache() {
   } catch {}
 }
 
-async function loadSharedCache() {
-  await ensureCategoryCache();
-}
-
 async function fetchSubcategoriesByCategory(categoryId) {
   try {
     const res = await apiRequest(
       "GET",
-      `/subcategories/category/${categoryId}?page=0&size=100&sort=name,asc`,
+      `/subcategories/category/${categoryId}?page=0&size=100&sort=id,asc`,
     );
     return res?.content || [];
   } catch {
@@ -134,7 +133,8 @@ function navigateTo(section) {
     else renderDashboardSection();
   } else if (section === "transactions") renderTransactionsSection();
   else if (section === "subcategories") renderSubcategoriesSection();
-  else if (section === "categories") renderCategoriesSection();
+  else if (section === "categories" && isAdmin()) renderCategoriesSection();
+  else if (section === "categories") navigateTo("dashboard");
 }
 
 // ===================================================================
@@ -186,8 +186,8 @@ function renderDashboardLayout() {
                     <ul class="sidebar-nav">
                         <li><button class="sidebar-link active" data-section="dashboard" onclick="window.navigateTo('dashboard')"><span class="icon">&#x1F4CA;</span> Dashboard</button></li>
                         <li><button class="sidebar-link" data-section="transactions" onclick="window.navigateTo('transactions')"><span class="icon">&#x1F4B0;</span> Transacciones</button></li>
-                        <li><button class="sidebar-link" data-section="subcategories" onclick="window.navigateTo('subcategories')"><span class="icon">&#x1F3F7;</span> Subcategor&iacute;as</button></li>
-                        <li><button class="sidebar-link" data-section="categories" onclick="window.navigateTo('categories')"><span class="icon">&#x1F4C1;</span> Categor&iacute;as</button></li>
+                        <li><button class="sidebar-link" data-section="subcategories" onclick="window.navigateTo('subcategories')"><span class="icon">&#x1F3F7;</span> Sub-Categor&iacute;as</button></li>
+                        ${isAdmin() ? '<li><button class="sidebar-link" data-section="categories" onclick="window.navigateTo(\'categories\')"><span class="icon">&#x1F4C1;</span> Categor&iacute;as</button></li>' : ""}
                     </ul>
                 </nav>
                 <main class="dash-main" id="dashContent">
@@ -210,7 +210,7 @@ function renderDashboardLayout() {
     `;
 
   updateLogoSrc();
-  loadSharedCache().then(() => {
+  ensureCategoryCache().then(() => {
     navigateTo(currentSection);
     initHeaderShrink();
   });
