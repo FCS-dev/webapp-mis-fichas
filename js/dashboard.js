@@ -143,19 +143,19 @@ function navigateTo(section) {
 function renderDashboardLayout() {
   const user = getUserInfo();
   const isDark = document.documentElement.classList.contains("dark");
-
+  // <a href="https://github.com/FCS-dev/webapp-mis-fichas" target="_blank" rel="noopener noreferrer">GitHub</a>
   document.getElementById("app").innerHTML = `
         <div class="dash-layout">
             <header class="dash-header">
                 <div class="dash-header-left">
                     <button class="sidebar-toggle" onclick="window.toggleSidebar()" aria-label="Menú">&#x2630;</button>
                     <a href="#/" onclick="window.navigateTo('dashboard')" class="logo-desktop logo-link">
-                        <img class="logo" src="assets/logo/mis-fichas-logo-modo-claro.png" alt="Mis Fichas" style="height:96px;width:auto">
+                        <img class="logo" src="assets/logo/mis-fichas-logo-modo-claro.png" alt="Mis Fichas">
                     </a>
                 </div>
                 <div class="dash-header-center">
                     <a href="#/" onclick="window.navigateTo('dashboard')" class="logo-mobile logo-link">
-                        <img class="logo" src="assets/logo/mis-fichas-logo-modo-claro.png" alt="Mis Fichas" style="height:96px;width:auto">
+                        <img class="logo" src="assets/logo/mis-fichas-logo-modo-claro.png" alt="Mis Fichas">
                     </a>
                     <h1 class="header-user-info">
                         ${!isAdmin() ? '<span class="header-welcome">Bienvenido,&nbsp;</span>' : ""}
@@ -201,9 +201,8 @@ function renderDashboardLayout() {
                 <nav class="footer-links" aria-label="Enlaces del pie de página">
                     <a href="#/dashboard">Dashboard</a>
                     <a href="#/dashboard" onclick="window.navigateTo('transactions')">Transacciones</a>
-                    <a href="https://github.com/FCS-dev/webapp-mis-fichas" target="_blank" rel="noopener noreferrer">GitHub</a>
                 </nav>
-                <span class="footer-copy">&copy; ${new Date().getFullYear()} Franco Calderón</span>
+                <span class="footer-copy">&copy; ${new Date().getFullYear()} <a href="https://github.com/FCS-dev/webapp-mis-fichas" target="_blank" rel="noopener noreferrer">Franco Calderón</a></span>
             </div>
         </footer>
         ${!isAdmin() ? '<a class="fab-tx" onclick="window.showTxForm()" title="Nueva transacci&oacute;n" role="button" aria-label="Nueva transacción"><span class="fab-icon">+</span><span class="fab-label">Nueva transacci&oacute;n</span></a>' : ""}
@@ -212,27 +211,6 @@ function renderDashboardLayout() {
   updateLogoSrc();
   ensureCategoryCache().then(() => {
     navigateTo(currentSection);
-    initHeaderShrink();
-  });
-}
-
-function initHeaderShrink() {
-  const header = document.querySelector(".dash-header");
-  if (!header) return;
-  let ticking = false;
-  window.addEventListener("scroll", () => {
-    if (!ticking) {
-      requestAnimationFrame(() => {
-        const shrunk = window.scrollY > 30;
-        header.classList.toggle("shrink", shrunk);
-        const src = getLogoSrc(shrunk);
-        document.querySelectorAll(".logo").forEach((img) => {
-          img.src = src;
-        });
-        ticking = false;
-      });
-      ticking = true;
-    }
   });
 }
 
