@@ -123,6 +123,9 @@ function navigateTo(section) {
   document.querySelectorAll(".sidebar-link").forEach((el) => {
     el.classList.toggle("active", el.dataset.section === section);
   });
+  document.querySelectorAll(".header-nav-link").forEach((el) => {
+    el.classList.toggle("active", el.dataset.section === section);
+  });
   closeSidebar();
 
   const content = document.getElementById("dashContent");
@@ -143,34 +146,33 @@ function navigateTo(section) {
 function renderDashboardLayout() {
   const user = getUserInfo();
   const isDark = document.documentElement.classList.contains("dark");
-  // <a href="https://github.com/FCS-dev/webapp-mis-fichas" target="_blank" rel="noopener noreferrer">GitHub</a>
+  const logoIcon = isDark ? 'assets/logo/mis-fichas-logo-solo-oscuro.png' : 'assets/logo/mis-fichas-logo-solo-claro.png';
+  const logoFull = isDark ? 'assets/logo/mis-fichas-logo-modo-oscuro.png' : 'assets/logo/mis-fichas-logo-modo-claro.png';
   document.getElementById("app").innerHTML = `
         <div class="dash-layout">
             <header class="dash-header">
-                <div class="dash-header-left">
-                    <button class="sidebar-toggle" onclick="window.toggleSidebar()" aria-label="Menú">&#x2630;</button>
-                    <a href="#/" onclick="window.navigateTo('dashboard')" class="logo-desktop logo-link">
-                        <img class="logo" src="assets/logo/mis-fichas-logo-modo-claro.png" alt="Mis Fichas">
-                    </a>
-                </div>
-                <div class="dash-header-center">
-                    <a href="#/" onclick="window.navigateTo('dashboard')" class="logo-mobile logo-link">
-                        <img class="logo" src="assets/logo/mis-fichas-logo-modo-claro.png" alt="Mis Fichas">
-                    </a>
-                    <h1 class="header-user-info">
-                        ${!isAdmin() ? '<span class="header-welcome">Bienvenido,&nbsp;</span>' : ""}
-                        <span class="header-name">${escHtml(user?.name || "")}</span>
-                        <span class="header-email">${escHtml(user?.email || "")}</span>
-                    </h1>
-                </div>
-                <div class="dash-header-right">
+                <button class="sidebar-toggle" onclick="window.toggleSidebar()" aria-label="Menú">&#x2630;</button>
+                <a href="#/" onclick="window.navigateTo('dashboard')" class="header-logo">
+                    <img class="header-logo-icon" src="${logoIcon}" alt="">
+                    <span class="header-logo-text">Mis Fichas</span>
+                </a>
+                <nav class="header-nav" aria-label="Navegación principal">
+                    <button class="header-nav-link active" data-section="dashboard" onclick="window.navigateTo('dashboard')">Dashboard</button>
+                    <button class="header-nav-link" data-section="transactions" onclick="window.navigateTo('transactions')">Transacciones</button>
+                    <button class="header-nav-link" data-section="subcategories" onclick="window.navigateTo('subcategories')">Sub-Categor&iacute;as</button>
+                    ${isAdmin() ? '<button class="header-nav-link" data-section="categories" onclick="window.navigateTo(\'categories\')">Categor&iacute;as</button>' : ""}
+                </nav>
+                <div class="header-right">
                     <button class="theme-toggle" onclick="window.toggleTheme()" title="Cambiar tema" aria-label="Cambiar tema" aria-pressed="${isDark}">
-                        <span class="toggle-track">
-                            <span class="toggle-thumb"></span>
-                            <span class="toggle-icon toggle-icon--light">&#x2600;</span>
-                            <span class="toggle-icon toggle-icon--dark">&#x263E;</span>
-                        </span>
+                        ${isDark
+                            ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'
+                            : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
+                        }
                     </button>
+                    <div class="header-user">
+                        <span class="header-greeting">Hola</span>
+                        <span class="header-user-name">${escHtml(user?.name || "")}</span>
+                    </div>
                     <button class="btn-logout" onclick="window.handleLogout()" title="Cerrar sesión" aria-label="Cerrar sesión">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
@@ -189,6 +191,12 @@ function renderDashboardLayout() {
                         <li><button class="sidebar-link" data-section="subcategories" onclick="window.navigateTo('subcategories')"><span class="icon">&#x1F3F7;</span> Sub-Categor&iacute;as</button></li>
                         ${isAdmin() ? '<li><button class="sidebar-link" data-section="categories" onclick="window.navigateTo(\'categories\')"><span class="icon">&#x1F4C1;</span> Categor&iacute;as</button></li>' : ""}
                     </ul>
+                    <button class="theme-toggle sidebar-theme-toggle" onclick="window.toggleTheme()" title="Cambiar tema" aria-label="Cambiar tema" aria-pressed="${isDark}">
+                        ${isDark
+                            ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'
+                            : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
+                        }
+                    </button>
                 </nav>
                 <main class="dash-main" id="dashContent">
                     <p class="loading-message">Cargando…</p>

@@ -95,11 +95,8 @@ function renderAdminDashboardSection() {
                             <div class="chart-wrapper"><canvas id="adminCategoryChart" role="img" aria-label="Gráfico de gastos por categoría"></canvas></div>
                         </div>
                         <div class="chart-card">
-                            <div class="chart-header">
-                                <div>
-                                    <p class="chart-title" style="margin:0">Gastos por subcategor&iacute;a</p>
-                                    <span id="adminSubcategoryLabel" class="chart-sub-label"></span>
-                                </div>
+                            <div class="chart-header chart-header--row">
+                                <span class="chart-header-label">Distribuci&oacute;n de la categor&iacute;a</span>
                                 <select id="adminCategoryFilter" onchange="window.handleAdminCategoryFilterChange()">
                                     <option value="">Seleccionar</option>
                                 </select>
@@ -443,11 +440,8 @@ async function loadExpBreakdownData(catExpenses) {
                     <div class="chart-wrapper"><canvas id="adminCategoryChart" role="img" aria-label="Gráfico de gastos por categoría"></canvas></div>
                 </div>
                 <div class="chart-card">
-                    <div class="chart-header">
-                        <div>
-                            <p class="chart-title" style="margin:0">Gastos por subcategor&iacute;a</p>
-                            <span id="adminSubcategoryLabel" class="chart-sub-label"></span>
-                        </div>
+                    <div class="chart-header chart-header--row">
+                        <span class="chart-header-label">Distribuci&oacute;n de la categor&iacute;a</span>
                         <select id="adminCategoryFilter" onchange="window.handleAdminCategoryFilterChange()">
                             <option value="">Seleccionar</option>
                         </select>
@@ -477,7 +471,6 @@ async function loadExpBreakdownData(catExpenses) {
       } else {
         adminCategoryFilter = null;
       }
-      updateAdminSubcategoryLabel();
       loadAdminSubcategoryChart();
     }
   } catch {
@@ -503,7 +496,6 @@ function renderAdminCategoryChart(data) {
       if (!opt) return;
       sel.value = catData.categoryId;
       adminCategoryFilter = catData.categoryId;
-      updateAdminSubcategoryLabel();
       loadAdminSubcategoryChart();
     }
   };
@@ -541,22 +533,10 @@ function renderAdminSubcategoryChart(data) {
   renderSubcategoryDoughnut("adminSubcategoryChart", "adminSubcategory", data);
 }
 
-function updateAdminSubcategoryLabel() {
-  const el = document.getElementById("adminSubcategoryLabel");
-  if (!el) return;
-  if (!adminCategoryFilter) {
-    el.textContent = "";
-    return;
-  }
-  const cat = cachedCategories.find((c) => c.id === adminCategoryFilter);
-  el.textContent = cat ? `Categoría: ${cat.name}` : "";
-}
-
 function handleAdminCategoryFilterChange() {
   const sel = document.getElementById("adminCategoryFilter");
   if (!sel) return;
   adminCategoryFilter = sel.value ? parseInt(sel.value) : null;
-  updateAdminSubcategoryLabel();
   loadAdminSubcategoryChart();
 }
 

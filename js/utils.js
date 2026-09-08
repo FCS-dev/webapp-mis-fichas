@@ -9,8 +9,9 @@ const CURRENT_YEAR = NOW.getFullYear();
 
 function formatMoney(amount) {
     return (CONFIG.CURRENCY_SYMBOL || '$') + ' ' + Number(amount).toLocaleString('es-ES', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+        useGrouping: true
     });
 }
 
@@ -57,4 +58,6 @@ function getLogoSrc(isSmall) {
 function updateLogoSrc() {
     const src = getLogoSrc(false);
     document.querySelectorAll('.logo').forEach(img => { img.src = src; });
+    const iconSrc = getLogoSrc(true);
+    document.querySelectorAll('.header-logo-icon').forEach(img => { img.src = iconSrc; });
 }
