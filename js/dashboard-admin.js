@@ -20,154 +20,121 @@ function renderAdminDashboardSection() {
             <div class="admin-hero-card"><div class="skeleton skeleton-text"></div></div>
         </div>
 
-        <div class="admin-accordion" id="adminAccordion">
-            <div class="accordion-item open" data-accordion="sec1">
-                <button class="accordion-header" onclick="window.toggleAccordion('sec1')" aria-expanded="true">
-                    <span class="accordion-title">Evoluci&oacute;n de Usuarios</span>
-                    <span class="accordion-chevron">&#x25BC;</span>
-                </button>
-                <div class="accordion-panel">
-                    <p class="admin-section-criteria" id="sec1Criteria"></p>
-                    <div class="admin-section-filters" id="sec1Filters"></div>
-                    <div class="stat-cards" id="sec1Cards">
-                        <div class="stat-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
-                        <div class="stat-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
+        <div class="admin-montos-section">
+            <div class="admin-montos-header">
+                <h3 class="admin-montos-title" id="montosTitle">Estad&iacute;sticas</h3>
+                <div class="admin-montos-filter" id="montosFilter"></div>
+            </div>
+            <div class="stat-cards" id="montosCards">
+                <div class="stat-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
+                <div class="stat-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
+                <div class="stat-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
+                <div class="stat-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
+                <div class="stat-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
+                <div class="stat-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
+            </div>
+        </div>
+
+        <div class="dash-content-area">
+            <div class="dash-tabs" role="tablist">
+                <button class="dash-tab-btn active" data-tab="sec1" role="tab" aria-selected="true" onclick="window.switchAdminTab('sec1')">Evoluci&oacute;n de Usuarios</button>
+                <button class="dash-tab-btn" data-tab="sec2" role="tab" aria-selected="false" onclick="window.switchAdminTab('sec2')">Evoluci&oacute;n de Transacciones</button>
+                <button class="dash-tab-btn" data-tab="sec6" role="tab" aria-selected="false" onclick="window.switchAdminTab('sec6')">Distribuci&oacute;n de Usuarios por Actividad</button>
+                <button class="dash-tab-btn" data-tab="sec5" role="tab" aria-selected="false" onclick="window.switchAdminTab('sec5')">Usuarios con Mayor Actividad</button>
+                <button class="dash-tab-btn" data-tab="expBreakdown" role="tab" aria-selected="false" onclick="window.switchAdminTab('expBreakdown')">Desglose de Gastos</button>
+            </div>
+
+            <div class="dash-tab-panel active" data-tab-panel="sec1" role="tabpanel">
+                <p class="admin-section-criteria" id="sec1Criteria"></p>
+                <div class="admin-section-filters" id="sec1Filters"></div>
+                <div class="stat-cards" id="sec1Cards">
+                    <div class="stat-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
+                    <div class="stat-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
+                </div>
+                <div class="chart-card" style="margin-top:12px"><div class="chart-wrapper"><canvas id="sec1Chart" role="img" aria-label="Gráfico de evolución de usuarios"></canvas></div></div>
+            </div>
+
+            <div class="dash-tab-panel" data-tab-panel="sec2" role="tabpanel">
+                <p class="admin-section-criteria" id="sec2Criteria"></p>
+                <div class="admin-section-filters" id="sec2Filters"></div>
+                <div class="stat-cards" id="sec2Cards">
+                    <div class="stat-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
+                    <div class="stat-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
+                </div>
+                <div class="chart-card" style="margin-top:12px"><div class="chart-wrapper"><canvas id="sec2Chart" role="img" aria-label="Gráfico de evolución de transacciones"></canvas></div></div>
+            </div>
+
+            <div class="dash-tab-panel" data-tab-panel="sec6" role="tabpanel">
+                <p class="admin-section-criteria" id="sec6Criteria"></p>
+                <div class="admin-section-filters" id="sec6Filters"></div>
+                <div id="sec6Cards"><div class="loading-message">Cargando…</div></div>
+            </div>
+
+            <div class="dash-tab-panel" data-tab-panel="sec5" role="tabpanel">
+                <p class="admin-section-criteria" id="sec5Criteria"></p>
+                <div class="admin-section-filters" id="sec5Filters"></div>
+                <div class="mini-tables" id="sec5Cards">
+                    <div class="mini-table-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
+                    <div class="mini-table-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
+                    <div class="mini-table-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
+                </div>
+            </div>
+
+            <div class="dash-tab-panel" data-tab-panel="expBreakdown" role="tabpanel">
+                <p class="admin-section-criteria" id="expBreakdownCriteria"></p>
+                <div class="admin-section-filters" id="expBreakdownFilters"></div>
+                <div class="dashboard-charts">
+                    <div class="chart-card">
+                        <p class="chart-title">Gastos por categor&iacute;a</p>
+                        <div class="chart-wrapper"><canvas id="adminCategoryChart" role="img" aria-label="Gráfico de gastos por categoría"></canvas></div>
                     </div>
-                    <div class="chart-card" style="margin-top:12px"><div class="chart-wrapper"><canvas id="sec1Chart" role="img" aria-label="Gráfico de evolución de usuarios"></canvas></div></div>
-                </div>
-            </div>
-
-            <div class="accordion-item" data-accordion="sec2">
-                <button class="accordion-header" onclick="window.toggleAccordion('sec2')" aria-expanded="false">
-                    <span class="accordion-title">Evoluci&oacute;n de Transacciones</span>
-                    <span class="accordion-chevron">&#x25BC;</span>
-                </button>
-                <div class="accordion-panel">
-                    <p class="admin-section-criteria" id="sec2Criteria"></p>
-                    <div class="admin-section-filters" id="sec2Filters"></div>
-                    <div class="stat-cards" id="sec2Cards">
-                        <div class="stat-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
-                        <div class="stat-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
-                    </div>
-                    <div class="chart-card" style="margin-top:12px"><div class="chart-wrapper"><canvas id="sec2Chart" role="img" aria-label="Gráfico de evolución de transacciones"></canvas></div></div>
-                </div>
-            </div>
-
-            <div class="accordion-item" data-accordion="sec5">
-                <button class="accordion-header" onclick="window.toggleAccordion('sec5')" aria-expanded="false">
-                    <span class="accordion-title">Usuarios con Mayor Actividad</span>
-                    <span class="accordion-chevron">&#x25BC;</span>
-                </button>
-                <div class="accordion-panel">
-                    <p class="admin-section-criteria" id="sec5Criteria"></p>
-                    <div class="admin-section-filters" id="sec5Filters"></div>
-                    <div class="mini-tables" id="sec5Cards">
-                        <div class="mini-table-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
-                        <div class="mini-table-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
-                        <div class="mini-table-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="accordion-item" data-accordion="sec6">
-                <button class="accordion-header" onclick="window.toggleAccordion('sec6')" aria-expanded="false">
-                    <span class="accordion-title">Distribuci&oacute;n de Usuarios por Actividad</span>
-                    <span class="accordion-chevron">&#x25BC;</span>
-                </button>
-                <div class="accordion-panel">
-                    <p class="admin-section-criteria" id="sec6Criteria"></p>
-                    <div class="admin-section-filters" id="sec6Filters"></div>
-                    <div id="sec6Cards"><div class="loading-message">Cargando…</div></div>
-                </div>
-            </div>
-
-            <div class="accordion-item" data-accordion="secExpBreakdown">
-                <button class="accordion-header" onclick="window.toggleAccordion('secExpBreakdown')" aria-expanded="false">
-                    <span class="accordion-title">Desglose de Gastos</span>
-                    <span class="accordion-chevron">&#x25BC;</span>
-                </button>
-                <div class="accordion-panel">
-                    <p class="admin-section-criteria" id="expBreakdownCriteria"></p>
-                    <div class="admin-section-filters" id="expBreakdownFilters"></div>
-                    <div class="dashboard-charts">
-                        <div class="chart-card">
-                            <p class="chart-title">Gastos por categor&iacute;a</p>
-                            <div class="chart-wrapper"><canvas id="adminCategoryChart" role="img" aria-label="Gráfico de gastos por categoría"></canvas></div>
+                    <div class="chart-card">
+                        <div class="chart-header chart-header--row">
+                            <span class="chart-header-label">Distribuci&oacute;n de </span>
+                            <select id="adminCategoryFilter" onchange="window.handleAdminCategoryFilterChange()">
+                                <option value="">Seleccionar</option>
+                            </select>
                         </div>
-                        <div class="chart-card">
-                            <div class="chart-header chart-header--row">
-                                <span class="chart-header-label">Distribuci&oacute;n de la categor&iacute;a</span>
-                                <select id="adminCategoryFilter" onchange="window.handleAdminCategoryFilterChange()">
-                                    <option value="">Seleccionar</option>
-                                </select>
-                            </div>
-                            <div class="chart-wrapper"><canvas id="adminSubcategoryChart" role="img" aria-label="Gráfico de gastos por subcategoría"></canvas></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="accordion-item" data-accordion="sec3">
-                <button class="accordion-header" onclick="window.toggleAccordion('sec3')" aria-expanded="false">
-                    <span class="accordion-title">Movimientos de Dinero</span>
-                    <span class="accordion-chevron">&#x25BC;</span>
-                </button>
-                <div class="accordion-panel">
-                    <p class="admin-section-criteria" id="sec3Criteria"></p>
-                    <div class="admin-section-filters" id="sec3Filters"></div>
-                    <div class="money-cards" id="sec3Cards">
-                        <div class="money-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
-                        <div class="money-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
-                        <div class="money-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="accordion-item" data-accordion="sec4">
-                <button class="accordion-header" onclick="window.toggleAccordion('sec4')" aria-expanded="false">
-                    <span class="accordion-title">Promedios</span>
-                    <span class="accordion-chevron">&#x25BC;</span>
-                </button>
-                <div class="accordion-panel">
-                    <p class="admin-section-criteria" id="sec4Criteria"></p>
-                    <div class="admin-section-filters" id="sec4Filters"></div>
-                    <div class="averages-grid" id="sec4Cards">
-                        <div class="avg-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
-                        <div class="avg-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
-                        <div class="avg-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
+                        <div class="chart-wrapper"><canvas id="adminSubcategoryChart" role="img" aria-label="Gráfico de gastos por subcategoría"></canvas></div>
                     </div>
                 </div>
             </div>
         </div>`;
 
-  document.querySelectorAll(".accordion-panel").forEach((panel) => {
-    const wrapper = document.createElement("div");
-    wrapper.className = "accordion-content";
-    wrapper.innerHTML = panel.innerHTML;
-    panel.innerHTML = "";
-    panel.appendChild(wrapper);
-  });
-
   renderSec1Filters();
   renderSec2Filters();
   renderExpBreakdownFilters();
-  renderSec3Filters();
-  renderSec4Filters();
   renderSec5Filters();
   renderSec6Filters();
+  renderMontosFilter();
   loadAdminAllData();
+  initTabsScrollFade();
 }
 
-function toggleAccordion(sectionId) {
-  const item = document.querySelector(`[data-accordion="${sectionId}"]`);
-  if (!item) return;
-  const wasOpen = item.classList.contains("open");
-  item.classList.toggle("open");
-  const btn = item.querySelector(".accordion-header");
-  if (btn) btn.setAttribute("aria-expanded", !wasOpen);
+function switchAdminTab(tabId) {
+  document.querySelectorAll(".dash-tab-btn").forEach((btn) => {
+    const isActive = btn.dataset.tab === tabId;
+    btn.classList.toggle("active", isActive);
+    btn.setAttribute("aria-selected", isActive);
+  });
+  document.querySelectorAll(".dash-tab-panel").forEach((panel) => {
+    panel.classList.toggle("active", panel.dataset.tabPanel === tabId);
+  });
 }
 
-window.toggleAccordion = toggleAccordion;
+window.switchAdminTab = switchAdminTab;
+
+function initTabsScrollFade() {
+  const tabs = document.querySelector("#dashContent .dash-tabs");
+  const area = document.querySelector("#dashContent .dash-content-area");
+  if (!tabs || !area) return;
+  const checkScroll = () => {
+    const maxScroll = tabs.scrollWidth - tabs.clientWidth;
+    area.classList.toggle("scroll-end", tabs.scrollLeft >= maxScroll - 2);
+  };
+  tabs.addEventListener("scroll", checkScroll, { passive: true });
+  checkScroll();
+}
 
 // ===================================================================
 // ADMIN DASHBOARD — HELPERS
@@ -294,26 +261,23 @@ function renderSec2Filters() {
   initMonthPicker("#sec2MonthTo", sec2YearTo, sec2MonthTo, function () {});
 }
 
-function renderSec3Filters() {
-  document.getElementById("sec3Filters").innerHTML = `
-        <label>Usuario
-            <select id="sec3UserSelect"><option value="0">Todos</option></select>
-        </label>
-        <button class="btn-primary" onclick="window.handleApplySec3()">Actualizar</button>`;
-  populateUserSelect("sec3UserSelect", sec3UserId);
-  document.getElementById("sec3Criteria").textContent =
-    criteriaUser(sec3UserId);
+function renderMontosFilter() {
+  document.getElementById("montosFilter").innerHTML = `
+        <label>Cambiar a</label>
+        <select id="montosUserSelect"><option value="0">Todos</option></select>
+        <button class="btn-primary" onclick="window.handleApplyMontos()">Actualizar</button>`;
+  populateUserSelect("montosUserSelect", montosUserId);
+  updateMontosTitle();
 }
 
-function renderSec4Filters() {
-  document.getElementById("sec4Filters").innerHTML = `
-        <label>Usuario
-            <select id="sec4UserSelect"><option value="0">Todos</option></select>
-        </label>
-        <button class="btn-primary" onclick="window.handleApplySec4()">Actualizar</button>`;
-  populateUserSelect("sec4UserSelect", sec4UserId);
-  document.getElementById("sec4Criteria").textContent =
-    sec4UserId === 0 ? "Todos" : criteriaUser(sec4UserId);
+function updateMontosTitle() {
+  const el = document.getElementById("montosTitle");
+  if (!el) return;
+  const user =
+    montosUserId === 0 ? null : adminUsers.find((u) => u.id === montosUserId);
+  el.innerHTML = user
+    ? `Estad&iacute;sticas de ${escHtml(user.name || user.email)}`
+    : "Estad&iacute;sticas";
 }
 
 function renderSec5Filters() {
@@ -422,7 +386,7 @@ async function loadExpBreakdownData(catExpenses) {
       destroyChart("adminCategory");
       destroyChart("adminSubcategory");
       const chartsEl = document.querySelector(
-        "#secExpBreakdown .dashboard-charts",
+        '[data-tab-panel="expBreakdown"] .dashboard-charts',
       );
       if (chartsEl)
         chartsEl.innerHTML =
@@ -431,7 +395,7 @@ async function loadExpBreakdownData(catExpenses) {
     }
 
     const chartsEl = document.querySelector(
-      "#secExpBreakdown .dashboard-charts",
+      '[data-tab-panel="expBreakdown"] .dashboard-charts',
     );
     if (chartsEl && chartsEl.querySelector(".empty-state")) {
       chartsEl.innerHTML = `
@@ -441,7 +405,7 @@ async function loadExpBreakdownData(catExpenses) {
                 </div>
                 <div class="chart-card">
                     <div class="chart-header chart-header--row">
-                        <span class="chart-header-label">Distribuci&oacute;n de la categor&iacute;a</span>
+                        <span class="chart-header-label">Distribuci&oacute;n de </span>
                         <select id="adminCategoryFilter" onchange="window.handleAdminCategoryFilterChange()">
                             <option value="">Seleccionar</option>
                         </select>
@@ -551,8 +515,7 @@ async function loadAdminAllData() {
     updateAdminTimestamp();
 
     populateUserSelect("sec2UserSelect", sec2UserId);
-    populateUserSelect("sec3UserSelect", sec3UserId);
-    populateUserSelect("sec4UserSelect", sec4UserId);
+    populateUserSelect("montosUserSelect", montosUserId);
     populateUserSelect("expBreakdownUser", expBreakdownUserId);
 
     const mf1 = sec1MonthFrom,
@@ -575,8 +538,8 @@ async function loadAdminAllData() {
     const [
       sec1Data,
       sec2Data,
-      sec3Data,
-      sec4Data,
+      montosMoneyData,
+      montosAvgData,
       sec5Data,
       sec6Data,
       expBreakdownData,
@@ -589,8 +552,11 @@ async function loadAdminAllData() {
         "GET",
         `/dashboard/admin/transaction-evolution?monthFrom=${mf2}&yearFrom=${yf2}&monthTo=${mt2}&yearTo=${yt2}&userId=${sec2UserId}`,
       ),
-      apiRequest("GET", `/dashboard/admin/money-movement?userId=${sec3UserId}`),
-      apiRequest("GET", `/dashboard/admin/averages?userId=${sec4UserId}`),
+      apiRequest(
+        "GET",
+        `/dashboard/admin/money-movement?userId=${montosUserId}`,
+      ),
+      apiRequest("GET", `/dashboard/admin/averages?userId=${montosUserId}`),
       apiRequest(
         "GET",
         `/dashboard/admin/top-users?monthFrom=${mf5}&yearFrom=${yf5}&monthTo=${mt5}&yearTo=${yt5}`,
@@ -608,33 +574,28 @@ async function loadAdminAllData() {
     renderAdminHeroCards({
       sec1Data,
       sec2Data,
-      sec3Data,
-      sec4Data,
+      montosMoneyData,
+      montosAvgData,
       sec5Data,
       sec6Data,
       expBreakdownData,
     });
     renderSec1(sec1Data);
     renderSec2(sec2Data);
-    renderSec3(sec3Data);
-    renderSec4(sec4Data);
+    renderMontosCards(montosMoneyData, montosAvgData);
     renderSec5(sec5Data);
     renderSec6(sec6Data);
     loadExpBreakdownData(expBreakdownData);
   } catch (err) {
     showToast("Error al cargar datos del panel", "error");
-    [
-      "sec1Cards",
-      "sec2Cards",
-      "sec3Cards",
-      "sec4Cards",
-      "sec5Cards",
-      "sec6Cards",
-    ].forEach((id) => {
-      const el = document.getElementById(id);
-      if (el)
-        el.innerHTML = '<div class="error-message">Error al cargar datos</div>';
-    });
+    ["sec1Cards", "sec2Cards", "montosCards", "sec5Cards", "sec6Cards"].forEach(
+      (id) => {
+        const el = document.getElementById(id);
+        if (el)
+          el.innerHTML =
+            '<div class="error-message">Error al cargar datos</div>';
+      },
+    );
   }
 }
 
@@ -643,18 +604,21 @@ function renderAdminHeroCards(allData) {
   if (!el) return;
 
   const sec1 = allData.sec1Data;
-  const sec3 = allData.sec3Data;
-  const sec4 = allData.sec4Data;
+  const money = allData.montosMoneyData;
 
   const activeUsers = sec1?.summary?.activeUsers?.current ?? "—";
   const totalIncome =
-    sec3?.totalIncome != null ? formatMoney(sec3.totalIncome) : "—";
+    money?.totalIncome != null ? formatMoney(money.totalIncome) : "—";
   const totalExpense =
-    sec3?.totalExpense != null ? formatMoney(sec3.totalExpense) : "—";
-  const avgIncome =
-    sec4?.globalAvgIncomePerUser != null
-      ? formatMoney(sec4.globalAvgIncomePerUser)
-      : "—";
+    money?.totalExpense != null ? formatMoney(money.totalExpense) : "—";
+  const totalBalance =
+    money?.totalBalance != null ? formatMoney(money.totalBalance) : "—";
+  const balanceColor =
+    money?.totalBalance != null
+      ? Number(money.totalBalance) >= 0
+        ? "var(--income)"
+        : "var(--expense)"
+      : "var(--text)";
 
   el.innerHTML = `
         <div class="admin-hero-card">
@@ -670,8 +634,8 @@ function renderAdminHeroCards(allData) {
             <span class="admin-hero-value">${totalExpense}</span>
         </div>
         <div class="admin-hero-card">
-            <span class="admin-hero-label">Ingreso promedio / usuario</span>
-            <span class="admin-hero-value">${avgIncome}</span>
+            <span class="admin-hero-label">Balance total</span>
+            <span class="admin-hero-value" style="color:${balanceColor}">${totalBalance}</span>
         </div>`;
 }
 
@@ -946,111 +910,60 @@ function renderSec2Chart(monthly) {
 }
 
 // ===================================================================
-// SECTION 3 — MOVIMIENTOS DE DINERO
+// MONTOS POR USUARIO (unified money movement + averages)
 // ===================================================================
-function handleApplySec3() {
-  sec3UserId = parseInt(document.getElementById("sec3UserSelect").value);
-  document.getElementById("sec3Criteria").textContent =
-    criteriaUser(sec3UserId);
-  loadSec3Data();
+function handleApplyMontos() {
+  montosUserId = parseInt(document.getElementById("montosUserSelect").value);
+  updateMontosTitle();
+  loadMontosData();
 }
 
-async function loadSec3Data() {
+async function loadMontosData() {
   try {
-    const data = await apiRequest(
-      "GET",
-      `/dashboard/admin/money-movement?userId=${sec3UserId}`,
-    );
-    renderSec3(data);
+    const [moneyData, avgData] = await Promise.all([
+      apiRequest(
+        "GET",
+        `/dashboard/admin/money-movement?userId=${montosUserId}`,
+      ),
+      apiRequest("GET", `/dashboard/admin/averages?userId=${montosUserId}`),
+    ]);
+    renderMontosCards(moneyData, avgData);
   } catch {
-    document.getElementById("sec3Cards").innerHTML =
+    document.getElementById("montosCards").innerHTML =
       '<div class="error-message">Error al cargar</div>';
   }
 }
 
-function renderSec3(data) {
-  if (!data) return;
-  const hasData = Number(data.totalIncome) > 0 || Number(data.totalExpense) > 0;
-  if (!hasData) {
-    showEmptyState("sec3Cards");
-    return;
-  }
-  document.getElementById("sec3Cards").innerHTML = `
-        <div class="money-card">
-            <span class="money-card-label">Ingresos totales</span>
-            <span class="money-card-value income">${formatMoney(data.totalIncome)}</span>
+function renderMontosCards(moneyData, avgData) {
+  const el = document.getElementById("montosCards");
+  if (!el) return;
+  const m = moneyData || {};
+  const a = avgData || {};
+  el.innerHTML = `
+        <div class="stat-card">
+            <span class="stat-card-label">Total Ingresos</span>
+            <span class="stat-card-value" style="color:var(--income)">${m.totalIncome != null ? formatMoney(m.totalIncome) : "—"}</span>
         </div>
-        <div class="money-card">
-            <span class="money-card-label">Gastos totales</span>
-            <span class="money-card-value expense">${formatMoney(data.totalExpense)}</span>
+        <div class="stat-card">
+            <span class="stat-card-label">Total Gastos</span>
+            <span class="stat-card-value" style="color:var(--expense)">${m.totalExpense != null ? formatMoney(m.totalExpense) : "—"}</span>
         </div>
-        <div class="money-card">
-            <span class="money-card-label">Balance total</span>
-            <span class="money-card-value" style="color:${Number(data.totalBalance) >= 0 ? "var(--income)" : "var(--expense)"}">${formatMoney(data.totalBalance)}</span>
+        <div class="stat-card">
+            <span class="stat-card-label">Total Balance</span>
+            <span class="stat-card-value" style="color:${Number(m.totalBalance) >= 0 ? "var(--income)" : "var(--expense)"}">${m.totalBalance != null ? formatMoney(m.totalBalance) : "—"}</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-card-label">Ingresos Promedio</span>
+            <span class="stat-card-value">${a.globalAvgIncomePerUser != null ? formatMoney(a.globalAvgIncomePerUser) : "—"}</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-card-label">Gastos Promedio</span>
+            <span class="stat-card-value">${a.globalAvgExpensePerUser != null ? formatMoney(a.globalAvgExpensePerUser) : "—"}</span>
+        </div>
+        <div class="stat-card">
+            <span class="stat-card-label">Transacciones Promedio</span>
+            <span class="stat-card-value">${a.globalAvgTransactionsPerUser != null ? Number(a.globalAvgTransactionsPerUser).toLocaleString("es-ES", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) : "—"}</span>
         </div>`;
-}
-
-// ===================================================================
-// SECTION 4 — PROMEDIOS
-// ===================================================================
-function handleApplySec4() {
-  sec4UserId = parseInt(document.getElementById("sec4UserSelect").value);
-  document.getElementById("sec4Criteria").textContent =
-    sec4UserId === 0 ? "Todos" : criteriaUser(sec4UserId);
-  loadSec4Data();
-}
-
-async function loadSec4Data() {
-  try {
-    const data = await apiRequest(
-      "GET",
-      `/dashboard/admin/averages?userId=${sec4UserId}`,
-    );
-    renderSec4(data);
-  } catch {
-    document.getElementById("sec4Cards").innerHTML =
-      '<div class="error-message">Error al cargar</div>';
-  }
-}
-
-function renderSec4(data) {
-  if (!data) return;
-  const hasData =
-    Number(data.globalAvgIncomePerUser) > 0 ||
-    Number(data.globalAvgExpensePerUser) > 0 ||
-    Number(data.globalAvgTransactionsPerUser) > 0;
-  if (!hasData) {
-    showEmptyState("sec4Cards");
-    return;
-  }
-  let html = `
-        <div class="avg-card">
-            <span class="avg-card-label">Ingreso promedio / usuario</span>
-            <span class="avg-card-value income">${formatMoney(data.globalAvgIncomePerUser)}</span>
-        </div>
-        <div class="avg-card">
-            <span class="avg-card-label">Gasto promedio / usuario</span>
-            <span class="avg-card-value expense">${formatMoney(data.globalAvgExpensePerUser)}</span>
-        </div>
-        <div class="avg-card">
-            <span class="avg-card-label">Transacciones promedio / usuario</span>
-            <span class="avg-card-value">${Number(data.globalAvgTransactionsPerUser).toLocaleString("es-ES", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}</span>
-        </div>`;
-
-  if (data.filteredAvgIncome !== null && data.filteredAvgExpense !== null) {
-    html += `
-            <div class="avg-card-divider"></div>
-            <div class="avg-card">
-                <span class="avg-card-label">Ingreso promedio (filtrado)</span>
-                <span class="avg-card-value income">${formatMoney(data.filteredAvgIncome)}</span>
-            </div>
-            <div class="avg-card">
-                <span class="avg-card-label">Gasto promedio (filtrado)</span>
-                <span class="avg-card-value expense">${formatMoney(data.filteredAvgExpense)}</span>
-            </div>`;
-  }
-
-  document.getElementById("sec4Cards").innerHTML = html;
 }
 
 // ===================================================================
@@ -1185,8 +1098,7 @@ function renderSec6(data) {
 
 window.handleApplySec1 = handleApplySec1;
 window.handleApplySec2 = handleApplySec2;
-window.handleApplySec3 = handleApplySec3;
-window.handleApplySec4 = handleApplySec4;
+window.handleApplyMontos = handleApplyMontos;
 window.handleApplySec5 = handleApplySec5;
 window.handleApplySec6 = handleApplySec6;
 window.handleApplyExpBreakdown = handleApplyExpBreakdown;

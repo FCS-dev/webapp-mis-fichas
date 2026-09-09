@@ -62,11 +62,8 @@ let sec2YearTo = CURRENT_YEAR;
 let sec2UserId = 0;
 let chartIncomeVsExpense = null;
 
-// Section 3: Money movement
-let sec3UserId = 0;
-
-// Section 4: Averages
-let sec4UserId = 0;
+// Section 3+4: Montos por Usuario (unified)
+let montosUserId = 0;
 
 // Section 5: Top users
 let sec5MonthFrom = _6m.month;
@@ -152,7 +149,7 @@ function renderDashboardLayout() {
         <div class="dash-layout">
             <header class="dash-header">
                 <button class="sidebar-toggle" onclick="window.toggleSidebar()" aria-label="Menú">&#x2630;</button>
-                <a href="#/" onclick="window.navigateTo('dashboard')" class="header-logo">
+                <a href="#dashboard" onclick="window.navigateTo('dashboard')" class="header-logo">
                     <img class="header-logo-icon" src="${logoIcon}" alt="">
                     <span class="header-logo-text">Mis Fichas</span>
                 </a>
@@ -170,7 +167,7 @@ function renderDashboardLayout() {
                         }
                     </button>
                     <div class="header-user">
-                        <span class="header-greeting">Hola</span>
+                        <span class="header-greeting">Hola,</span>
                         <span class="header-user-name">${escHtml(user?.name || "")}</span>
                     </div>
                     <button class="btn-logout" onclick="window.handleLogout()" title="Cerrar sesión" aria-label="Cerrar sesión">
@@ -207,8 +204,8 @@ function renderDashboardLayout() {
             <div class="footer-inner">
                 <span class="footer-brand">Mis Fichas</span>
                 <nav class="footer-links" aria-label="Enlaces del pie de página">
-                    <a href="#/dashboard">Dashboard</a>
-                    <a href="#/dashboard" onclick="window.navigateTo('transactions')">Transacciones</a>
+                    <a href="#dashboard">Dashboard</a>
+                    <a href="#dashboard" onclick="window.navigateTo('transactions')">Transacciones</a>
                 </nav>
                 <span class="footer-copy">&copy; ${new Date().getFullYear()} <a href="https://github.com/FCS-dev/webapp-mis-fichas" target="_blank" rel="noopener noreferrer">Franco Calderón</a></span>
             </div>

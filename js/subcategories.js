@@ -1,8 +1,8 @@
 // SUBCATEGORIES SECTION — Tree view
 // ===================================================================
 function renderSubcategoriesSection() {
+  //<button class="btn-back-dashboard" onclick="window.navigateTo('dashboard')">&#x2190; Volver al panel</button>
   document.getElementById("dashContent").innerHTML = `
-        <button class="btn-back-dashboard" onclick="window.navigateTo('dashboard')">&#x2190; Volver al panel</button>
         <div class="section-header">
             <h2>Categor&iacute;as y Sub-Categorías</h2>
             <p>Gesti&oacute;n de Sub-Categor&iacute;as personalizadas</p>

@@ -110,7 +110,7 @@ function renderDashboardSection() {
                 </div>
                 <div class="chart-card">
                     <div class="chart-header chart-header--row">
-                        <span class="chart-header-label">Distribuci&oacute;n de la categor&iacute;a</span>
+                        <span class="chart-header-label">Distribuci&oacute;n de </span>
                         <select id="subcategoryCategoryFilter" onchange="window.handleCategoryFilterChange()">
                             <option value="">Seleccionar categor&iacute;a</option>
                         </select>
