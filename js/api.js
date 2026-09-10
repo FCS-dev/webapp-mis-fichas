@@ -1,14 +1,13 @@
-function getTokens() {
-    const stored = localStorage.getItem('auth');
-    return stored ? JSON.parse(stored) : null;
+function getAccessToken() {
+    return localStorage.getItem('accessToken');
 }
 
-function saveTokens(accessToken, refreshToken) {
-    localStorage.setItem('auth', JSON.stringify({ accessToken, refreshToken }));
+function saveAccessToken(accessToken) {
+    localStorage.setItem('accessToken', accessToken);
 }
 
 function clearTokens() {
-    localStorage.removeItem('auth');
+    localStorage.removeItem('accessToken');
     localStorage.removeItem('userInfo');
 }
 
@@ -44,12 +43,9 @@ function isAdmin() {
 }
 
 async function apiRefresh() {
-    const tokens = getTokens();
-    if (!tokens?.refreshToken) throw new Error('No hay token de refresco');
     const res = await fetch(`${CONFIG.API_BASE}/auth/refresh`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ refreshToken: tokens.refreshToken })
+        credentials: 'include'
     });
     let json;
     try {
@@ -60,7 +56,7 @@ async function apiRefresh() {
     }
     if (!json.success) throw new Error(json.message || 'Sesión expirada');
     const data = json.data;
-    saveTokens(data.accessToken, data.refreshToken || tokens.refreshToken);
+    saveAccessToken(data.accessToken);
     return data.accessToken;
 }
 
@@ -71,7 +67,7 @@ async function apiRequest(method, path, body) {
             headers['Content-Type'] = 'application/json';
         }
         if (token) headers['Authorization'] = `Bearer ${token}`;
-        const opts = { method, headers };
+        const opts = { method, headers, credentials: 'include' };
         if (body !== undefined) opts.body = JSON.stringify(body);
         const res = await fetch(`${CONFIG.API_BASE}${path}`, opts);
         let json;
@@ -86,9 +82,9 @@ async function apiRequest(method, path, body) {
         return json.data;
     };
 
-    const tokens = getTokens();
-    let result = await doRequest(tokens?.accessToken);
-    if (result === null && tokens?.refreshToken) {
+    const token = getAccessToken();
+    let result = await doRequest(token);
+    if (result === null) {
         try {
             const newToken = await apiRefresh();
             result = await doRequest(newToken);
@@ -97,10 +93,6 @@ async function apiRequest(method, path, body) {
             window.location.hash = '#login';
             throw e;
         }
-    } else if (result === null) {
-        clearTokens();
-        window.location.hash = '#login';
-        throw new Error('Sesión expirada');
     }
     return result;
 }

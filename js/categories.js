@@ -2,7 +2,6 @@
 // ===================================================================
 function renderCategoriesSection() {
   catPage = 0;
-  // <button class="btn-back-dashboard" onclick="window.navigateTo('dashboard')">&#x2190; Volver al panel</button>
   document.getElementById("dashContent").innerHTML = `
         <div class="section-header">
             <h2>Categor&iacute;as</h2>
@@ -53,7 +52,7 @@ function renderCatTable() {
   const tbody = document.getElementById("catBody");
   if (!catCategories.length) {
     tbody.innerHTML =
-      '<tr><td colspan="3" class="empty-state">No hay categor&iacute;as</td></tr>';
+      '<tr><td colspan="3" class="empty-state">No hay categorías creadas. Usa el botón "Nueva" para crear una.</td></tr>';
     return;
   }
   tbody.innerHTML = catCategories
@@ -116,7 +115,7 @@ function showCatForm(catId) {
     .join("");
 
   showModal({
-    title: cat ? "Editar categor&iacute;a" : "Nueva categor&iacute;a",
+    title: cat ? "Editar categoría" : "Nueva categoría",
     bodyHtml: `
             <form id="catForm">
                 <div class="form-group">
@@ -169,6 +168,7 @@ async function handleCatSubmit(e) {
     hideModal();
     window.__editingCatId = null;
     showToast("Categor&iacute;a guardada correctamente", "success");
+    invalidateCategoryCache();
     await loadCategoriesData();
   } catch (err) {
     errorEl.textContent = err.message;
@@ -190,6 +190,7 @@ function deleteCat(id) {
     try {
       await apiRequest("DELETE", `/admin/categories/${id}`);
       showToast("Categor&iacute;a eliminada", "success");
+      invalidateCategoryCache();
       await loadCategoriesData();
     } catch (err) {
       showToast(err.message, "error");

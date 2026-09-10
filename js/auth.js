@@ -2,13 +2,6 @@ function renderLogin() {
     const isDark = document.documentElement.classList.contains('dark');
     document.getElementById('app').innerHTML = `
         <div class="auth-container">
-            <button class="theme-toggle auth-theme-toggle" onclick="window.toggleTheme()" title="Cambiar tema" aria-label="Cambiar tema" aria-pressed="${isDark}">
-                <span class="toggle-track">
-                    <span class="toggle-thumb"></span>
-                    <span class="toggle-icon toggle-icon--light">&#x2600;</span>
-                    <span class="toggle-icon toggle-icon--dark">&#x263E;</span>
-                </span>
-            </button>
             <div class="auth-card">
                 <div class="auth-header">
                     <img class="logo" src="assets/logo/mis-fichas-logo-modo-claro.png" alt="Mis Fichas" style="height:256px;width:auto;margin-bottom:8px">
@@ -27,6 +20,9 @@ function renderLogin() {
                     <button type="submit" class="btn-primary">Iniciar sesión</button>
                 </form>
                 <p class="auth-footer">¿No tienes cuenta? <a href="#register">Regístrate</a></p>
+                <div class="auth-theme-row">
+                    <button class="theme-toggle" onclick="window.toggleTheme()" title="Cambiar tema" aria-label="Cambiar tema" aria-pressed="${isDark}">${getThemeIcon(isDark)}</button>
+                </div>
             </div>
         </div>
     `;
@@ -45,7 +41,7 @@ async function handleLoginSubmit(e) {
     btn.textContent = 'Ingresando…';
     try {
         const data = await apiRequest('POST', '/auth/login', { email, password });
-        saveTokens(data.accessToken, data.refreshToken);
+        saveAccessToken(data.accessToken);
         saveUserInfoFromToken(data.accessToken);
         window.location.hash = '#dashboard';
     } catch (err) {
@@ -60,13 +56,6 @@ function renderRegister() {
     const isDark = document.documentElement.classList.contains('dark');
     document.getElementById('app').innerHTML = `
         <div class="auth-container">
-            <button class="theme-toggle auth-theme-toggle" onclick="window.toggleTheme()" title="Cambiar tema" aria-label="Cambiar tema" aria-pressed="${isDark}">
-                <span class="toggle-track">
-                    <span class="toggle-thumb"></span>
-                    <span class="toggle-icon toggle-icon--light">&#x2600;</span>
-                    <span class="toggle-icon toggle-icon--dark">&#x263E;</span>
-                </span>
-            </button>
             <div class="auth-card">
                 <div class="auth-header">
                     <img class="logo" src="assets/logo/mis-fichas-logo-modo-claro.png" alt="Mis Fichas" style="height:256px;width:auto;margin-bottom:8px">
@@ -91,6 +80,9 @@ function renderRegister() {
                     <button type="submit" class="btn-primary">Crear cuenta</button>
                 </form>
                 <p class="auth-footer">¿Ya tienes cuenta? <a href="#login">Inicia sesión</a></p>
+                <div class="auth-theme-row">
+                    <button class="theme-toggle" onclick="window.toggleTheme()" title="Cambiar tema" aria-label="Cambiar tema" aria-pressed="${isDark}">${getThemeIcon(isDark)}</button>
+                </div>
             </div>
         </div>
     `;
@@ -112,7 +104,7 @@ async function handleRegisterSubmit(e) {
     btn.textContent = 'Registrando…';
     try {
         const data = await apiRequest('POST', '/auth/register', { name, email, password });
-        saveTokens(data.accessToken, data.refreshToken);
+        saveAccessToken(data.accessToken);
         saveUserInfoFromToken(data.accessToken);
         window.location.hash = '#dashboard';
     } catch (err) {

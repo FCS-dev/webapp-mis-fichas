@@ -8,9 +8,9 @@ function getCssVar(name) {
 }
 
 const CHART_COLORS = [
-  "#4f46e5",
-  "#059669",
-  "#dc2626",
+  getCssVar("--primary") || "#8e2f37",
+  getCssVar("--income") || "#52998b",
+  getCssVar("--expense") || "#ce3737",
   "#f59e0b",
   "#8b5cf6",
   "#ec4899",
@@ -70,6 +70,23 @@ function generateColors(count) {
   return colors;
 }
 
+function createDrillDownHandler(chartData, filterSelectId, filterVar, loadFn) {
+  return (event, elements) => {
+    if (elements.length > 0) {
+      const idx = elements[0].index;
+      const catData = chartData[idx];
+      if (!catData || !catData.categoryId) return;
+      const sel = document.getElementById(filterSelectId);
+      if (!sel) return;
+      const opt = sel.querySelector(`option[value="${catData.categoryId}"]`);
+      if (!opt) return;
+      sel.value = catData.categoryId;
+      window[filterVar] = catData.categoryId;
+      loadFn();
+    }
+  };
+}
+
 function createDoughnutChart(canvasId, labels, values, onClick) {
   const canvas = document.getElementById(canvasId);
   if (!canvas || !values.length) return null;
@@ -92,20 +109,6 @@ function createDoughnutChart(canvasId, labels, values, onClick) {
             boxWidth: 12,
             padding: 8,
             font: { size: 10 },
-
-            // generateLabels: function (chart) {
-            //   return chart.data.labels.map(function (label, index) {
-            //     const text = String(label || "");
-            //     return {
-            //       text: text.length > 15 ? text.substring(0, 12) + "..." : text,
-            //       fillStyle: colors[index],
-            //       strokeStyle: colors[index],
-            //       lineWidth: 0,
-            //       hidden: false,
-            //       index: index,
-            //     };
-            //   });
-            // },
           },
         },
       },

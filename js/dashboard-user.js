@@ -288,10 +288,9 @@ function renderMonthlySummaryTable(data) {
   if (!container) return;
   if (!data || !data.length) {
     container.innerHTML =
-      '<p class="empty-state">Sin datos para este per&iacute;odo</p>';
+      '<p class="empty-state">Sin datos para este período. Agrega transacciones para ver el resumen.</p>';
     return;
   }
-  //<caption>Resumen mensual de ingresos, gastos y tasa de ahorro</caption>
   let html = `<table class="summary-mini-table">
         <thead><tr><th>Mes</th><th>Ingreso</th><th>Gasto</th><th>Ahorro</th></tr></thead><tbody>`;
   data.forEach((d) => {
@@ -320,7 +319,7 @@ function renderTopExpenses(data) {
   if (catContainer) {
     if (!data?.topCategories?.length) {
       catContainer.innerHTML =
-        '<p class="empty-state">Sin datos para este per&iacute;odo</p>';
+        '<p class="empty-state">Sin datos para este período. Agrega transacciones para ver las categorías top.</p>';
     } else {
       catContainer.innerHTML =
         '<ol class="top-list">' +
@@ -342,7 +341,7 @@ function renderTopExpenses(data) {
   if (subContainer) {
     if (!data?.topSubcategories?.length) {
       subContainer.innerHTML =
-        '<p class="empty-state">Sin datos para este per&iacute;odo</p>';
+        '<p class="empty-state">Sin datos para este período. Agrega transacciones para ver las subcategorías top.</p>';
     } else {
       subContainer.innerHTML =
         '<ol class="top-list">' +
@@ -384,20 +383,12 @@ function renderCategoryChart(data) {
   canvas.style.display = "";
   if (emptyEl) emptyEl.style.display = "none";
 
-  const onClick = (event, elements) => {
-    if (elements.length > 0) {
-      const idx = elements[0].index;
-      const catData = categoryChartData[idx];
-      if (!catData || !catData.categoryId) return;
-      const sel = document.getElementById("subcategoryCategoryFilter");
-      if (!sel) return;
-      const opt = sel.querySelector(`option[value="${catData.categoryId}"]`);
-      if (!opt) return;
-      sel.value = catData.categoryId;
-      dashCategoryFilter = catData.categoryId;
-      loadSubcategoryChart();
-    }
-  };
+  const onClick = createDrillDownHandler(
+    categoryChartData,
+    "subcategoryCategoryFilter",
+    "dashCategoryFilter",
+    loadSubcategoryChart
+  );
 
   chartCategory = createDoughnutChart(
     "categoryChart",
@@ -447,8 +438,8 @@ function renderBalanceChart(data) {
         {
           label: "Ingresos",
           data: sorted.map((d) => d.income),
-          borderColor: "#059669",
-          backgroundColor: "rgba(5,150,105,0.06)",
+          borderColor: getCssVar("--income"),
+          backgroundColor: `rgba(${getCssVar("--income-rgb") || "82,153,139"},0.06)`,
           fill: true,
           tension: 0.3,
           pointRadius: 3,
@@ -457,8 +448,8 @@ function renderBalanceChart(data) {
         {
           label: "Gastos",
           data: sorted.map((d) => d.expense),
-          borderColor: "#dc2626",
-          backgroundColor: "rgba(220,38,38,0.06)",
+          borderColor: getCssVar("--expense"),
+          backgroundColor: `rgba(${getCssVar("--expense-rgb") || "206,55,55"},0.06)`,
           fill: true,
           tension: 0.3,
           pointRadius: 3,
@@ -467,8 +458,8 @@ function renderBalanceChart(data) {
         {
           label: "Balance",
           data: sorted.map((d) => d.balance),
-          borderColor: "#4f46e5",
-          backgroundColor: "rgba(79,70,229,0.06)",
+          borderColor: getCssVar("--primary"),
+          backgroundColor: `rgba(${getCssVar("--primary-rgb") || "142,47,55"},0.06)`,
           fill: true,
           tension: 0.3,
           pointRadius: 3,
@@ -523,7 +514,8 @@ async function loadSubcategoryChart() {
     );
     const data = Array.isArray(res) ? res : [];
     renderSubcategoryChart(data);
-  } catch {
+  } catch (err) {
+    console.error("Error loading subcategory chart:", err);
     destroyChart("subcategory");
   }
 }
@@ -576,17 +568,6 @@ function handleCategoryFilterChange() {
 async function refreshDashboardIfActive() {
   if (!document.getElementById("incomeCard")) return;
   await loadDashboardData();
-}
-
-function switchTab(tabId) {
-  document.querySelectorAll(".dash-tab-btn").forEach((btn) => {
-    const isActive = btn.dataset.tab === tabId;
-    btn.classList.toggle("active", isActive);
-    btn.setAttribute("aria-selected", isActive);
-  });
-  document.querySelectorAll(".dash-tab-panel").forEach((panel) => {
-    panel.classList.toggle("active", panel.dataset.tabPanel === tabId);
-  });
 }
 
 window.handleFilterChange = handleFilterChange;

@@ -97,7 +97,13 @@ async function ensureCategoryCache() {
       "/categories?page=0&size=100&sort=name,asc",
     );
     cachedCategories = res?.content || [];
-  } catch {}
+  } catch (err) {
+    console.error("Error loading categories:", err);
+  }
+}
+
+function invalidateCategoryCache() {
+  cachedCategories = [];
 }
 
 async function fetchSubcategoriesByCategory(categoryId) {
@@ -107,7 +113,8 @@ async function fetchSubcategoriesByCategory(categoryId) {
       `/subcategories/category/${categoryId}?page=0&size=100&sort=id,asc`,
     );
     return res?.content || [];
-  } catch {
+  } catch (err) {
+    console.error("Error loading subcategories:", err);
     return [];
   }
 }
@@ -143,10 +150,15 @@ function navigateTo(section) {
 function renderDashboardLayout() {
   const user = getUserInfo();
   const isDark = document.documentElement.classList.contains("dark");
-  const logoIcon = isDark ? 'assets/logo/mis-fichas-logo-solo-oscuro.png' : 'assets/logo/mis-fichas-logo-solo-claro.png';
-  const logoFull = isDark ? 'assets/logo/mis-fichas-logo-modo-oscuro.png' : 'assets/logo/mis-fichas-logo-modo-claro.png';
+  const logoIcon = isDark
+    ? "assets/logo/mis-fichas-logo-solo-oscuro.png"
+    : "assets/logo/mis-fichas-logo-solo-claro.png";
+  const logoFull = isDark
+    ? "assets/logo/mis-fichas-logo-modo-oscuro.png"
+    : "assets/logo/mis-fichas-logo-modo-claro.png";
   document.getElementById("app").innerHTML = `
         <div class="dash-layout">
+            <a href="#dashContent" class="skip-link">Saltar al contenido</a>
             <header class="dash-header">
                 <button class="sidebar-toggle" onclick="window.toggleSidebar()" aria-label="Menú">&#x2630;</button>
                 <a href="#dashboard" onclick="window.navigateTo('dashboard')" class="header-logo">
@@ -161,10 +173,7 @@ function renderDashboardLayout() {
                 </nav>
                 <div class="header-right">
                     <button class="theme-toggle" onclick="window.toggleTheme()" title="Cambiar tema" aria-label="Cambiar tema" aria-pressed="${isDark}">
-                        ${isDark
-                            ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'
-                            : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
-                        }
+                        ${getThemeIcon(isDark)}
                     </button>
                     <div class="header-user">
                         <span class="header-greeting">Hola,</span>
@@ -189,10 +198,7 @@ function renderDashboardLayout() {
                         ${isAdmin() ? '<li><button class="sidebar-link" data-section="categories" onclick="window.navigateTo(\'categories\')"><span class="icon">&#x1F4C1;</span> Categor&iacute;as</button></li>' : ""}
                     </ul>
                     <button class="theme-toggle sidebar-theme-toggle" onclick="window.toggleTheme()" title="Cambiar tema" aria-label="Cambiar tema" aria-pressed="${isDark}">
-                        ${isDark
-                            ? '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>'
-                            : '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'
-                        }
+                        ${getThemeIcon(isDark)}
                     </button>
                 </nav>
                 <main class="dash-main" id="dashContent">
@@ -204,13 +210,13 @@ function renderDashboardLayout() {
             <div class="footer-inner">
                 <span class="footer-brand">Mis Fichas</span>
                 <nav class="footer-links" aria-label="Enlaces del pie de página">
-                    <a href="#dashboard">Dashboard</a>
-                    <a href="#dashboard" onclick="window.navigateTo('transactions')">Transacciones</a>
+                    <a href="#dashboard" onclick="window.navigateTo('dashboard')">Dashboard</a>
+                    <a href="#transactions" onclick="window.navigateTo('transactions')">Transacciones</a>
                 </nav>
                 <span class="footer-copy">&copy; ${new Date().getFullYear()} <a href="https://github.com/FCS-dev/webapp-mis-fichas" target="_blank" rel="noopener noreferrer">Franco Calderón</a></span>
             </div>
         </footer>
-        ${!isAdmin() ? '<a class="fab-tx" onclick="window.showTxForm()" title="Nueva transacci&oacute;n" role="button" aria-label="Nueva transacción"><span class="fab-icon">+</span><span class="fab-label">Nueva transacci&oacute;n</span></a>' : ""}
+        ${!isAdmin() ? '<button class="fab-tx" onclick="window.showTxForm()" title="Nueva transacci&oacute;n" aria-label="Nueva transacción"><span class="fab-icon">+</span><span class="fab-label">Nueva transacci&oacute;n</span></button>' : ""}
     `;
 
   updateLogoSrc();
@@ -247,3 +253,4 @@ async function handleLogout() {
 // ===================================================================
 window.handleLogout = handleLogout;
 window.navigateTo = navigateTo;
+window.invalidateCategoryCache = invalidateCategoryCache;

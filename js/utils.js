@@ -61,3 +61,17 @@ function updateLogoSrc() {
     const iconSrc = getLogoSrc(true);
     document.querySelectorAll('.header-logo-icon').forEach(img => { img.src = iconSrc; });
 }
+
+function switchTab(tabId) {
+    document.querySelectorAll(".dash-tab-btn").forEach((btn) => {
+        const isActive = btn.dataset.tab === tabId;
+        btn.classList.toggle("active", isActive);
+        btn.setAttribute("aria-selected", isActive);
+        btn.setAttribute("tabindex", isActive ? "0" : "-1");
+    });
+    document.querySelectorAll(".dash-tab-panel").forEach((panel) => {
+        const isActive = panel.dataset.tabPanel === tabId;
+        panel.classList.toggle("active", isActive);
+        panel.setAttribute("aria-hidden", !isActive);
+    });
+}

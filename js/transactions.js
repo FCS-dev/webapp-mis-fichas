@@ -32,7 +32,7 @@ async function renderTransactionsSection() {
                         </tr>
                     </thead>
                     <tbody id="txBody">
-                        <tr><td colspan="6" class="empty-state">Seleccion&aacute; un usuario para ver sus transacciones</td></tr>
+                        <tr><td colspan="6" class="empty-state">Selecciona un usuario para ver sus transacciones</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -89,8 +89,11 @@ async function loadTransactionsData() {
 function renderTxTable() {
   const tbody = document.getElementById("txBody");
   if (!txTransactions.length) {
+    const msg = isAdmin() && txAdminUserId === 0
+      ? 'Selecciona un usuario para ver sus transacciones'
+      : 'No hay transacciones en este período. Crea una con el botón "+".';
     tbody.innerHTML =
-      '<tr><td colspan="6" class="empty-state">No hay transacciones en este per&iacute;odo</td></tr>';
+      `<tr><td colspan="6" class="empty-state">${msg}</td></tr>`;
     return;
   }
   const admin = isAdmin();

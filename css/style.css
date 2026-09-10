@@ -16,6 +16,7 @@
     --text-secondary: rgba(116, 99, 84, 1);
     --text-secondary-on-tonal: rgba(45, 31, 19, 1);
     --primary: rgba(142, 47, 55, 1);
+    --primary-rgb: 142, 47, 55;
     --primary-hover: rgba(110, 32, 40, 1);
     --income: rgba(82, 153, 139, 1);
     --expense: rgba(206, 55, 55, 1);
@@ -37,6 +38,10 @@
     --space-xl: 20px;
     --space-xxl: 24px;
 
+    --btn-sm: 6px 12px;
+    --btn-md: 10px 20px;
+    --btn-lg: 12px 24px;
+
     --radius-sm: 4px;
     --radius-lg: 12px;
     --radius-pill: 28px;
@@ -54,6 +59,7 @@ html.dark {
     --text-secondary: rgba(211, 207, 199, 1);
     --text-secondary-on-tonal: rgba(27, 28, 28, 1);
     --primary: rgba(255, 145, 0, 1);
+    --primary-rgb: 255, 145, 0;
     --primary-hover: rgba(230, 120, 0, 1);
     --income: rgba(0, 180, 117, 1);
     --expense: rgba(255, 99, 82, 1);
@@ -77,6 +83,21 @@ body {
     transition: background 0.3s, color 0.3s;
 }
 
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: var(--primary);
+    color: #fff;
+    padding: 8px 16px;
+    z-index: 200;
+    transition: top 0.2s;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
 :focus-visible {
     outline: 2px solid var(--primary);
     outline-offset: 2px;
@@ -88,7 +109,6 @@ button:focus-visible,
 .btn-icon:focus-visible,
 .btn-page:focus-visible,
 .btn-logout:focus-visible,
-.btn-back-dashboard:focus-visible,
 .sidebar-link:focus-visible,
 .sidebar-toggle:focus-visible,
 .theme-toggle:focus-visible,
@@ -123,6 +143,11 @@ a {
     padding: 4px;
     cursor: pointer;
     line-height: 1;
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .toggle-track {
@@ -186,10 +211,14 @@ html.dark .toggle-thumb {
     position: relative;
 }
 
-.auth-theme-toggle {
-    position: absolute;
-    top: 20px;
-    right: 20px;
+.auth-theme-row {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+}
+
+.auth-theme-row .theme-toggle {
+    display: inline-flex;
 }
 
 .auth-card {
@@ -298,7 +327,7 @@ html.dark .toggle-thumb {
 
 /* ===== Buttons ===== */
 .btn-primary {
-    padding: 10px 20px;
+    padding: var(--btn-md);
     background: var(--primary);
     color: #fff;
     border: none;
@@ -319,7 +348,7 @@ html.dark .toggle-thumb {
 }
 
 .btn-danger {
-    padding: 10px 20px;
+    padding: var(--btn-md);
     background: var(--expense);
     color: #fff;
     border: none;
@@ -340,7 +369,7 @@ html.dark .toggle-thumb {
 }
 
 .btn-secondary {
-    padding: 10px 20px;
+    padding: var(--btn-md);
     background: transparent;
     color: var(--text);
     border: 1px solid var(--border);
@@ -359,7 +388,7 @@ html.dark .toggle-thumb {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 6px 10px;
+    padding: var(--btn-sm);
     background: transparent;
     color: var(--text-secondary);
     border: 1px solid var(--border);
@@ -378,7 +407,7 @@ html.dark .toggle-thumb {
     background: none;
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 8px 12px;
+    padding: var(--btn-sm);
     cursor: pointer;
     color: var(--text-secondary);
     font-size: 0.85rem;
@@ -538,7 +567,7 @@ html.dark .toggle-thumb {
 /* Header controls */
 .dash-header .btn-logout {
     flex-shrink: 0;
-    padding: 6px 10px;
+    padding: var(--btn-sm);
     font-size: 0.85rem;
 }
 
@@ -627,6 +656,11 @@ html.dark .toggle-thumb {
     padding: 4px 6px;
     line-height: 1;
     flex-shrink: 0;
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .sidebar-toggle:hover {
@@ -689,6 +723,7 @@ html.dark .toggle-thumb {
     border-bottom: 2px solid var(--border);
     padding-bottom: 0;
     overflow-x: auto;
+    overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
 }
 
@@ -854,8 +889,6 @@ html.dark .toggle-thumb {
     background: rgba(116, 99, 84, 0.15);
     color: var(--text-secondary);
 }
-
-.summary-card--income .summary-icon {}
 
 .summary-value {
     display: block;
@@ -1103,7 +1136,7 @@ html.dark .badge-expense {
 }
 
 .btn-page {
-    padding: 10px 16px;
+    padding: var(--btn-md);
     background: var(--card-bg);
     color: var(--text);
     border: 1px solid var(--border);
@@ -1188,6 +1221,11 @@ html.dark .badge-expense {
     padding: 4px;
     line-height: 1;
     transition: color 0.2s;
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .modal-close:hover {
@@ -1459,7 +1497,7 @@ html.dark .badge-expense {
 .filter-controls input[type="month"]:focus,
 .filter-controls .flatpickr-input:hover,
 .filter-controls .flatpickr-input:focus {
-    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.25);
+    box-shadow: var(--shadow-focus);
     outline: none;
 }
 
@@ -1519,11 +1557,14 @@ html.dark .badge-expense {
 .comparison-content {
     flex: 1;
     min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
 
 .comparison-period {
     display: block;
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     font-weight: 600;
     color: var(--text-secondary);
     text-transform: uppercase;
@@ -1535,6 +1576,7 @@ html.dark .badge-expense {
     font-size: 0.85rem;
     font-weight: 500;
     color: var(--text);
+    line-height: 1.4;
 }
 
 .comparison-icon {
@@ -1564,25 +1606,6 @@ html.dark .comparison-icon.income {
 
 html.dark .comparison-icon.expense {
     background: rgba(248, 113, 113, 0.18);
-}
-
-.comparison-text {
-    color: var(--text);
-    line-height: 1.4;
-}
-
-.comparison-content {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.comparison-period {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
 }
 
 /* ===== Range checkboxes ===== */
@@ -1788,12 +1811,12 @@ html.dark .comparison-icon.expense {
 
 .admin-montos-filter select:hover,
 .admin-montos-filter select:focus {
-    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.25);
+    box-shadow: var(--shadow-focus);
     outline: none;
 }
 
 .admin-montos-filter .btn-primary {
-    padding: 6px 16px;
+    padding: var(--btn-sm);
     font-size: 0.85rem;
 }
 
@@ -1877,12 +1900,12 @@ html.dark .comparison-icon.expense {
 .admin-section-filters input[type="month"]:focus,
 .admin-section-filters .flatpickr-input:hover,
 .admin-section-filters .flatpickr-input:focus {
-    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.25);
+    box-shadow: var(--shadow-focus);
     outline: none;
 }
 
 .admin-section-filters .btn-primary {
-    padding: 8px 16px;
+    padding: var(--btn-sm);
     font-size: 0.85rem;
     align-self: stretch;
     margin-top: 2px;
@@ -2146,7 +2169,6 @@ html.dark .stat-card-change.down {
     gap: 8px;
     box-shadow: none;
     cursor: pointer;
-    text-decoration: none;
     z-index: 50;
     transition: background 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s;
     border: 2px solid var(--primary);
@@ -2166,29 +2188,6 @@ html.dark .stat-card-change.down {
 
 .fab-tx .fab-label {
     line-height: 1;
-}
-
-/* ===== Botón volver al dashboard (USER transactions) ===== */
-.btn-back-dashboard {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--input-bg);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 8px 16px;
-    font-size: 0.85rem;
-    font-weight: 500;
-    color: var(--text);
-    cursor: pointer;
-    margin-bottom: 12px;
-    transition: background 0.2s, border-color 0.2s, color 0.2s;
-}
-
-.btn-back-dashboard:hover {
-    background: var(--primary);
-    color: #fff;
-    border-color: var(--primary);
 }
 
 .sr-only {
@@ -2235,15 +2234,16 @@ html.dark .stat-card-change.down {
     }
 }
 
-/* ===== Tablet: stat cards 3 cols ===== */
+/* ===== Tablet: stat cards 2 cols ===== */
 @media (min-width: 641px) {
+
     .stat-cards {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .admin-section-filters {
-        flex-direction: row;
-        align-items: flex-end;
+        flex-direction: column;
+        align-items: center;
         flex-wrap: wrap;
     }
 
@@ -2282,30 +2282,6 @@ html.dark .stat-card-change.down {
 
     .tree-subcategory-comment {
         white-space: normal;
-    }
-
-    .dash-header {
-        padding: 6px 20px;
-        display: grid;
-        grid-template-columns: 1fr auto 1fr;
-        align-items: center;
-    }
-
-    .header-logo {
-        justify-self: start;
-    }
-
-    .header-nav {
-        display: flex;
-        justify-self: center;
-    }
-
-    .header-right {
-        justify-self: end;
-    }
-
-    .sidebar-toggle {
-        display: none;
     }
 
     .dash-main {
@@ -2379,30 +2355,6 @@ html.dark .stat-card-change.down {
         flex-direction: row;
     }
 
-    .header-greeting {
-        display: inline;
-    }
-
-    .header-user-info {
-        font-size: 1.5rem;
-    }
-
-    .header-welcome {
-        font-size: 0.85rem;
-    }
-
-    .header-name {
-        font-size: 1.5rem;
-    }
-
-    .header-email {
-        font-size: 0.85rem;
-    }
-
-    .dash-header-center {
-        overflow: hidden;
-    }
-
     .footer-inner {
         flex-direction: row;
         text-align: left;
@@ -2452,8 +2404,28 @@ html.dark .stat-card-change.down {
         grid-template-columns: repeat(3, 1fr);
     }
 
+    .dash-header {
+        padding: 6px 20px;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+    }
+
+    .header-logo {
+        justify-self: start;
+    }
+
     .header-nav {
         display: flex;
+        justify-self: center;
+    }
+
+    .header-greeting {
+        display: inline;
+    }
+
+    .header-right {
+        justify-self: end;
     }
 
     .sidebar-toggle {
@@ -2529,6 +2501,25 @@ html.dark .stat-card-change.down {
     div .activity-bars {
         width: 60%;
     }
+
+    #sec6Cards {
+        display: flex;
+        gap: 24px;
+        align-items: flex-start;
+    }
+
+    #sec6Cards .activity-legend {
+        margin-top: 0;
+        padding-top: 0;
+        border-top: none;
+        border-left: 1px solid var(--border);
+        padding-left: 16px;
+    }
+
+    .admin-section-filters {
+        flex-direction: row;
+        align-items: flex-end;
+    }
 }
 
 /* ===== Reduced Motion ===== */
@@ -2553,7 +2544,6 @@ html.dark .stat-card-change.down {
     .btn-icon,
     .btn-page,
     .btn-logout,
-    .btn-back-dashboard,
     .fab-tx,
     .modal {
         transition-duration: 0.01ms !important;

@@ -111,18 +111,7 @@ function renderAdminDashboardSection() {
   initTabsScrollFade();
 }
 
-function switchAdminTab(tabId) {
-  document.querySelectorAll(".dash-tab-btn").forEach((btn) => {
-    const isActive = btn.dataset.tab === tabId;
-    btn.classList.toggle("active", isActive);
-    btn.setAttribute("aria-selected", isActive);
-  });
-  document.querySelectorAll(".dash-tab-panel").forEach((panel) => {
-    panel.classList.toggle("active", panel.dataset.tabPanel === tabId);
-  });
-}
-
-window.switchAdminTab = switchAdminTab;
+window.switchAdminTab = switchTab;
 
 function initTabsScrollFade() {
   const tabs = document.querySelector("#dashContent .dash-tabs");
@@ -207,7 +196,7 @@ function showEmptyState(containerId) {
   const el = document.getElementById(containerId);
   if (el)
     el.innerHTML =
-      '<div class="empty-state">Sin informaci&oacute;n para mostrar</div>';
+      '<div class="empty-state">Sin información para mostrar en este período.</div>';
 }
 
 function readPeriodRange(fromSel, toSel) {
@@ -437,7 +426,8 @@ async function loadExpBreakdownData(catExpenses) {
       }
       loadAdminSubcategoryChart();
     }
-  } catch {
+  } catch (err) {
+    console.error("Error loading category chart:", err);
     destroyChart("adminCategory");
     destroyChart("adminSubcategory");
   }
@@ -449,20 +439,12 @@ function renderAdminCategoryChart(data) {
   const canvas = document.getElementById("adminCategoryChart");
   if (!canvas || !data.length) return;
 
-  const onClick = (event, elements) => {
-    if (elements.length > 0) {
-      const idx = elements[0].index;
-      const catData = adminCategoryChartData[idx];
-      if (!catData || !catData.categoryId) return;
-      const sel = document.getElementById("adminCategoryFilter");
-      if (!sel) return;
-      const opt = sel.querySelector(`option[value="${catData.categoryId}"]`);
-      if (!opt) return;
-      sel.value = catData.categoryId;
-      adminCategoryFilter = catData.categoryId;
-      loadAdminSubcategoryChart();
-    }
-  };
+  const onClick = createDrillDownHandler(
+    adminCategoryChartData,
+    "adminCategoryFilter",
+    "adminCategoryFilter",
+    loadAdminSubcategoryChart
+  );
 
   chartAdminCategory = createDoughnutChart(
     "adminCategoryChart",
@@ -488,7 +470,8 @@ async function loadAdminSubcategoryChart() {
       `/dashboard/admin/expenses-by-subcategory?userId=${uid}&categoryId=${adminCategoryFilter}&monthFrom=${mf}&yearFrom=${yf}&monthTo=${mt}&yearTo=${yt}`,
     );
     renderAdminSubcategoryChart(Array.isArray(res) ? res : []);
-  } catch {
+  } catch (err) {
+    console.error("Error loading subcategory chart:", err);
     destroyChart("adminSubcategory");
   }
 }
@@ -646,7 +629,9 @@ async function loadAdminUsers() {
       "/admin/users?role=USER&status=ACTIVE&size=100&sort=name,asc",
     );
     adminUsers = res?.content || [];
-  } catch {}
+  } catch (err) {
+    console.error("Error loading admin users:", err);
+  }
 }
 
 function updateAdminTimestamp() {
@@ -683,7 +668,8 @@ async function loadSec1Data() {
       `/dashboard/admin/user-evolution?monthFrom=${sec1MonthFrom}&yearFrom=${sec1YearFrom}&monthTo=${sec1MonthTo}&yearTo=${sec1YearTo}`,
     );
     renderSec1(data);
-  } catch {
+  } catch (err) {
+    console.error("Error loading sec1 data:", err);
     destroyChart("userGrowth");
     document.getElementById("sec1Cards").innerHTML =
       '<div class="error-message">Error al cargar</div>';
@@ -747,8 +733,8 @@ function renderSec1Chart(monthly) {
           {
             label: "Activos",
             data: monthly.map((d) => d.activeUsers),
-            borderColor: "#4f46e5",
-            backgroundColor: "rgba(79,70,229,0.06)",
+            borderColor: getCssVar("--primary"),
+            backgroundColor: `rgba(${getCssVar("--primary-rgb") || "142,47,55"},0.06)`,
             fill: false,
             tension: 0.3,
             pointRadius: 3,
@@ -756,8 +742,8 @@ function renderSec1Chart(monthly) {
           {
             label: "Registrados",
             data: monthly.map((d) => d.registeredUsers),
-            borderColor: "#059669",
-            backgroundColor: "rgba(5,150,105,0.06)",
+            borderColor: getCssVar("--income"),
+            backgroundColor: `rgba(${getCssVar("--income-rgb") || "82,153,139"},0.06)`,
             fill: false,
             tension: 0.3,
             pointRadius: 3,
@@ -809,7 +795,8 @@ async function loadSec2Data() {
       `/dashboard/admin/transaction-evolution?monthFrom=${sec2MonthFrom}&yearFrom=${sec2YearFrom}&monthTo=${sec2MonthTo}&yearTo=${sec2YearTo}&userId=${sec2UserId}`,
     );
     renderSec2(data);
-  } catch {
+  } catch (err) {
+    console.error("Error loading sec2 data:", err);
     destroyChart("incomeVsExpense");
     document.getElementById("sec2Cards").innerHTML =
       '<div class="error-message">Error al cargar</div>';
@@ -876,13 +863,13 @@ function renderSec2Chart(monthly) {
           {
             label: "Ingresos",
             data: monthly.map((d) => Number(d.incomeTotal)),
-            backgroundColor: "rgba(5,150,105,0.7)",
+            backgroundColor: `rgba(${getCssVar("--income-rgb") || "82,153,139"},0.7)`,
             borderRadius: 4,
           },
           {
             label: "Gastos",
             data: monthly.map((d) => Number(d.expenseTotal)),
-            backgroundColor: "rgba(220,38,38,0.7)",
+            backgroundColor: `rgba(${getCssVar("--expense-rgb") || "206,55,55"},0.7)`,
             borderRadius: 4,
           },
         ],
@@ -928,7 +915,8 @@ async function loadMontosData() {
       apiRequest("GET", `/dashboard/admin/averages?userId=${montosUserId}`),
     ]);
     renderMontosCards(moneyData, avgData);
-  } catch {
+  } catch (err) {
+    console.error("Error loading montos data:", err);
     document.getElementById("montosCards").innerHTML =
       '<div class="error-message">Error al cargar</div>';
   }
@@ -992,7 +980,8 @@ async function loadSec5Data() {
       `/dashboard/admin/top-users?monthFrom=${sec5MonthFrom}&yearFrom=${sec5YearFrom}&monthTo=${sec5MonthTo}&yearTo=${sec5YearTo}`,
     );
     renderSec5(data);
-  } catch {
+  } catch (err) {
+    console.error("Error loading sec5 data:", err);
     document.getElementById("sec5Cards").innerHTML =
       '<div class="error-message">Error al cargar</div>';
   }
@@ -1056,7 +1045,8 @@ async function loadSec6Data() {
       `/dashboard/admin/activity-distribution?month=${sec6Month}&year=${sec6Year}`,
     );
     renderSec6(data);
-  } catch {
+  } catch (err) {
+    console.error("Error loading sec6 data:", err);
     document.getElementById("sec6Cards").innerHTML =
       '<div class="error-message">Error al cargar</div>';
   }

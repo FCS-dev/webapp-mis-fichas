@@ -1,7 +1,6 @@
 // SUBCATEGORIES SECTION — Tree view
 // ===================================================================
 function renderSubcategoriesSection() {
-  //<button class="btn-back-dashboard" onclick="window.navigateTo('dashboard')">&#x2190; Volver al panel</button>
   document.getElementById("dashContent").innerHTML = `
         <div class="section-header">
             <h2>Categor&iacute;as y Sub-Categorías</h2>
@@ -49,7 +48,7 @@ function renderSubTree() {
 
   if (!visibleSubs.length) {
     container.innerHTML =
-      '<p class="tree-empty">No hay subcategor&iacute;as disponibles</p>';
+      '<p class="tree-empty">No hay subcategorías. Crea una con el botón "Nueva".</p>';
     return;
   }
 
@@ -99,7 +98,7 @@ function renderSubTree() {
                 </li>`;
             })
             .join("")
-        : '<li class="tree-empty">Sin subcategor&iacute;as</li>';
+        : '<li class="tree-empty">Sin subcategorías. Crea una con el botón "Nueva".</li>';
 
       return `<div class="tree-category">
             <div class="tree-category-header">
