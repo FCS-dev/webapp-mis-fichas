@@ -828,6 +828,18 @@ html.dark .toggle-thumb {
     font-weight: 500;
 }
 
+#adminPeriodSubtitle h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    margin-top: 4px;
+}
+
+#adminPeriodSubtitle span {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
 /* ===== Summary cards (mobile-first: 1 column) ===== */
 .summary-cards {
     display: grid;
@@ -2237,10 +2249,6 @@ html.dark .stat-card-change.down {
 /* ===== Tablet: stat cards 2 cols ===== */
 @media (min-width: 641px) {
 
-    .stat-cards {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
     .admin-section-filters {
         flex-direction: column;
         align-items: center;
@@ -2396,9 +2404,9 @@ html.dark .stat-card-change.down {
         align-items: flex-start;
     }
 
-    .stat-cards {
+    /* .stat-cards {
         grid-template-columns: repeat(2, 1fr);
-    }
+    } */
 
     #montosCards {
         grid-template-columns: repeat(3, 1fr);
@@ -2499,13 +2507,13 @@ html.dark .stat-card-change.down {
     }
 
     div .activity-bars {
-        width: 60%;
+        width: 90%;
     }
 
     #sec6Cards {
         display: flex;
         gap: 24px;
-        align-items: flex-start;
+        align-items: center;
     }
 
     #sec6Cards .activity-legend {

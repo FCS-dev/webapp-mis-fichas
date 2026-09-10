@@ -11,6 +11,7 @@ function renderAdminDashboardSection() {
         <div class="section-header">
             <h2>Panel de Administraci&oacute;n</h2>
             <p id="adminDashboardTimestamp" style="font-size:0.75rem;color:var(--text-secondary);margin-top:4px;"></p>
+            <div id="adminPeriodSubtitle"></div>
         </div>
 
         <div class="admin-hero-cards" id="adminHeroCards">
@@ -22,7 +23,7 @@ function renderAdminDashboardSection() {
 
         <div class="admin-montos-section">
             <div class="admin-montos-header">
-                <h3 class="admin-montos-title" id="montosTitle">Estad&iacute;sticas</h3>
+                <h3 class="admin-montos-title" id="montosTitle">Estad&iacute;sticas (Todos)</h3>
                 <div class="admin-montos-filter" id="montosFilter"></div>
             </div>
             <div class="stat-cards" id="montosCards">
@@ -48,7 +49,6 @@ function renderAdminDashboardSection() {
                 <p class="admin-section-criteria" id="sec1Criteria"></p>
                 <div class="admin-section-filters" id="sec1Filters"></div>
                 <div class="stat-cards" id="sec1Cards">
-                    <div class="stat-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
                     <div class="stat-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
                 </div>
                 <div class="chart-card" style="margin-top:12px"><div class="chart-wrapper"><canvas id="sec1Chart" role="img" aria-label="Gráfico de evolución de usuarios"></canvas></div></div>
@@ -266,7 +266,7 @@ function updateMontosTitle() {
     montosUserId === 0 ? null : adminUsers.find((u) => u.id === montosUserId);
   el.innerHTML = user
     ? `Estad&iacute;sticas de ${escHtml(user.name || user.email)}`
-    : "Estad&iacute;sticas";
+    : "Estad&iacute;sticas (Todos)";
 }
 
 function renderSec5Filters() {
@@ -443,7 +443,7 @@ function renderAdminCategoryChart(data) {
     adminCategoryChartData,
     "adminCategoryFilter",
     "adminCategoryFilter",
-    loadAdminSubcategoryChart
+    loadAdminSubcategoryChart,
   );
 
   chartAdminCategory = createDoughnutChart(
@@ -603,22 +603,54 @@ function renderAdminHeroCards(allData) {
         : "var(--expense)"
       : "var(--text)";
 
+  const usersChange = sec1?.summary?.activeUsers
+    ? renderComparisonIndicator(
+        sec1.summary.activeUsers.current,
+        sec1.summary.activeUsers.previous,
+      )
+    : "";
+  const incomeChange =
+    money?.currentMonthIncome != null && money?.previousMonthIncome != null
+      ? renderComparisonIndicator(
+          Number(money.currentMonthIncome),
+          Number(money.previousMonthIncome),
+        )
+      : "";
+  const expenseChange =
+    money?.currentMonthExpense != null && money?.previousMonthExpense != null
+      ? renderComparisonIndicator(
+          Number(money.currentMonthExpense),
+          Number(money.previousMonthExpense),
+        )
+      : "";
+  const balanceChange =
+    money?.currentMonthBalance != null && money?.previousMonthBalance != null
+      ? renderComparisonIndicator(
+          Number(money.currentMonthBalance),
+          Number(money.previousMonthBalance),
+        )
+      : "";
+
   el.innerHTML = `
         <div class="admin-hero-card">
             <span class="admin-hero-label">Usuarios activos</span>
             <span class="admin-hero-value">${Number(activeUsers).toLocaleString("es-ES")}</span>
+            ${usersChange}
         </div>
         <div class="admin-hero-card income">
             <span class="admin-hero-label">Ingresos totales</span>
             <span class="admin-hero-value">${totalIncome}</span>
+            ${incomeChange}
         </div>
         <div class="admin-hero-card expense">
             <span class="admin-hero-label">Gastos totales</span>
             <span class="admin-hero-value">${totalExpense}</span>
+            ${expenseChange}
         </div>
         <div class="admin-hero-card">
             <span class="admin-hero-label">Balance total</span>
             <span class="admin-hero-value" style="color:${balanceColor}">${totalBalance}</span>
+            ${balanceChange}
         </div>`;
 }
 
@@ -640,6 +672,11 @@ function updateAdminTimestamp() {
   const d = adminLastUpdate;
   const pad = (n) => String(n).padStart(2, "0");
   el.textContent = `Última actualización: ${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+
+  const sub = document.getElementById("adminPeriodSubtitle");
+  if (sub) {
+    sub.innerHTML = `<h3>${MONTH_NAMES_FULL[d.getMonth()]} ${d.getFullYear()}</h3><span>(% variaciones respecto al mes anterior)</span>`;
+  }
 }
 
 // ===================================================================
@@ -690,14 +727,8 @@ function renderSec1(data) {
   const s = data.summary;
   document.getElementById("sec1Cards").innerHTML = `
         <div class="stat-card">
-            <span class="stat-card-label">Usuarios activos</span>
-            <span class="stat-card-value">${Number(s.activeUsers.current).toLocaleString("es-ES")}</span>
-            ${renderComparisonIndicator(s.activeUsers.current, s.activeUsers.previous)}
-        </div>
-        <div class="stat-card">
-            <span class="stat-card-label">Registrados</span>
+            <span class="stat-card-label">Registrados en el Periodo</span>
             <span class="stat-card-value">${Number(s.registeredUsers.current).toLocaleString("es-ES")}</span>
-            ${renderComparisonIndicator(s.registeredUsers.current, s.registeredUsers.previous)}
         </div>`;
 
   renderSec1Chart(monthly);
@@ -758,6 +789,13 @@ function renderSec1Chart(monthly) {
             position: "bottom",
             labels: { color: textColor, boxWidth: 12, padding: 12 },
           },
+          datalabels: {
+            display: true,
+            align: "top",
+            anchor: "end",
+            formatter: (value) => value,
+            color: textColor,
+          },
         },
         scales: {
           x: { ticks: { color: textColor }, grid: { color: gridColor } },
@@ -768,6 +806,7 @@ function renderSec1Chart(monthly) {
           },
         },
       },
+      plugins: [ChartDataLabels],
     });
   }
 }
@@ -818,14 +857,12 @@ function renderSec2(data) {
   const s = data.summary;
   document.getElementById("sec2Cards").innerHTML = `
         <div class="stat-card">
-            <span class="stat-card-label">Transacciones / mes</span>
+            <span class="stat-card-label">Transacciones / mes, en el Periodo</span>
             <span class="stat-card-value">${Number(s.transactionsPerMonth.current).toLocaleString("es-ES")}</span>
-            ${renderComparisonIndicator(s.transactionsPerMonth.current, s.transactionsPerMonth.previous)}
         </div>
         <div class="stat-card">
-            <span class="stat-card-label">Promedio / usuario</span>
+            <span class="stat-card-label">Promedio / usuario, en el Periodo</span>
             <span class="stat-card-value">${Number(s.avgPerUser.current).toLocaleString("es-ES", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}</span>
-            ${renderComparisonIndicator(s.avgPerUser.current, s.avgPerUser.previous)}
         </div>`;
 
   renderSec2Chart(monthly);
@@ -882,6 +919,24 @@ function renderSec2Chart(monthly) {
             position: "bottom",
             labels: { color: textColor, boxWidth: 12, padding: 12 },
           },
+          datalabels: {
+            display: true,
+            anchor: "end",
+            align: "top",
+            formatter: (value) => {
+              if (value >= 1000) {
+                return (
+                  (value / 1000).toLocaleString("es-ES", {
+                    maximumFractionDigits: 1,
+                  }) + "k"
+                );
+              }
+              return value.toLocaleString("es-ES", {
+                maximumFractionDigits: 0,
+              });
+            },
+            color: textColor,
+          },
         },
         scales: {
           x: { ticks: { color: textColor }, grid: { color: gridColor } },
@@ -892,6 +947,7 @@ function renderSec2Chart(monthly) {
           },
         },
       },
+      plugins: [ChartDataLabels],
     });
   }
 }

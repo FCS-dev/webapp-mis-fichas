@@ -81,8 +81,7 @@ function createDrillDownHandler(chartData, filterSelectId, filterVar, loadFn) {
       const opt = sel.querySelector(`option[value="${catData.categoryId}"]`);
       if (!opt) return;
       sel.value = catData.categoryId;
-      window[filterVar] = catData.categoryId;
-      loadFn();
+      sel.dispatchEvent(new Event("change"));
     }
   };
 }
@@ -171,6 +170,9 @@ function refreshChartTheme() {
         }
       });
     }
+
+    const datalabels = chart.options.plugins?.datalabels;
+    if (datalabels) datalabels.color = textColor;
 
     chart.update("none");
   });
