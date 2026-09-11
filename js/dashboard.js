@@ -1,21 +1,12 @@
 // ===================================================================
-// HELPERS
-// ===================================================================
-function getDefaultDateFrom(monthsBack) {
-  const d = new Date();
-  d.setMonth(d.getMonth() - monthsBack);
-  return { month: d.getMonth() + 1, year: d.getFullYear() };
-}
-
-// ===================================================================
 // STATE
 // ===================================================================
 let currentSection = "dashboard";
 let cachedCategories = [];
 
 // Dashboard filter state
-let dashMonth = CURRENT_MONTH;
-let dashYear = CURRENT_YEAR;
+let dashMonth = currentMonth();
+let dashYear = currentYear();
 let dashCategoryFilter = null;
 let dashMonthsRange = 3;
 let chartCategory = null;
@@ -47,18 +38,19 @@ let adminUsers = [];
 let adminLastUpdate = null;
 
 // Section 1: User evolution
-const _6m = getDefaultDateFrom(6);
+const _d = new Date(); _d.setMonth(_d.getMonth() - 6);
+const _6m = { month: _d.getMonth() + 1, year: _d.getFullYear() };
 let sec1MonthFrom = _6m.month;
 let sec1YearFrom = _6m.year;
-let sec1MonthTo = CURRENT_MONTH;
-let sec1YearTo = CURRENT_YEAR;
+let sec1MonthTo = currentMonth();
+let sec1YearTo = currentYear();
 let chartUserGrowth = null;
 
 // Section 2: Transaction evolution
 let sec2MonthFrom = _6m.month;
 let sec2YearFrom = _6m.year;
-let sec2MonthTo = CURRENT_MONTH;
-let sec2YearTo = CURRENT_YEAR;
+let sec2MonthTo = currentMonth();
+let sec2YearTo = currentYear();
 let sec2UserId = 0;
 let chartIncomeVsExpense = null;
 
@@ -68,12 +60,12 @@ let montosUserId = 0;
 // Section 5: Top users
 let sec5MonthFrom = _6m.month;
 let sec5YearFrom = _6m.year;
-let sec5MonthTo = CURRENT_MONTH;
-let sec5YearTo = CURRENT_YEAR;
+let sec5MonthTo = currentMonth();
+let sec5YearTo = currentYear();
 
 // Section 6: Activity distribution
-let sec6Month = CURRENT_MONTH;
-let sec6Year = CURRENT_YEAR;
+let sec6Month = currentMonth();
+let sec6Year = currentYear();
 
 // Expense breakdown (category + subcategory pie charts)
 let chartAdminCategory = null;
@@ -83,8 +75,8 @@ let adminCategoryChartData = [];
 let expBreakdownUserId = 0;
 let expBreakdownMonthFrom = _6m.month;
 let expBreakdownYearFrom = _6m.year;
-let expBreakdownMonthTo = CURRENT_MONTH;
-let expBreakdownYearTo = CURRENT_YEAR;
+let expBreakdownMonthTo = currentMonth();
+let expBreakdownYearTo = currentYear();
 
 // ===================================================================
 // CATEGORY CACHE
@@ -170,6 +162,7 @@ function renderDashboardLayout() {
                     <button class="header-nav-link" data-section="transactions" onclick="window.navigateTo('transactions')">Transacciones</button>
                     <button class="header-nav-link" data-section="subcategories" onclick="window.navigateTo('subcategories')">Sub-Categor&iacute;as</button>
                     ${isAdmin() ? '<button class="header-nav-link" data-section="categories" onclick="window.navigateTo(\'categories\')">Categor&iacute;as</button>' : ""}
+                    ${!isAdmin() ? '<button class="header-nav-link" onclick="window.showTxForm()">Nueva Transacci&oacute;n</button>' : ""}
                 </nav>
                 <div class="header-right">
                     <button class="theme-toggle" onclick="window.toggleTheme()" title="Cambiar tema" aria-label="Cambiar tema" aria-pressed="${isDark}">
@@ -196,6 +189,7 @@ function renderDashboardLayout() {
                         <li><button class="sidebar-link" data-section="transactions" onclick="window.navigateTo('transactions')"><span class="icon">&#x1F4B0;</span> Transacciones</button></li>
                         <li><button class="sidebar-link" data-section="subcategories" onclick="window.navigateTo('subcategories')"><span class="icon">&#x1F3F7;</span> Sub-Categor&iacute;as</button></li>
                         ${isAdmin() ? '<li><button class="sidebar-link" data-section="categories" onclick="window.navigateTo(\'categories\')"><span class="icon">&#x1F4C1;</span> Categor&iacute;as</button></li>' : ""}
+                        ${!isAdmin() ? '<li class="sidebar-separator"></li><li><button class="sidebar-link" onclick="window.showTxForm(); window.closeSidebar()"><span class="icon">&#x2795;</span> Nueva Transacci&oacute;n</button></li>' : ""}
                     </ul>
                     <button class="theme-toggle sidebar-theme-toggle" onclick="window.toggleTheme()" title="Cambiar tema" aria-label="Cambiar tema" aria-pressed="${isDark}">
                         ${getThemeIcon(isDark)}
@@ -216,7 +210,7 @@ function renderDashboardLayout() {
                 <span class="footer-copy">&copy; ${new Date().getFullYear()} <a href="https://github.com/FCS-dev/webapp-mis-fichas" target="_blank" rel="noopener noreferrer">Franco Calderón</a></span>
             </div>
         </footer>
-        ${!isAdmin() ? '<button class="fab-tx" onclick="window.showTxForm()" title="Nueva transacci&oacute;n" aria-label="Nueva transacción"><span class="fab-icon">+</span><span class="fab-label">Nueva transacci&oacute;n</span></button>' : ""}
+        ${!isAdmin() ? '<button class="fab-tx" onclick="window.showTxForm()" title="Nueva transacci&oacute;n" aria-label="Nueva transacción"><span class="fab-icon">+</span><span class="fab-label">Transacci&oacute;n</span></button>' : ""}
     `;
 
   updateLogoSrc();
@@ -240,10 +234,12 @@ function renderDashboard() {
 // ===================================================================
 async function handleLogout() {
   try {
-    await apiRequest("POST", "/auth/logout");
-  } catch {
-    /* ignore */
-  }
+    await fetch(`${CONFIG.API_BASE}/auth/logout`, {
+      method: "POST",
+      credentials: "include",
+    });
+  } catch { /* ignore */ }
+  destroyAllCharts();
   clearTokens();
   window.location.hash = "#login";
 }

@@ -128,36 +128,18 @@ function initTabsScrollFade() {
 // ===================================================================
 // ADMIN DASHBOARD — HELPERS
 // ===================================================================
-function getMaxMonthValue() {
-  const now = new Date();
-  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
-}
-
 function buildMonthInput(id, year, month) {
-  return `<input type="month" id="${id}" value="${year}-${String(month).padStart(2, "0")}" max="${getMaxMonthValue()}">`;
+  return `<input type="month" id="${id}" value="${year}-${String(month).padStart(2, "0")}">`;
 }
 
 function initMonthPicker(selector, year, month, onChange) {
-  flatpickr(selector, {
-    plugins: [
-      new monthSelectPlugin({
-        shorthand: true,
-        dateFormat: "Y-m",
-        altInput: true,
-        altFormat: "F Y",
-      }),
-    ],
-    defaultDate: `${year}-${String(month).padStart(2, "0")}`,
-    maxDate: new Date(),
-    onChange: onChange,
-  });
+  const el = document.querySelector(selector);
+  if (!el) return;
+  if (onChange) el.addEventListener("change", onChange);
 }
 
 function getMonthPickerValue(selector) {
   const el = document.querySelector(selector);
-  if (el && el._flatpickr && el._flatpickr.selectedDates[0]) {
-    return el._flatpickr.formatDate(el._flatpickr.selectedDates[0], "Y-m");
-  }
   return el?.value || "";
 }
 
@@ -210,24 +192,34 @@ function readPeriodRange(fromSel, toSel) {
   return { yf, mf, yt, mt };
 }
 
+function renderPeriodFilters(cfg) {
+  document.getElementById(cfg.filtersId).innerHTML = `
+        <label>Desde ${buildMonthInput(cfg.fromId, cfg.fromYear, cfg.fromMonth)}</label>
+        <label>Hasta ${buildMonthInput(cfg.toId, cfg.toYear, cfg.toMonth)}</label>
+        <button class="btn-primary" onclick="window.${cfg.applyHandler}()">Actualizar</button>`;
+  document.getElementById(cfg.criteriaId).textContent = criteriaPeriod(
+    cfg.fromMonth, cfg.fromYear, cfg.toMonth, cfg.toYear,
+  );
+  initMonthPicker(`#${cfg.fromId}`, cfg.fromYear, cfg.fromMonth);
+  initMonthPicker(`#${cfg.toId}`, cfg.toYear, cfg.toMonth);
+}
+
+function applyPeriodFilter(fromSel, toSel, criteriaId, assignFn, loadFn) {
+  const r = readPeriodRange(fromSel, toSel);
+  if (!r) return;
+  assignFn(r);
+  document.getElementById(criteriaId).textContent = criteriaPeriod(r.mf, r.yf, r.mt, r.yt);
+  loadFn();
+}
+
 function renderSec1Filters() {
-  document.getElementById("sec1Filters").innerHTML = `
-        <label>Desde ${buildMonthInput("sec1MonthFrom", sec1YearFrom, sec1MonthFrom)}</label>
-        <label>Hasta ${buildMonthInput("sec1MonthTo", sec1YearTo, sec1MonthTo)}</label>
-        <button class="btn-primary" onclick="window.handleApplySec1()">Actualizar</button>`;
-  document.getElementById("sec1Criteria").textContent = criteriaPeriod(
-    sec1MonthFrom,
-    sec1YearFrom,
-    sec1MonthTo,
-    sec1YearTo,
-  );
-  initMonthPicker(
-    "#sec1MonthFrom",
-    sec1YearFrom,
-    sec1MonthFrom,
-    function () {},
-  );
-  initMonthPicker("#sec1MonthTo", sec1YearTo, sec1MonthTo, function () {});
+  renderPeriodFilters({
+    filtersId: "sec1Filters", criteriaId: "sec1Criteria",
+    fromId: "sec1MonthFrom", toId: "sec1MonthTo",
+    fromYear: sec1YearFrom, fromMonth: sec1MonthFrom,
+    toYear: sec1YearTo, toMonth: sec1MonthTo,
+    applyHandler: "handleApplySec1",
+  });
 }
 
 function renderSec2Filters() {
@@ -241,13 +233,8 @@ function renderSec2Filters() {
   populateUserSelect("sec2UserSelect", sec2UserId);
   document.getElementById("sec2Criteria").textContent =
     `${criteriaUser(sec2UserId)} | ${criteriaPeriod(sec2MonthFrom, sec2YearFrom, sec2MonthTo, sec2YearTo)}`;
-  initMonthPicker(
-    "#sec2MonthFrom",
-    sec2YearFrom,
-    sec2MonthFrom,
-    function () {},
-  );
-  initMonthPicker("#sec2MonthTo", sec2YearTo, sec2MonthTo, function () {});
+  initMonthPicker("#sec2MonthFrom", sec2YearFrom, sec2MonthFrom);
+  initMonthPicker("#sec2MonthTo", sec2YearTo, sec2MonthTo);
 }
 
 function renderMontosFilter() {
@@ -270,23 +257,13 @@ function updateMontosTitle() {
 }
 
 function renderSec5Filters() {
-  document.getElementById("sec5Filters").innerHTML = `
-        <label>Desde ${buildMonthInput("sec5MonthFrom", sec5YearFrom, sec5MonthFrom)}</label>
-        <label>Hasta ${buildMonthInput("sec5MonthTo", sec5YearTo, sec5MonthTo)}</label>
-        <button class="btn-primary" onclick="window.handleApplySec5()">Actualizar</button>`;
-  document.getElementById("sec5Criteria").textContent = criteriaPeriod(
-    sec5MonthFrom,
-    sec5YearFrom,
-    sec5MonthTo,
-    sec5YearTo,
-  );
-  initMonthPicker(
-    "#sec5MonthFrom",
-    sec5YearFrom,
-    sec5MonthFrom,
-    function () {},
-  );
-  initMonthPicker("#sec5MonthTo", sec5YearTo, sec5MonthTo, function () {});
+  renderPeriodFilters({
+    filtersId: "sec5Filters", criteriaId: "sec5Criteria",
+    fromId: "sec5MonthFrom", toId: "sec5MonthTo",
+    fromYear: sec5YearFrom, fromMonth: sec5MonthFrom,
+    toYear: sec5YearTo, toMonth: sec5MonthTo,
+    applyHandler: "handleApplySec5",
+  });
 }
 
 function renderSec6Filters() {
@@ -297,7 +274,7 @@ function renderSec6Filters() {
     sec6Month,
     sec6Year,
   );
-  initMonthPicker("#sec6Month", sec6Year, sec6Month, function () {});
+  initMonthPicker("#sec6Month", sec6Year, sec6Month);
 }
 
 function populateUserSelect(selectId, selectedValue, defaultLabel) {
@@ -327,18 +304,8 @@ function renderExpBreakdownFilters() {
   populateUserSelect("expBreakdownUser", expBreakdownUserId);
   document.getElementById("expBreakdownCriteria").textContent =
     `${criteriaUser(expBreakdownUserId)} | ${criteriaPeriod(expBreakdownMonthFrom, expBreakdownYearFrom, expBreakdownMonthTo, expBreakdownYearTo)}`;
-  initMonthPicker(
-    "#expBreakdownMonthFrom",
-    expBreakdownYearFrom,
-    expBreakdownMonthFrom,
-    function () {},
-  );
-  initMonthPicker(
-    "#expBreakdownMonthTo",
-    expBreakdownYearTo,
-    expBreakdownMonthTo,
-    function () {},
-  );
+  initMonthPicker("#expBreakdownMonthFrom", expBreakdownYearFrom, expBreakdownMonthFrom);
+  initMonthPicker("#expBreakdownMonthTo", expBreakdownYearTo, expBreakdownMonthTo);
 }
 
 function handleApplyExpBreakdown() {
@@ -683,19 +650,9 @@ function updateAdminTimestamp() {
 // SECTION 1 — EVOLUCIÓN DE USUARIOS
 // ===================================================================
 function handleApplySec1() {
-  const r = readPeriodRange("#sec1MonthFrom", "#sec1MonthTo");
-  if (!r) return;
-  sec1MonthFrom = r.mf;
-  sec1YearFrom = r.yf;
-  sec1MonthTo = r.mt;
-  sec1YearTo = r.yt;
-  document.getElementById("sec1Criteria").textContent = criteriaPeriod(
-    r.mf,
-    r.yf,
-    r.mt,
-    r.yt,
-  );
-  loadSec1Data();
+  applyPeriodFilter("#sec1MonthFrom", "#sec1MonthTo", "sec1Criteria", r => {
+    sec1MonthFrom = r.mf; sec1YearFrom = r.yf; sec1MonthTo = r.mt; sec1YearTo = r.yt;
+  }, loadSec1Data);
 }
 
 async function loadSec1Data() {
@@ -1014,19 +971,9 @@ function renderMontosCards(moneyData, avgData) {
 // SECTION 5 — TOP USUARIOS
 // ===================================================================
 function handleApplySec5() {
-  const r = readPeriodRange("#sec5MonthFrom", "#sec5MonthTo");
-  if (!r) return;
-  sec5MonthFrom = r.mf;
-  sec5YearFrom = r.yf;
-  sec5MonthTo = r.mt;
-  sec5YearTo = r.yt;
-  document.getElementById("sec5Criteria").textContent = criteriaPeriod(
-    r.mf,
-    r.yf,
-    r.mt,
-    r.yt,
-  );
-  loadSec5Data();
+  applyPeriodFilter("#sec5MonthFrom", "#sec5MonthTo", "sec5Criteria", r => {
+    sec5MonthFrom = r.mf; sec5YearFrom = r.yf; sec5MonthTo = r.mt; sec5YearTo = r.yt;
+  }, loadSec5Data);
 }
 
 async function loadSec5Data() {

@@ -265,21 +265,15 @@ async function handleTxSubmit(e) {
   e.preventDefault();
   const errorEl = document.getElementById("txFormError");
   errorEl.textContent = "";
-  const btn = e.target.querySelector('button[type="submit"]');
-  btn.disabled = true;
-  btn.textContent = "Guardando…";
-
-  const payload = {
-    amount: parseFloat(document.getElementById("txAmount").value),
-    categoryId: parseInt(document.getElementById("txCategory").value),
-    subcategoryId: parseInt(document.getElementById("txSubcategory").value),
-    description: document.getElementById("txDesc").value.trim(),
-    transactionDate: document.getElementById("txDate").value,
-  };
-
-  const isEdit = !!window.__editingTxId;
-
-  try {
+  await withSubmitBtn(e, "Guardando…", async () => {
+    const payload = {
+      amount: parseFloat(document.getElementById("txAmount").value),
+      categoryId: parseInt(document.getElementById("txCategory").value),
+      subcategoryId: parseInt(document.getElementById("txSubcategory").value),
+      description: document.getElementById("txDesc").value.trim(),
+      transactionDate: document.getElementById("txDate").value,
+    };
+    const isEdit = !!window.__editingTxId;
     if (isEdit) {
       await apiRequest("PUT", `/transactions/${window.__editingTxId}`, payload);
     } else {
@@ -291,12 +285,7 @@ async function handleTxSubmit(e) {
     showToast("Transacción guardada correctamente", "success");
     await loadTransactionsData();
     await refreshDashboardIfActive();
-  } catch (err) {
-    errorEl.textContent = err.message;
-  } finally {
-    btn.disabled = false;
-    btn.textContent = isEdit ? "Guardar cambios" : "Crear transacción";
-  }
+  }).catch(err => { errorEl.textContent = err.message; });
 }
 
 async function editTx(id) {

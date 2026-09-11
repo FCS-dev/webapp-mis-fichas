@@ -63,7 +63,7 @@ html.dark {
     --primary-hover: rgba(230, 120, 0, 1);
     --income: rgba(0, 180, 117, 1);
     --expense: rgba(255, 99, 82, 1);
-    --border: rgba(38, 37, 34, 1);
+    --border: rgba(58, 56, 52, 1);
     --input-bg: rgba(38, 37, 34, 1);
     --shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     --shadow-focus: 0 0 0 2px rgba(255, 145, 0, 0.35);
@@ -323,6 +323,7 @@ html.dark .toggle-thumb {
     display: flex;
     gap: 10px;
     margin-top: 8px;
+    justify-content: center;
 }
 
 /* ===== Buttons ===== */
@@ -636,6 +637,12 @@ html.dark .toggle-thumb {
     width: 20px;
     text-align: center;
     flex-shrink: 0;
+}
+
+.sidebar-separator {
+    border-top: 1px solid var(--border);
+    margin: 8px 24px;
+    list-style: none;
 }
 
 /* Theme toggle inside sidebar (mobile) */
@@ -1490,8 +1497,7 @@ html.dark .badge-expense {
 }
 
 .filter-controls select,
-.filter-controls input[type="month"],
-.filter-controls .flatpickr-input {
+.filter-controls input[type="month"] {
     padding: 8px 14px;
     border: 1.5px solid var(--primary);
     border-radius: var(--radius);
@@ -1506,9 +1512,7 @@ html.dark .badge-expense {
 .filter-controls select:hover,
 .filter-controls select:focus,
 .filter-controls input[type="month"]:hover,
-.filter-controls input[type="month"]:focus,
-.filter-controls .flatpickr-input:hover,
-.filter-controls .flatpickr-input:focus {
+.filter-controls input[type="month"]:focus {
     box-shadow: var(--shadow-focus);
     outline: none;
 }
@@ -1833,32 +1837,6 @@ html.dark .comparison-icon.expense {
 }
 
 /* ===== Admin Dashboard Sections ===== */
-.admin-section {
-    background: var(--card-bg);
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    padding: 20px;
-    margin-bottom: 20px;
-    transition: background 0.3s;
-}
-
-.admin-section-header {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 16px;
-}
-
-.admin-section-header h3 {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--text);
-}
-
-.admin-section-title-group {
-    display: flex;
-    flex-direction: column;
-}
 
 .admin-section-criteria {
     font-size: 0.75rem;
@@ -1891,8 +1869,7 @@ html.dark .comparison-icon.expense {
 }
 
 .admin-section-filters select,
-.admin-section-filters input[type="month"],
-.admin-section-filters .flatpickr-input {
+.admin-section-filters input[type="month"] {
     flex: 1;
     min-width: 0;
     padding: 8px 10px;
@@ -1909,9 +1886,7 @@ html.dark .comparison-icon.expense {
 .admin-section-filters select:hover,
 .admin-section-filters select:focus,
 .admin-section-filters input[type="month"]:hover,
-.admin-section-filters input[type="month"]:focus,
-.admin-section-filters .flatpickr-input:hover,
-.admin-section-filters .flatpickr-input:focus {
+.admin-section-filters input[type="month"]:focus {
     box-shadow: var(--shadow-focus);
     outline: none;
 }
@@ -2200,6 +2175,7 @@ html.dark .stat-card-change.down {
 
 .fab-tx .fab-label {
     line-height: 1;
+    font-size: .75rem;
 }
 
 .sr-only {
@@ -2233,11 +2209,28 @@ html.dark .stat-card-change.down {
     font-size: 0.8rem;
 }
 
+#txForm {
+    display: grid;
+    gap: 12px;
+}
+
+#catForm,
+#subForm {
+    display: grid;
+    gap: 12px;
+}
+
+#subForm .form-group,
+#catForm .form-group {
+    gap: 12px;
+}
+
 @media (min-width: 401px) {
     .fab-tx {
-        bottom: 84px;
+        bottom: 30px;
         left: 50%;
         right: auto;
+        background-color: rgba(0, 0, 0, 0.3);
         transform: translateX(-50%);
     }
 
@@ -2388,15 +2381,16 @@ html.dark .stat-card-change.down {
 
 @media (min-width: 1024px) {
     .fab-tx {
-        bottom: calc(var(--footer-height) + 16px);
+        display: none;
+        /* bottom: calc(var(--footer-height) + 16px);
         left: auto;
         right: 7%;
-        transform: none;
+        transform: none; */
     }
 
-    .fab-tx:hover {
+    /* .fab-tx:hover {
         transform: scale(1.05);
-    }
+    } */
 
     .admin-section-header {
         flex-direction: row;

@@ -56,7 +56,7 @@ El frontend consume una **API REST** (`http://localhost:8080/api/v1`) con autent
 - **Gráfico de líneas**: evolución del balance mensual (últimos 12 meses)
 - **Comparativas**: ingresos vs gastos del mes actual vs anterior
 - **Top gastos**: las subcategorías con mayor gasto
-- Selector de mes con Flatpickr
+- Selector de mes nativo (`<input type="month">`)
 
 ### Dashboard de administrador
 
@@ -152,7 +152,7 @@ El frontend consume una **API REST** (`http://localhost:8080/api/v1`) con autent
 
 ## Arquitectura
 
-Proyecto **vanilla** sin frameworks, build tools ni dependencias de runtime (solo CDN: Chart.js y Flatpickr). Scripts cargados secuencialmente en `index.html` con namespace global.
+Proyecto **vanilla** sin frameworks, build tools ni dependencias de runtime (solo CDN: Chart.js). Scripts cargados secuencialmente en `index.html` con namespace global.
 
 ### Estructura de archivos
 
@@ -330,7 +330,6 @@ Base URL: `http://localhost:8080/api/v1`
 | **Estilos**       | CSS3 (custom properties, responsive mobile-first, temas claro/oscuro) |
 | **Lógica**        | JavaScript vanilla (scripts secuenciales, namespace global)           |
 | **Gráficos**      | Chart.js 4.x (CDN)                                                    |
-| **Datepicker**    | Flatpickr + plugin monthSelect (CDN)                                   |
 | **Autenticación** | JWT (access + refresh token, cookie HttpOnly)                         |
 | **API**           | REST en Java/Spring Boot (`localhost:8080/api/v1`)                    |
 | **Moneda**        | EUR (€)                                                                |

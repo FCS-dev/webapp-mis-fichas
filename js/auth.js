@@ -36,20 +36,12 @@ async function handleLoginSubmit(e) {
     const password = document.getElementById('loginPassword').value;
     const errorEl = document.getElementById('loginError');
     errorEl.textContent = '';
-    const btn = e.target.querySelector('button[type="submit"]');
-    btn.disabled = true;
-    btn.textContent = 'Ingresando…';
-    try {
+    await withSubmitBtn(e, 'Ingresando…', async () => {
         const data = await apiRequest('POST', '/auth/login', { email, password });
         saveAccessToken(data.accessToken);
         saveUserInfoFromToken(data.accessToken);
         window.location.hash = '#dashboard';
-    } catch (err) {
-        errorEl.textContent = err.message;
-    } finally {
-        btn.disabled = false;
-        btn.textContent = 'Iniciar sesión';
-    }
+    }).catch(err => { errorEl.textContent = err.message; });
 }
 
 function renderRegister() {
@@ -99,18 +91,10 @@ async function handleRegisterSubmit(e) {
     const successEl = document.getElementById('registerSuccess');
     errorEl.textContent = '';
     successEl.textContent = '';
-    const btn = e.target.querySelector('button[type="submit"]');
-    btn.disabled = true;
-    btn.textContent = 'Registrando…';
-    try {
+    await withSubmitBtn(e, 'Registrando…', async () => {
         const data = await apiRequest('POST', '/auth/register', { name, email, password });
         saveAccessToken(data.accessToken);
         saveUserInfoFromToken(data.accessToken);
         window.location.hash = '#dashboard';
-    } catch (err) {
-        errorEl.textContent = err.message;
-    } finally {
-        btn.disabled = false;
-        btn.textContent = 'Crear cuenta';
-    }
+    }).catch(err => { errorEl.textContent = err.message; });
 }

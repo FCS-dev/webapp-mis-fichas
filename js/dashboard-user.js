@@ -30,13 +30,13 @@ function renderDashboardSection() {
             <div class="filter-section">
                 <div class="filter-controls" id="dashFilters">
                 <label>Per&iacute;odo
-                    <input type="text" id="dashMonthInput" class="flatpickr-input" value="${dashYear}-${String(dashMonth).padStart(2, "0")}" onchange="window.handleFilterChange()">
+                    <input type="month" id="dashMonthInput" value="${dashYear}-${String(dashMonth).padStart(2, "0")}" onchange="window.handleFilterChange()">
                 </label>
             </div>
             </div>
         </div>
         <div class="summary-cards" id="dashSummary" role="group" aria-label="Resumen financiero">
-            <div class="summary-card summary-card--income" id="incomeCard">
+            <div class="summary-card summary-card" id="incomeCard">
                 <div class="summary-card-header">
                     <span class="summary-label">Ingresos</span>
                     <span class="summary-icon income" aria-hidden="true">
@@ -46,7 +46,7 @@ function renderDashboardSection() {
                 <span class="summary-value income" id="incomeValue">${CONFIG.CURRENCY_SYMBOL || "$"} 0</span>
                 <span class="summary-change" id="incomeChange"></span>
             </div>
-            <div class="summary-card summary-card--expense" id="expenseCard">
+            <div class="summary-card summary-card" id="expenseCard">
                 <div class="summary-card-header">
                     <span class="summary-label">Gastos</span>
                     <span class="summary-icon expense" aria-hidden="true">
@@ -56,7 +56,7 @@ function renderDashboardSection() {
                 <span class="summary-value expense" id="expenseValue">${CONFIG.CURRENCY_SYMBOL || "$"} 0</span>
                 <span class="summary-change" id="expenseChange"></span>
             </div>
-            <div class="summary-card summary-card--balance" id="balanceCard">
+            <div class="summary-card summary-card" id="balanceCard">
                 <div class="summary-card-header">
                     <span class="summary-label">Balance</span>
                     <span class="summary-icon balance" aria-hidden="true">
@@ -66,7 +66,7 @@ function renderDashboardSection() {
                 <span class="summary-value" id="balanceValue">${CONFIG.CURRENCY_SYMBOL || "$"} 0</span>
                 <span class="summary-change" id="balanceChange"></span>
             </div>
-            <div class="summary-card summary-card--saving" id="savingRateCard">
+            <div class="summary-card summary-card" id="savingRateCard">
                 <div class="summary-card-header">
                     <span class="summary-label">Tasa de ahorro</span>
                     <span class="summary-icon saving" aria-hidden="true">
@@ -140,8 +140,8 @@ function renderDashboardSection() {
     "#dashMonthInput",
     dashYear,
     dashMonth,
-    function (selectedDates, dateStr) {
-      const [y, m] = dateStr.split("-");
+    function (e) {
+      const [y, m] = e.target.value.split("-");
       dashYear = parseInt(y);
       dashMonth = parseInt(m);
       dashCategoryFilter = null;
@@ -185,7 +185,19 @@ async function loadDashboardData() {
     const savingRate = summaryRes?.savingRate ?? 0;
     renderDashboardCards(income, expense, savingRate);
 
-    renderComparisonCards(comparisonRes);
+    const _now = new Date(dashYear, dashMonth - 1, 1);
+    const _prev = new Date(dashYear, dashMonth - 2, 1);
+    const _curLabel = getMonthFullName(dashMonth) + " " + dashYear;
+    const _prevLabel = getMonthFullName(_prev.getMonth() + 1) + " " + _prev.getFullYear();
+    const _periodText = _curLabel + " vs " + _prevLabel;
+    const expPeriod = document.getElementById("expenseComparisonPeriod");
+    const incPeriod = document.getElementById("incomeComparisonPeriod");
+    if (expPeriod) expPeriod.textContent = _periodText;
+    if (incPeriod) incPeriod.textContent = _periodText;
+    const expEl = document.getElementById("expenseGlossary");
+    const incEl = document.getElementById("incomeGlossary");
+    if (expEl) expEl.textContent = comparisonRes?.expenseGlossary || "Sin datos comparativos";
+    if (incEl) incEl.textContent = comparisonRes?.incomeGlossary || "Sin datos comparativos";
 
     const catExpenseData = Array.isArray(catExpenses) ? catExpenses : [];
     categoryChartData = catExpenseData;
@@ -261,26 +273,6 @@ function renderDashboardCards(income, expense, savingRate) {
     srEl.className =
       "summary-value " + (savingRate >= 0 ? "income" : "expense");
   }
-}
-
-function renderComparisonCards(data) {
-  const expEl = document.getElementById("expenseGlossary");
-  const incEl = document.getElementById("incomeGlossary");
-  const expPeriod = document.getElementById("expenseComparisonPeriod");
-  const incPeriod = document.getElementById("incomeComparisonPeriod");
-
-  const now = new Date(dashYear, dashMonth - 1, 1);
-  const prev = new Date(dashYear, dashMonth - 2, 1);
-  const curLabel = getMonthFullName(dashMonth) + " " + dashYear;
-  const prevLabel =
-    getMonthFullName(prev.getMonth() + 1) + " " + prev.getFullYear();
-
-  if (expPeriod) expPeriod.textContent = curLabel + " vs " + prevLabel;
-  if (incPeriod) incPeriod.textContent = curLabel + " vs " + prevLabel;
-  if (expEl)
-    expEl.textContent = data?.expenseGlossary || "Sin datos comparativos";
-  if (incEl)
-    incEl.textContent = data?.incomeGlossary || "Sin datos comparativos";
 }
 
 function renderMonthlySummaryTable(data) {
@@ -387,7 +379,7 @@ function renderCategoryChart(data) {
     categoryChartData,
     "subcategoryCategoryFilter",
     "dashCategoryFilter",
-    loadSubcategoryChart
+    loadSubcategoryChart,
   );
 
   chartCategory = createDoughnutChart(
@@ -477,6 +469,24 @@ function renderBalanceChart(data) {
           position: "bottom",
           labels: { color: textColor, boxWidth: 12, padding: 12 },
         },
+        datalabels: {
+          display: true,
+          align: "top",
+          anchor: "end",
+          formatter: (value) => {
+            if (value >= 1000) {
+              return (
+                (value / 1000).toLocaleString("es-ES", {
+                  maximumFractionDigits: 1,
+                }) + "k"
+              );
+            }
+            return value.toLocaleString("es-ES", {
+              maximumFractionDigits: 0,
+            });
+          },
+          color: textColor,
+        },
       },
       scales: {
         x: {
@@ -499,6 +509,7 @@ function renderBalanceChart(data) {
         },
       },
     },
+    plugins: [ChartDataLabels],
   });
 }
 
@@ -540,19 +551,11 @@ function updateDashboardPeriodLabel() {
 }
 
 function handleFilterChange() {
-  const fp = document.getElementById("dashMonthInput")?._flatpickr;
-  if (fp) {
-    const dateStr = fp.formatDate(fp.selectedDates[0], "Y-m");
-    const [year, month] = dateStr.split("-");
-    dashYear = parseInt(year);
-    dashMonth = parseInt(month);
-  } else {
-    const input = document.getElementById("dashMonthInput");
-    if (!input || !input.value) return;
-    const [year, month] = input.value.split("-");
-    dashYear = parseInt(year);
-    dashMonth = parseInt(month);
-  }
+  const input = document.getElementById("dashMonthInput");
+  if (!input || !input.value) return;
+  const [year, month] = input.value.split("-");
+  dashYear = parseInt(year);
+  dashMonth = parseInt(month);
   dashCategoryFilter = null;
   updateDashboardPeriodLabel();
   loadDashboardData();

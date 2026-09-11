@@ -3,9 +3,9 @@
 // ===================================================================
 const MONTH_NAMES_SHORT = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
 const MONTH_NAMES_FULL = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-const NOW = new Date();
-const CURRENT_MONTH = NOW.getMonth() + 1;
-const CURRENT_YEAR = NOW.getFullYear();
+
+function currentMonth() { return new Date().getMonth() + 1; }
+function currentYear() { return new Date().getFullYear(); }
 
 function formatMoney(amount) {
     return (CONFIG.CURRENCY_SYMBOL || '$') + ' ' + Number(amount).toLocaleString('es-ES', {
@@ -60,6 +60,14 @@ function updateLogoSrc() {
     document.querySelectorAll('.logo').forEach(img => { img.src = src; });
     const iconSrc = getLogoSrc(true);
     document.querySelectorAll('.header-logo-icon').forEach(img => { img.src = iconSrc; });
+}
+
+function withSubmitBtn(e, loadingText, fn) {
+    const btn = e.target.querySelector('button[type="submit"]');
+    const orig = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = loadingText;
+    return fn().finally(() => { btn.disabled = false; btn.textContent = orig; });
 }
 
 function switchTab(tabId) {

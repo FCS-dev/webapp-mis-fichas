@@ -37,37 +37,23 @@ function getChartGridColor() {
     : "#e2e8f0";
 }
 
+const _charts = {
+  category:       [() => chartCategory,       v => (chartCategory = v)],
+  subcategory:    [() => chartSubcategory,    v => (chartSubcategory = v)],
+  balance:        [() => chartBalance,         v => (chartBalance = v)],
+  userGrowth:     [() => chartUserGrowth,     v => (chartUserGrowth = v)],
+  incomeVsExpense:[() => chartIncomeVsExpense,v => (chartIncomeVsExpense = v)],
+  adminCategory:  [() => chartAdminCategory,  v => (chartAdminCategory = v)],
+  adminSubcategory:[() => chartAdminSubcategory,v => (chartAdminSubcategory = v)],
+};
+
 function destroyChart(ref) {
-  if (ref === "category" && chartCategory) {
-    chartCategory.destroy();
-    chartCategory = null;
-  } else if (ref === "subcategory" && chartSubcategory) {
-    chartSubcategory.destroy();
-    chartSubcategory = null;
-  } else if (ref === "balance" && chartBalance) {
-    chartBalance.destroy();
-    chartBalance = null;
-  } else if (ref === "userGrowth" && chartUserGrowth) {
-    chartUserGrowth.destroy();
-    chartUserGrowth = null;
-  } else if (ref === "incomeVsExpense" && chartIncomeVsExpense) {
-    chartIncomeVsExpense.destroy();
-    chartIncomeVsExpense = null;
-  } else if (ref === "adminCategory" && chartAdminCategory) {
-    chartAdminCategory.destroy();
-    chartAdminCategory = null;
-  } else if (ref === "adminSubcategory" && chartAdminSubcategory) {
-    chartAdminSubcategory.destroy();
-    chartAdminSubcategory = null;
-  }
+  const [get, set] = _charts[ref] || [];
+  if (get?.()) { try { get().stop(); get().destroy(); } catch {} set(null); }
 }
 
-function generateColors(count) {
-  const colors = [];
-  for (let i = 0; i < count; i++) {
-    colors.push(CHART_COLORS[i % CHART_COLORS.length]);
-  }
-  return colors;
+function destroyAllCharts() {
+  Object.keys(_charts).forEach(destroyChart);
 }
 
 function createDrillDownHandler(chartData, filterSelectId, filterVar, loadFn) {
@@ -89,7 +75,7 @@ function createDrillDownHandler(chartData, filterSelectId, filterVar, loadFn) {
 function createDoughnutChart(canvasId, labels, values, onClick) {
   const canvas = document.getElementById(canvasId);
   if (!canvas || !values.length) return null;
-  const colors = generateColors(values.length);
+  const colors = values.map((_, i) => CHART_COLORS[i % CHART_COLORS.length]);
   return new Chart(canvas.getContext("2d"), {
     type: "doughnut",
     data: {
@@ -103,6 +89,7 @@ function createDoughnutChart(canvasId, labels, values, onClick) {
       plugins: {
         legend: {
           position: window.innerWidth < 641 ? "bottom" : "right",
+          maxWidth: 100,
           labels: {
             color: getChartTextColor(),
             boxWidth: 12,
@@ -181,13 +168,7 @@ function refreshChartTheme() {
 window.refreshChartTheme = refreshChartTheme;
 
 function renderSubcategoryDoughnut(canvasId, chartRefProp, data) {
-  if (chartRefProp === "subcategory" && chartSubcategory) {
-    chartSubcategory.destroy();
-    chartSubcategory = null;
-  } else if (chartRefProp === "adminSubcategory" && chartAdminSubcategory) {
-    chartAdminSubcategory.destroy();
-    chartAdminSubcategory = null;
-  }
+  destroyChart(chartRefProp);
   const canvas = document.getElementById(canvasId);
   if (!canvas || !data.length) return null;
   const chart = createDoughnutChart(
@@ -195,7 +176,6 @@ function renderSubcategoryDoughnut(canvasId, chartRefProp, data) {
     data.map((d) => d.subcategoryName),
     data.map((d) => d.total),
   );
-  if (chartRefProp === "subcategory") chartSubcategory = chart;
-  else if (chartRefProp === "adminSubcategory") chartAdminSubcategory = chart;
+  _charts[chartRefProp]?.[1]?.(chart);
   return chart;
 }

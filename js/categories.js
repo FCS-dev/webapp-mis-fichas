@@ -2,6 +2,7 @@
 // ===================================================================
 function renderCategoriesSection() {
   catPage = 0;
+  // <caption>Gesti&oacute;n de categor&iacute;as</caption>
   document.getElementById("dashContent").innerHTML = `
         <div class="section-header">
             <h2>Categor&iacute;as</h2>
@@ -13,7 +14,6 @@ function renderCategoriesSection() {
         <div id="catPageSize"></div>
         <div class="table-scroll">
             <table class="data-table">
-                <caption>Gesti&oacute;n de categor&iacute;as</caption>
                 <thead>
                     <tr>
                         <th>Nombre</th>
@@ -146,16 +146,11 @@ async function handleCatSubmit(e) {
   e.preventDefault();
   const errorEl = document.getElementById("catFormError");
   errorEl.textContent = "";
-  const btn = e.target.querySelector('button[type="submit"]');
-  btn.disabled = true;
-  btn.textContent = "Guardando…";
-
-  const payload = {
-    name: document.getElementById("catName").value.trim(),
-    type: document.getElementById("catType").value,
-  };
-
-  try {
+  await withSubmitBtn(e, "Guardando…", async () => {
+    const payload = {
+      name: document.getElementById("catName").value.trim(),
+      type: document.getElementById("catType").value,
+    };
     if (window.__editingCatId) {
       await apiRequest(
         "PUT",
@@ -170,14 +165,9 @@ async function handleCatSubmit(e) {
     showToast("Categor&iacute;a guardada correctamente", "success");
     invalidateCategoryCache();
     await loadCategoriesData();
-  } catch (err) {
+  }).catch((err) => {
     errorEl.textContent = err.message;
-  } finally {
-    btn.disabled = false;
-    btn.textContent = window.__editingCatId
-      ? "Guardar cambios"
-      : "Crear categor&iacute;a";
-  }
+  });
 }
 
 function editCat(id) {

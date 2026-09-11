@@ -7,7 +7,7 @@ function renderSubcategoriesSection() {
             <p>Gesti&oacute;n de Sub-Categor&iacute;as personalizadas</p>
         </div>
         <div class="section-actions">
-            <button class="btn-primary" onclick="window.showSubForm()">+ Nueva subcategor&iacute;a</button>
+            <button class="btn-primary" onclick="window.showSubForm()">+ Nueva Sub-Categoría</button>
         </div>
         <div id="subTreeContainer" class="tree-container">
             <p class="loading-message">Cargando…</p>
@@ -39,7 +39,7 @@ async function loadSubcategoriesData() {
 
 function renderSubTree() {
   const container = document.getElementById("subTreeContainer");
-  const userId = getUserId();
+  const userId = getUserInfo()?.userId || null;
   const admin = isAdmin();
 
   const visibleSubs = subSubcategories.filter(
@@ -128,15 +128,15 @@ async function showSubForm(subId) {
     .join("");
 
   showModal({
-    title: sub ? "Editar subcategor&iacute;a" : "Nueva subcategor&iacute;a",
+    title: sub ? "Editar Sub-Categoría" : "Nueva Sub-Categoría",
     bodyHtml: `
             <form id="subForm">
                 <div class="form-group">
                     <label for="subName">Nombre</label>
-                    <input type="text" id="subName" required placeholder="Nombre de la subcategor&iacute;a" value="${sub ? escHtml(sub.name) : ""}">
+                    <input type="text" id="subName" required placeholder="Nombre de la Sub-Categoría" value="${sub ? escHtml(sub.name) : ""}">
                 </div>
                 <div class="form-group">
-                    <label for="subCategory">Categor&iacute;a</label>
+                    <label for="subCategory">Categoría</label>
                     <select id="subCategory" required>
                         <option value="">Seleccionar</option>
                         ${catOptions}
@@ -163,18 +163,13 @@ async function handleSubSubmit(e) {
   e.preventDefault();
   const errorEl = document.getElementById("subFormError");
   errorEl.textContent = "";
-  const btn = e.target.querySelector('button[type="submit"]');
-  btn.disabled = true;
-  btn.textContent = "Guardando…";
-
-  const payload = {
-    name: document.getElementById("subName").value.trim(),
-    categoryId: parseInt(document.getElementById("subCategory").value),
-  };
-  const comments = document.getElementById("subComments").value.trim();
-  if (comments) payload.comments = comments;
-
-  try {
+  await withSubmitBtn(e, "Guardando…", async () => {
+    const payload = {
+      name: document.getElementById("subName").value.trim(),
+      categoryId: parseInt(document.getElementById("subCategory").value),
+    };
+    const comments = document.getElementById("subComments").value.trim();
+    if (comments) payload.comments = comments;
     if (window.__editingSubId) {
       await apiRequest(
         "PUT",
@@ -188,14 +183,9 @@ async function handleSubSubmit(e) {
     window.__editingSubId = null;
     showToast("Subcategoría guardada correctamente", "success");
     await loadSubcategoriesData();
-  } catch (err) {
+  }).catch((err) => {
     errorEl.textContent = err.message;
-  } finally {
-    btn.disabled = false;
-    btn.textContent = window.__editingSubId
-      ? "Guardar cambios"
-      : "Crear subcategor&iacute;a";
-  }
+  });
 }
 
 function editSub(id) {

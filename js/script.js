@@ -31,16 +31,10 @@ function router() {
     window.location.hash = '#login';
 }
 
-let hashChangePending = false;
-window.addEventListener('hashchange', () => {
-    if (!hashChangePending) {
-        requestAnimationFrame(() => {
-            router();
-            hashChangePending = false;
-        });
-        hashChangePending = true;
-    }
-});
+window.addEventListener('hashchange', router);
+window.onerror = function(msg) {
+    if (msg?.includes('startTime')) return true;
+};
 window.addEventListener('load', () => {
     initTheme();
     router();
