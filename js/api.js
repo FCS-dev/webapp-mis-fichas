@@ -71,6 +71,9 @@ async function apiRequest(method, path, body) {
       headers["Content-Type"] = "application/json";
     }
     if (token) headers["Authorization"] = `Bearer ${token}`;
+    if (method === "POST") {
+      headers["Idempotency-Key"] = crypto.randomUUID();
+    }
     const opts = { method, headers, credentials: "include" };
     if (body !== undefined) opts.body = JSON.stringify(body);
     const res = await fetch(`${CONFIG.API_BASE}${path}`, opts);

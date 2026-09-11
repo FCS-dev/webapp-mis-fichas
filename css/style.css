@@ -1435,6 +1435,7 @@ html.dark .badge-expense {
 .chart-wrapper {
     position: relative;
     width: 100%;
+    height: 100%;
     margin: 0 auto;
     overflow: hidden;
 }
@@ -2497,7 +2498,8 @@ html.dark .stat-card-change.down {
     }
 
     .chart-wrapper {
-        width: 60%;
+        width: 100%;
+        height: 100%;
     }
 
     div .activity-bars {
