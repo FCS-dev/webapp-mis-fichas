@@ -192,23 +192,38 @@ function readPeriodRange(fromSel, toSel) {
   return { yf, mf, yt, mt };
 }
 
+function criteriaText(userId, mFrom, yFrom, mTo, yTo) {
+  const period = criteriaPeriod(mFrom, yFrom, mTo, yTo);
+  return userId == null ? period : `${criteriaUser(userId)} | ${period}`;
+}
+
 function renderPeriodFilters(cfg) {
+  const userLabel = cfg.userSelectId
+    ? `<label>Usuario
+            <select id="${cfg.userSelectId}"><option value="0">Todos</option></select>
+        </label>`
+    : "";
   document.getElementById(cfg.filtersId).innerHTML = `
+        ${userLabel}
         <label>Desde ${buildMonthInput(cfg.fromId, cfg.fromYear, cfg.fromMonth)}</label>
         <label>Hasta ${buildMonthInput(cfg.toId, cfg.toYear, cfg.toMonth)}</label>
         <button class="btn-primary" onclick="window.${cfg.applyHandler}()">Actualizar</button>`;
-  document.getElementById(cfg.criteriaId).textContent = criteriaPeriod(
+  if (cfg.userSelectId) populateUserSelect(cfg.userSelectId, cfg.selectedUserId);
+  document.getElementById(cfg.criteriaId).textContent = criteriaText(
+    cfg.userSelectId ? cfg.selectedUserId : null,
     cfg.fromMonth, cfg.fromYear, cfg.toMonth, cfg.toYear,
   );
   initMonthPicker(`#${cfg.fromId}`, cfg.fromYear, cfg.fromMonth);
   initMonthPicker(`#${cfg.toId}`, cfg.toYear, cfg.toMonth);
 }
 
-function applyPeriodFilter(fromSel, toSel, criteriaId, assignFn, loadFn) {
+function applyPeriodFilter(fromSel, toSel, criteriaId, assignFn, loadFn, userId) {
   const r = readPeriodRange(fromSel, toSel);
   if (!r) return;
   assignFn(r);
-  document.getElementById(criteriaId).textContent = criteriaPeriod(r.mf, r.yf, r.mt, r.yt);
+  document.getElementById(criteriaId).textContent = criteriaText(
+    userId ?? null, r.mf, r.yf, r.mt, r.yt,
+  );
   loadFn();
 }
 
@@ -223,18 +238,14 @@ function renderSec1Filters() {
 }
 
 function renderSec2Filters() {
-  document.getElementById("sec2Filters").innerHTML = `
-        <label>Usuario
-            <select id="sec2UserSelect"><option value="0">Todos</option></select>
-        </label>
-        <label>Desde ${buildMonthInput("sec2MonthFrom", sec2YearFrom, sec2MonthFrom)}</label>
-        <label>Hasta ${buildMonthInput("sec2MonthTo", sec2YearTo, sec2MonthTo)}</label>
-        <button class="btn-primary" onclick="window.handleApplySec2()">Actualizar</button>`;
-  populateUserSelect("sec2UserSelect", sec2UserId);
-  document.getElementById("sec2Criteria").textContent =
-    `${criteriaUser(sec2UserId)} | ${criteriaPeriod(sec2MonthFrom, sec2YearFrom, sec2MonthTo, sec2YearTo)}`;
-  initMonthPicker("#sec2MonthFrom", sec2YearFrom, sec2MonthFrom);
-  initMonthPicker("#sec2MonthTo", sec2YearTo, sec2MonthTo);
+  renderPeriodFilters({
+    filtersId: "sec2Filters", criteriaId: "sec2Criteria",
+    fromId: "sec2MonthFrom", toId: "sec2MonthTo",
+    fromYear: sec2YearFrom, fromMonth: sec2MonthFrom,
+    toYear: sec2YearTo, toMonth: sec2MonthTo,
+    applyHandler: "handleApplySec2",
+    userSelectId: "sec2UserSelect", selectedUserId: sec2UserId,
+  });
 }
 
 function renderMontosFilter() {
@@ -294,33 +305,24 @@ function populateUserSelect(selectId, selectedValue, defaultLabel) {
 // EXPENSE BREAKDOWN — CATEGORY & SUBCATEGORY PIE CHARTS
 // ===================================================================
 function renderExpBreakdownFilters() {
-  document.getElementById("expBreakdownFilters").innerHTML = `
-        <label>Usuario
-            <select id="expBreakdownUser"><option value="0">Todos</option></select>
-        </label>
-        <label>Desde ${buildMonthInput("expBreakdownMonthFrom", expBreakdownYearFrom, expBreakdownMonthFrom)}</label>
-        <label>Hasta ${buildMonthInput("expBreakdownMonthTo", expBreakdownYearTo, expBreakdownMonthTo)}</label>
-        <button class="btn-primary" onclick="window.handleApplyExpBreakdown()">Actualizar</button>`;
-  populateUserSelect("expBreakdownUser", expBreakdownUserId);
-  document.getElementById("expBreakdownCriteria").textContent =
-    `${criteriaUser(expBreakdownUserId)} | ${criteriaPeriod(expBreakdownMonthFrom, expBreakdownYearFrom, expBreakdownMonthTo, expBreakdownYearTo)}`;
-  initMonthPicker("#expBreakdownMonthFrom", expBreakdownYearFrom, expBreakdownMonthFrom);
-  initMonthPicker("#expBreakdownMonthTo", expBreakdownYearTo, expBreakdownMonthTo);
+  renderPeriodFilters({
+    filtersId: "expBreakdownFilters", criteriaId: "expBreakdownCriteria",
+    fromId: "expBreakdownMonthFrom", toId: "expBreakdownMonthTo",
+    fromYear: expBreakdownYearFrom, fromMonth: expBreakdownMonthFrom,
+    toYear: expBreakdownYearTo, toMonth: expBreakdownMonthTo,
+    applyHandler: "handleApplyExpBreakdown",
+    userSelectId: "expBreakdownUser", selectedUserId: expBreakdownUserId,
+  });
 }
 
 function handleApplyExpBreakdown() {
   expBreakdownUserId = parseInt(
     document.getElementById("expBreakdownUser").value,
   );
-  const r = readPeriodRange("#expBreakdownMonthFrom", "#expBreakdownMonthTo");
-  if (!r) return;
-  expBreakdownMonthFrom = r.mf;
-  expBreakdownYearFrom = r.yf;
-  expBreakdownMonthTo = r.mt;
-  expBreakdownYearTo = r.yt;
-  document.getElementById("expBreakdownCriteria").textContent =
-    `${criteriaUser(expBreakdownUserId)} | ${criteriaPeriod(r.mf, r.yf, r.mt, r.yt)}`;
-  loadExpBreakdownData();
+  applyPeriodFilter("#expBreakdownMonthFrom", "#expBreakdownMonthTo", "expBreakdownCriteria", r => {
+    expBreakdownMonthFrom = r.mf; expBreakdownYearFrom = r.yf;
+    expBreakdownMonthTo = r.mt; expBreakdownYearTo = r.yt;
+  }, loadExpBreakdownData, expBreakdownUserId);
 }
 
 async function loadExpBreakdownData(catExpenses) {
@@ -409,8 +411,6 @@ function renderAdminCategoryChart(data) {
   const onClick = createDrillDownHandler(
     adminCategoryChartData,
     "adminCategoryFilter",
-    "adminCategoryFilter",
-    loadAdminSubcategoryChart,
   );
 
   chartAdminCategory = createDoughnutChart(
@@ -722,7 +722,7 @@ function renderSec1Chart(monthly) {
             label: "Activos",
             data: monthly.map((d) => d.activeUsers),
             borderColor: getCssVar("--primary"),
-            backgroundColor: `rgba(${getCssVar("--primary-rgb") || "142,47,55"},0.06)`,
+            backgroundColor: cssAlpha("--primary-rgb", "142,47,55", 0.06),
             fill: false,
             tension: 0.3,
             pointRadius: 3,
@@ -731,7 +731,7 @@ function renderSec1Chart(monthly) {
             label: "Registrados",
             data: monthly.map((d) => d.registeredUsers),
             borderColor: getCssVar("--income"),
-            backgroundColor: `rgba(${getCssVar("--income-rgb") || "82,153,139"},0.06)`,
+            backgroundColor: cssAlpha("--income-rgb", "82,153,139", 0.06),
             fill: false,
             tension: 0.3,
             pointRadius: 3,
@@ -773,15 +773,9 @@ function renderSec1Chart(monthly) {
 // ===================================================================
 function handleApplySec2() {
   sec2UserId = parseInt(document.getElementById("sec2UserSelect").value);
-  const r = readPeriodRange("#sec2MonthFrom", "#sec2MonthTo");
-  if (!r) return;
-  sec2MonthFrom = r.mf;
-  sec2YearFrom = r.yf;
-  sec2MonthTo = r.mt;
-  sec2YearTo = r.yt;
-  document.getElementById("sec2Criteria").textContent =
-    `${criteriaUser(sec2UserId)} | ${criteriaPeriod(r.mf, r.yf, r.mt, r.yt)}`;
-  loadSec2Data();
+  applyPeriodFilter("#sec2MonthFrom", "#sec2MonthTo", "sec2Criteria", r => {
+    sec2MonthFrom = r.mf; sec2YearFrom = r.yf; sec2MonthTo = r.mt; sec2YearTo = r.yt;
+  }, loadSec2Data, sec2UserId);
 }
 
 async function loadSec2Data() {
@@ -857,13 +851,13 @@ function renderSec2Chart(monthly) {
           {
             label: "Ingresos",
             data: monthly.map((d) => Number(d.incomeTotal)),
-            backgroundColor: `rgba(${getCssVar("--income-rgb") || "82,153,139"},0.7)`,
+            backgroundColor: cssAlpha("--income-rgb", "82,153,139", 0.7),
             borderRadius: 4,
           },
           {
             label: "Gastos",
             data: monthly.map((d) => Number(d.expenseTotal)),
-            backgroundColor: `rgba(${getCssVar("--expense-rgb") || "206,55,55"},0.7)`,
+            backgroundColor: cssAlpha("--expense-rgb", "206,55,55", 0.7),
             borderRadius: 4,
           },
         ],
@@ -880,18 +874,7 @@ function renderSec2Chart(monthly) {
             display: true,
             anchor: "end",
             align: "top",
-            formatter: (value) => {
-              if (value >= 1000) {
-                return (
-                  (value / 1000).toLocaleString("es-ES", {
-                    maximumFractionDigits: 1,
-                  }) + "k"
-                );
-              }
-              return value.toLocaleString("es-ES", {
-                maximumFractionDigits: 0,
-              });
-            },
+            formatter: formatK,
             color: textColor,
           },
         },

@@ -7,6 +7,20 @@ function getCssVar(name) {
     .trim();
 }
 
+function cssAlpha(varName, fallbackRgb, alpha) {
+  return `rgba(${getCssVar(varName) || fallbackRgb},${alpha})`;
+}
+
+function formatK(value) {
+  if (value >= 1000) {
+    return (
+      (value / 1000).toLocaleString("es-ES", { maximumFractionDigits: 1 }) +
+      "k"
+    );
+  }
+  return value.toLocaleString("es-ES", { maximumFractionDigits: 0 });
+}
+
 const CHART_COLORS = [
   getCssVar("--primary") || "#8e2f37",
   getCssVar("--income") || "#52998b",
@@ -56,7 +70,7 @@ function destroyAllCharts() {
   Object.keys(_charts).forEach(destroyChart);
 }
 
-function createDrillDownHandler(chartData, filterSelectId, filterVar, loadFn) {
+function createDrillDownHandler(chartData, filterSelectId) {
   return (event, elements) => {
     if (elements.length > 0) {
       const idx = elements[0].index;
@@ -134,15 +148,8 @@ function refreshChartTheme() {
   const textColor = getChartTextColor();
   const gridColor = getChartGridColor();
 
-  [
-    chartCategory,
-    chartSubcategory,
-    chartBalance,
-    chartUserGrowth,
-    chartIncomeVsExpense,
-    chartAdminCategory,
-    chartAdminSubcategory,
-  ].forEach((chart) => {
+  Object.values(_charts).forEach(([get]) => {
+    const chart = get();
     if (!chart) return;
 
     const legendLabels = chart.options.plugins?.legend?.labels;

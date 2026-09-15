@@ -30,47 +30,47 @@ function renderDashboardSection() {
             <div class="filter-section">
                 <div class="filter-controls" id="dashFilters">
                 <label>Per&iacute;odo
-                    <input type="month" id="dashMonthInput" value="${dashYear}-${String(dashMonth).padStart(2, "0")}" onchange="window.handleFilterChange()">
+                    <input type="month" id="dashMonthInput" value="${dashYear}-${String(dashMonth).padStart(2, "0")}">
                 </label>
             </div>
             </div>
         </div>
         <div class="summary-cards" id="dashSummary" role="group" aria-label="Resumen financiero">
-            <div class="summary-card summary-card" id="incomeCard">
+            <div class="summary-card" id="incomeCard">
                 <div class="summary-card-header">
                     <span class="summary-label">Ingresos</span>
                     <span class="summary-icon income" aria-hidden="true">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
                     </span>
                 </div>
-                <span class="summary-value income" id="incomeValue">${CONFIG.CURRENCY_SYMBOL || "$"} 0</span>
+                <span class="summary-value income" id="incomeValue">${CONFIG.CURRENCY_SYMBOL} 0</span>
                 <span class="summary-change" id="incomeChange"></span>
             </div>
-            <div class="summary-card summary-card" id="expenseCard">
+            <div class="summary-card" id="expenseCard">
                 <div class="summary-card-header">
                     <span class="summary-label">Gastos</span>
                     <span class="summary-icon expense" aria-hidden="true">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
                     </span>
                 </div>
-                <span class="summary-value expense" id="expenseValue">${CONFIG.CURRENCY_SYMBOL || "$"} 0</span>
+                <span class="summary-value expense" id="expenseValue">${CONFIG.CURRENCY_SYMBOL} 0</span>
                 <span class="summary-change" id="expenseChange"></span>
             </div>
-            <div class="summary-card summary-card" id="balanceCard">
+            <div class="summary-card" id="balanceCard">
                 <div class="summary-card-header">
                     <span class="summary-label">Balance</span>
                     <span class="summary-icon balance" aria-hidden="true">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
                     </span>
                 </div>
-                <span class="summary-value" id="balanceValue">${CONFIG.CURRENCY_SYMBOL || "$"} 0</span>
+                <span class="summary-value" id="balanceValue">${CONFIG.CURRENCY_SYMBOL} 0</span>
                 <span class="summary-change" id="balanceChange"></span>
             </div>
-            <div class="summary-card summary-card" id="savingRateCard">
+            <div class="summary-card" id="savingRateCard">
                 <div class="summary-card-header">
                     <span class="summary-label">Tasa de ahorro</span>
                     <span class="summary-icon saving" aria-hidden="true">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
                     </span>
                 </div>
                 <span class="summary-value" id="savingRateValue">0%</span>
@@ -173,7 +173,10 @@ async function loadDashboardData() {
           "GET",
           `/dashboard/me/monthly-balance?months=${dashMonthsRange}`,
         ),
-        apiRequest("GET", "/dashboard/me/monthly-comparison"),
+        apiRequest(
+          "GET",
+          `/dashboard/me/monthly-comparison?month=${dashMonth}&year=${dashYear}`,
+        ),
         apiRequest(
           "GET",
           `/dashboard/me/top-expenses?month=${dashMonth}&year=${dashYear}`,
@@ -185,7 +188,6 @@ async function loadDashboardData() {
     const savingRate = summaryRes?.savingRate ?? 0;
     renderDashboardCards(income, expense, savingRate);
 
-    const _now = new Date(dashYear, dashMonth - 1, 1);
     const _prev = new Date(dashYear, dashMonth - 2, 1);
     const _curLabel = getMonthFullName(dashMonth) + " " + dashYear;
     const _prevLabel = getMonthFullName(_prev.getMonth() + 1) + " " + _prev.getFullYear();
@@ -378,8 +380,6 @@ function renderCategoryChart(data) {
   const onClick = createDrillDownHandler(
     categoryChartData,
     "subcategoryCategoryFilter",
-    "dashCategoryFilter",
-    loadSubcategoryChart,
   );
 
   chartCategory = createDoughnutChart(
@@ -431,7 +431,7 @@ function renderBalanceChart(data) {
           label: "Ingresos",
           data: sorted.map((d) => d.income),
           borderColor: getCssVar("--income"),
-          backgroundColor: `rgba(${getCssVar("--income-rgb") || "82,153,139"},0.06)`,
+          backgroundColor: cssAlpha("--income-rgb", "82,153,139", 0.06),
           fill: true,
           tension: 0.3,
           pointRadius: 3,
@@ -441,7 +441,7 @@ function renderBalanceChart(data) {
           label: "Gastos",
           data: sorted.map((d) => d.expense),
           borderColor: getCssVar("--expense"),
-          backgroundColor: `rgba(${getCssVar("--expense-rgb") || "206,55,55"},0.06)`,
+          backgroundColor: cssAlpha("--expense-rgb", "206,55,55", 0.06),
           fill: true,
           tension: 0.3,
           pointRadius: 3,
@@ -451,7 +451,7 @@ function renderBalanceChart(data) {
           label: "Balance",
           data: sorted.map((d) => d.balance),
           borderColor: getCssVar("--primary"),
-          backgroundColor: `rgba(${getCssVar("--primary-rgb") || "142,47,55"},0.06)`,
+          backgroundColor: cssAlpha("--primary-rgb", "142,47,55", 0.06),
           fill: true,
           tension: 0.3,
           pointRadius: 3,
@@ -473,18 +473,7 @@ function renderBalanceChart(data) {
           display: true,
           align: "top",
           anchor: "end",
-          formatter: (value) => {
-            if (value >= 1000) {
-              return (
-                (value / 1000).toLocaleString("es-ES", {
-                  maximumFractionDigits: 1,
-                }) + "k"
-              );
-            }
-            return value.toLocaleString("es-ES", {
-              maximumFractionDigits: 0,
-            });
-          },
+          formatter: formatK,
           color: textColor,
         },
       },
@@ -550,17 +539,6 @@ function updateDashboardPeriodLabel() {
   if (el) el.textContent = `${getMonthFullName(dashMonth)} ${dashYear}`;
 }
 
-function handleFilterChange() {
-  const input = document.getElementById("dashMonthInput");
-  if (!input || !input.value) return;
-  const [year, month] = input.value.split("-");
-  dashYear = parseInt(year);
-  dashMonth = parseInt(month);
-  dashCategoryFilter = null;
-  updateDashboardPeriodLabel();
-  loadDashboardData();
-}
-
 function handleCategoryFilterChange() {
   const sel = document.getElementById("subcategoryCategoryFilter");
   if (!sel) return;
@@ -573,7 +551,6 @@ async function refreshDashboardIfActive() {
   await loadDashboardData();
 }
 
-window.handleFilterChange = handleFilterChange;
 window.handleCategoryFilterChange = handleCategoryFilterChange;
 window.handleRangeChange = handleRangeChange;
 window.refreshDashboardIfActive = refreshDashboardIfActive;

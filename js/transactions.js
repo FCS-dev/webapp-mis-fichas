@@ -20,7 +20,6 @@ async function renderTransactionsSection() {
             <div id="txPageSize"></div>
             <div class="table-scroll">
                 <table class="data-table">
-                    <caption>Transacciones del usuario</caption>
                     <thead>
                         <tr>
                             <th>Fecha</th>
@@ -89,11 +88,11 @@ async function loadTransactionsData() {
 function renderTxTable() {
   const tbody = document.getElementById("txBody");
   if (!txTransactions.length) {
-    const msg = isAdmin() && txAdminUserId === 0
-      ? 'Selecciona un usuario para ver sus transacciones'
-      : 'No hay transacciones en este período. Crea una con el botón "+".';
-    tbody.innerHTML =
-      `<tr><td colspan="6" class="empty-state">${msg}</td></tr>`;
+    const msg =
+      isAdmin() && txAdminUserId === 0
+        ? "Selecciona un usuario para ver sus transacciones"
+        : 'No hay transacciones en este período. Crea una con el botón "+".';
+    tbody.innerHTML = `<tr><td colspan="6" class="empty-state">${msg}</td></tr>`;
     return;
   }
   const admin = isAdmin();
@@ -258,10 +257,12 @@ async function showTxForm(txId) {
   catSelect.addEventListener("change", updateSubs);
   if (!tx) updateSubs();
 
-  document.getElementById("txForm").addEventListener("submit", handleTxSubmit);
+  document
+    .getElementById("txForm")
+    .addEventListener("submit", (e) => handleTxSubmit(e, txId));
 }
 
-async function handleTxSubmit(e) {
+async function handleTxSubmit(e, txId) {
   e.preventDefault();
   const errorEl = document.getElementById("txFormError");
   errorEl.textContent = "";
@@ -273,24 +274,19 @@ async function handleTxSubmit(e) {
       description: document.getElementById("txDesc").value.trim(),
       transactionDate: document.getElementById("txDate").value,
     };
-    const isEdit = !!window.__editingTxId;
-    if (isEdit) {
-      await apiRequest("PUT", `/transactions/${window.__editingTxId}`, payload);
+    if (txId) {
+      await apiRequest("PUT", `/transactions/${txId}`, payload);
     } else {
       await apiRequest("POST", "/transactions", payload);
     }
     hideModal();
-    window.__editingTxId = null;
     txPage = 0;
     showToast("Transacción guardada correctamente", "success");
     await loadTransactionsData();
     await refreshDashboardIfActive();
-  }).catch(err => { errorEl.textContent = err.message; });
-}
-
-async function editTx(id) {
-  window.__editingTxId = id;
-  await showTxForm(id);
+  }).catch((err) => {
+    errorEl.textContent = err.message;
+  });
 }
 
 function deleteTx(id) {
@@ -308,7 +304,7 @@ function deleteTx(id) {
 }
 
 window.showTxForm = showTxForm;
-window.editTx = editTx;
+window.editTx = showTxForm;
 window.deleteTx = deleteTx;
 window.changeTxPage = changeTxPage;
 window.handleTxPageSizeChange = handleTxPageSizeChange;

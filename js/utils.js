@@ -79,7 +79,15 @@ function switchTab(tabId) {
     });
     document.querySelectorAll(".dash-tab-panel").forEach((panel) => {
         const isActive = panel.dataset.tabPanel === tabId;
-        panel.classList.toggle("active", isActive);
-        panel.setAttribute("aria-hidden", !isActive);
+        if (isActive) {
+            panel.classList.add("active");
+            panel.setAttribute("aria-hidden", "false");
+            panel.style.animation = "none";
+            panel.offsetHeight;
+            panel.style.animation = "";
+        } else {
+            panel.classList.remove("active");
+            panel.setAttribute("aria-hidden", "true");
+        }
     });
 }

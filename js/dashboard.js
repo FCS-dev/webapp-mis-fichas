@@ -116,6 +116,7 @@ async function fetchSubcategoriesByCategory(categoryId) {
 // ===================================================================
 function navigateTo(section) {
   currentSection = section;
+  destroyAllCharts();
   document.querySelectorAll(".sidebar-link").forEach((el) => {
     el.classList.toggle("active", el.dataset.section === section);
   });
@@ -142,12 +143,7 @@ function navigateTo(section) {
 function renderDashboardLayout() {
   const user = getUserInfo();
   const isDark = document.documentElement.classList.contains("dark");
-  const logoIcon = isDark
-    ? "assets/logo/mis-fichas-logo-solo-oscuro.png"
-    : "assets/logo/mis-fichas-logo-solo-claro.png";
-  const logoFull = isDark
-    ? "assets/logo/mis-fichas-logo-modo-oscuro.png"
-    : "assets/logo/mis-fichas-logo-modo-claro.png";
+  const logoIcon = getLogoSrc(true);
   document.getElementById("app").innerHTML = `
         <div class="dash-layout">
             <a href="#dashContent" class="skip-link">Saltar al contenido</a>
@@ -224,8 +220,6 @@ function renderDashboardLayout() {
 // ===================================================================
 function renderDashboard() {
   currentSection = "dashboard";
-  window.__editingTxId = null;
-  window.__editingSubId = null;
   renderDashboardLayout();
 }
 

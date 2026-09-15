@@ -32,9 +32,6 @@ function router() {
 }
 
 window.addEventListener('hashchange', router);
-window.onerror = function(msg) {
-    if (msg?.includes('startTime')) return true;
-};
 window.addEventListener('load', () => {
     initTheme();
     router();

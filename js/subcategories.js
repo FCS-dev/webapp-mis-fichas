@@ -156,10 +156,10 @@ async function showSubForm(subId) {
 
   document
     .getElementById("subForm")
-    .addEventListener("submit", handleSubSubmit);
+    .addEventListener("submit", (e) => handleSubSubmit(e, subId));
 }
 
-async function handleSubSubmit(e) {
+async function handleSubSubmit(e, subId) {
   e.preventDefault();
   const errorEl = document.getElementById("subFormError");
   errorEl.textContent = "";
@@ -170,27 +170,17 @@ async function handleSubSubmit(e) {
     };
     const comments = document.getElementById("subComments").value.trim();
     if (comments) payload.comments = comments;
-    if (window.__editingSubId) {
-      await apiRequest(
-        "PUT",
-        `/subcategories/${window.__editingSubId}`,
-        payload,
-      );
+    if (subId) {
+      await apiRequest("PUT", `/subcategories/${subId}`, payload);
     } else {
       await apiRequest("POST", "/subcategories", payload);
     }
     hideModal();
-    window.__editingSubId = null;
     showToast("Subcategoría guardada correctamente", "success");
     await loadSubcategoriesData();
   }).catch((err) => {
     errorEl.textContent = err.message;
   });
-}
-
-function editSub(id) {
-  window.__editingSubId = id;
-  showSubForm(id);
 }
 
 function deleteSub(id) {
@@ -206,5 +196,5 @@ function deleteSub(id) {
 }
 
 window.showSubForm = showSubForm;
-window.editSub = editSub;
+window.editSub = showSubForm;
 window.deleteSub = deleteSub;

@@ -10,33 +10,31 @@ El frontend consume una **API REST** (`http://localhost:8080/api/v1`) con autent
 
 ### Escritorio
 
-<img src="./assets/screenshots/home-desktop.webp" alt="Home de Mis Fichas en escritorio" width="800">
+<img src="./assets/screenshots/desktop-admin-dashboard1-dark.webp" alt="Home de Mis Fichas ADMIN en escritorio" width="800">
 
-| Dashboard de usuario                                                                                          | Panel de administración                                                                                     |
-| ------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| <img src="./assets/screenshots/dashboard-user-desktop.webp" alt="Dashboard de usuario en escritorio" width="450"> | <img src="./assets/screenshots/dashboard-admin-desktop.webp" alt="Panel de admin en escritorio" width="450"> |
+| Panel ADMIN: Evolución de registro de USER                                                                            | Panel ADMIN: Transacciones por meses: INCOMES y EXPENSES                                                                                                           |
+| --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| <img src="./assets/screenshots/desktop-admin-chart1-dark.webp" alt="chart Lineal, evolución de usuarios" width="400"> | <img src="./assets/screenshots/desktop-admin-dashboard2-dark.webp" alt="chart de barras, comparativo entre meses de transacciones INCOMES y EXPENSES" width="400"> |
 
-| Formulario de transacciones                                                                                | Modal de edición                                                                                         |
-| ----------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| <img src="./assets/screenshots/transactions-desktop.webp" alt="Formulario de transacciones en escritorio" width="450"> | <img src="./assets/screenshots/modal-desktop.webp" alt="Modal de edición en escritorio" width="450"> |
+| Panel ADMIN: Tablas comparativas de "Power USERS"                                                                       | Panel ADMIN: Chart tipo donut sobre EXPENSES: Categorias y Sub-Categorias                                                                   |
+| ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| <img src="./assets/screenshots/desktop-admin-dashboard4-dark.webp" alt="Tablas de USERS con mas actividad" width="400"> | <img src="./assets/screenshots/desktop-admin-dashboard5-dark.webp" alt="Chart donuts de EXPENSES; Categorias y Sub-Categorias" width="400"> |
 
-| Gráficos de dona y líneas                                                                              | Gestión de categorías y subcategorías                                                                |
-| -------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| <img src="./assets/screenshots/charts-desktop.webp" alt="Gráficos financieros en escritorio" width="450"> | <img src="./assets/screenshots/categories-desktop.webp" alt="Gestión de categorías en escritorio" width="450"> |
+---
 
 ### Móvil
 
-| Dashboard de usuario                                                                                     | Navegación con sidebar                                                                                |
-| --------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| <img src="./assets/screenshots/dashboard-user-mobile.webp" alt="Dashboard de usuario en móvil" width="450"> | <img src="./assets/screenshots/sidebar-mobile.webp" alt="Sidebar de navegación en móvil" width="450"> |
+| Login                                                                                             | Dashboard USER                                                                                                   |
+| ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| <img src="./assets/screenshots/login-light.webp" alt="Ventana login para USER/ADMIN" width="450"> | <img src="./assets/screenshots/mobile-user-dashboard1-light.webp" alt="Dashboard principal de USER" width="450"> |
 
-| Formulario de login                                                                                    | Lista de transacciones                                                                               |
-| ------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| <img src="./assets/screenshots/login-mobile.webp" alt="Formulario de login en móvil" width="450"> | <img src="./assets/screenshots/transactions-mobile.webp" alt="Lista de transacciones en móvil" width="450"> |
+| Dashboard USER 2                                                                                                   | Menu sidebar                                                                                            |
+| ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| <img src="./assets/screenshots/mobile-user-dashboard2-light.webp" alt="Dashboard principal de USER 2" width="450"> | <img src="./assets/screenshots/mobile-user-sidemenu-light.webp" alt="Menu sidebar de USER" width="450"> |
 
-| Tema oscuro                                                                                        | Registro de usuario                                                                              |
-| -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| <img src="./assets/screenshots/dark-mode-mobile.webp" alt="Tema oscuro en móvil" width="450"> | <img src="./assets/screenshots/register-mobile.webp" alt="Registro de usuario en móvil" width="450"> |
+| Modal de registro de Transación                                                                                                  |
+| -------------------------------------------------------------------------------------------------------------------------------- |
+| <img src="./assets/screenshots/mobile-user-new-transaccion-light.webp" alt="Modal de registro de nueva transacción" width="450"> |
 
 ---
 
@@ -210,23 +208,23 @@ Proyecto **vanilla** sin frameworks, build tools ni dependencias de runtime (sol
 
 ### Responsabilidades por módulo
 
-| Módulo             | Responsabilidad                                                              |
-| ------------------ | ---------------------------------------------------------------------------- |
-| `config.js`        | URL base de la API, símbolo de moneda                                        |
-| `api.js`           | Fetch con headers JWT, manejo de errores HTTP (401, 429, etc.), refresh token |
-| `auth.js`          | Login, registro, logout, gestión de tokens, sincronización de UI             |
-| `utils.js`         | Formateo de fechas, moneda, helpers generales                                |
-| `sidebar.js`       | Navegación responsive, toggle del sidebar, overlay en móvil                  |
-| `dashboard.js`     | Lógica compartida de dashboard (inicialización, eventos)                     |
-| `dashboard-user.js`| Cards de resumen, gráficos de dona/líneas, comparativas, top gastos          |
-| `dashboard-admin.js`| 7 secciones analíticas del admin, tablas, promedios                         |
-| `transactions.js`  | Formulario CRUD, filtros, listado paginado de transacciones                  |
-| `subcategories.js` | CRUD de subcategorías, cascada categoría→subcategoría                       |
-| `categories.js`    | Consulta de categorías activas, CRUD admin                                   |
-| `charts.js`        | Configuración y renderizado de gráficos Chart.js                             |
-| `modal.js`         | Sistema de modales (bottom-sheet móvil, dialog desktop)                      |
-| `toast.js`         | Notificaciones toast con animación                                            |
-| `pagination.js`    | Componente de paginación reutilizable                                         |
+| Módulo               | Responsabilidad                                                               |
+| -------------------- | ----------------------------------------------------------------------------- |
+| `config.js`          | URL base de la API, símbolo de moneda                                         |
+| `api.js`             | Fetch con headers JWT, manejo de errores HTTP (401, 429, etc.), refresh token |
+| `auth.js`            | Login, registro, logout, gestión de tokens, sincronización de UI              |
+| `utils.js`           | Formateo de fechas, moneda, helpers generales                                 |
+| `sidebar.js`         | Navegación responsive, toggle del sidebar, overlay en móvil                   |
+| `dashboard.js`       | Lógica compartida de dashboard (inicialización, eventos)                      |
+| `dashboard-user.js`  | Cards de resumen, gráficos de dona/líneas, comparativas, top gastos           |
+| `dashboard-admin.js` | 7 secciones analíticas del admin, tablas, promedios                           |
+| `transactions.js`    | Formulario CRUD, filtros, listado paginado de transacciones                   |
+| `subcategories.js`   | CRUD de subcategorías, cascada categoría→subcategoría                         |
+| `categories.js`      | Consulta de categorías activas, CRUD admin                                    |
+| `charts.js`          | Configuración y renderizado de gráficos Chart.js                              |
+| `modal.js`           | Sistema de modales (bottom-sheet móvil, dialog desktop)                       |
+| `toast.js`           | Notificaciones toast con animación                                            |
+| `pagination.js`      | Componente de paginación reutilizable                                         |
 
 ---
 
@@ -236,133 +234,138 @@ Base URL: `http://localhost:8080/api/v1`
 
 ### Autenticación (público)
 
-| Método | Ruta               | Descripción                          |
-| ------ | ------------------ | ------------------------------------ |
-| POST   | `/auth/register`   | Registrar un nuevo usuario (rol USER) |
-| POST   | `/auth/login`      | Iniciar sesión, devuelve access token |
-| POST   | `/auth/refresh`    | Refrescar access token               |
-| POST   | `/auth/logout`     | Cerrar sesión, revoca refresh token  |
+| Método | Ruta             | Descripción                                          | Parámetros                      |
+| ------ | ---------------- | ---------------------------------------------------- | ------------------------------- |
+| POST   | `/auth/register` | Registrar un nuevo usuario (rol USER)                | Body: `{email, password, name}` |
+| POST   | `/auth/login`    | Iniciar sesión (rate-limit en 429, bloqueo temporal) | Body: `{email, password}`       |
+| POST   | `/auth/refresh`  | Refrescar access token (rotación de refresh token)   | Cookie HttpOnly                 |
+| POST   | `/auth/logout`   | Cerrar sesión, revoca refresh token                  | —                               |
 
 ### Transacciones (USER y ADMIN)
 
-| Método | Ruta                            | Descripción                                     |
-| ------ | ------------------------------- | ----------------------------------------------- |
-| GET    | `/transactions`                 | Listar transacciones (filtros: userId, categoryId, subcategoryId, date, dateFrom, dateTo, paginación) |
-| POST   | `/transactions`                 | Crear nueva transacción                         |
-| GET    | `/transactions/{id}`            | Obtener transacción por ID                      |
-| PUT    | `/transactions/{id}`            | Actualizar transacción (USER solo las propias)  |
-| DELETE | `/transactions/{id}`            | Eliminar transacción (soft delete)              |
-| GET    | `/transactions/category/{id}`   | Listar transacciones por categoría              |
-| GET    | `/transactions/subcategory/{id}`| Listar transacciones por subcategoría           |
-| GET    | `/transactions/date/{date}`     | Listar transacciones por fecha exacta           |
-| GET    | `/transactions/date-range`      | Listar transacciones por rango de fechas        |
+| Método | Ruta                                        | Descripción                                    | Parámetros query                                                                                      |
+| ------ | ------------------------------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| GET    | `/transactions`                             | Listar transacciones paginadas                 | `userId`, `categoryId`, `subcategoryId`, `date`, `dateFrom`, `dateTo`, `page`, `size`, `sort`         |
+| POST   | `/transactions`                             | Crear nueva transacción                        | Body: `{categoryId, subcategoryId, amount, transactionDate, description?}`, Header: `Idempotency-Key` |
+| GET    | `/transactions/{id}`                        | Obtener transacción por ID                     | Path: `id`                                                                                            |
+| PUT    | `/transactions/{id}`                        | Actualizar transacción (USER solo las propias) | Path: `id`, Body: `{categoryId, subcategoryId, amount, transactionDate, description?}`                |
+| DELETE | `/transactions/{id}`                        | Eliminar transacción (soft delete)             | Path: `id`                                                                                            |
+| GET    | `/transactions/category/{categoryId}`       | Listar transacciones por categoría             | Path: `categoryId`, Query: `userId`, `page`, `size`, `sort`                                           |
+| GET    | `/transactions/subcategory/{subcategoryId}` | Listar transacciones por subcategoría          | Path: `subcategoryId`, Query: `userId`, `page`, `size`, `sort`                                        |
+| GET    | `/transactions/date/{date}`                 | Listar transacciones por fecha exacta          | Path: `date` (ISO), Query: `userId`, `page`, `size`, `sort`                                           |
+| GET    | `/transactions/date-range`                  | Listar transacciones por rango de fechas       | Query: `from`, `to` (ISO), `userId`, `page`, `size`, `sort`                                           |
 
 ### Subcategorías (USER y ADMIN)
 
-| Método | Ruta                              | Descripción                                        |
-| ------ | --------------------------------- | -------------------------------------------------- |
-| GET    | `/subcategories`                  | Listar subcategorías (USER: sistema + propias)     |
-| POST   | `/subcategories`                  | Crear subcategoría (USER: personal, ADMIN: sistema) |
-| GET    | `/subcategories/{id}`             | Obtener subcategoría por ID                        |
-| PUT    | `/subcategories/{id}`             | Actualizar subcategoría (USER solo las propias)    |
-| DELETE | `/subcategories/{id}`             | Eliminar subcategoría (soft delete)                |
-| GET    | `/subcategories/category/{id}`    | Listar subcategorías por categoría                 |
+| Método | Ruta                                   | Descripción                                              | Parámetros                                                       |
+| ------ | -------------------------------------- | -------------------------------------------------------- | ---------------------------------------------------------------- |
+| GET    | `/subcategories`                       | Listar subcategorías paginadas (USER: sistema + propias) | Query: `page`, `size`, `sort`                                    |
+| POST   | `/subcategories`                       | Crear subcategoría (USER: personal, ADMIN: sistema)      | Body: `{name, categoryId, comments?}`, Header: `Idempotency-Key` |
+| GET    | `/subcategories/{id}`                  | Obtener subcategoría por ID                              | Path: `id`                                                       |
+| PUT    | `/subcategories/{id}`                  | Actualizar subcategoría (USER solo las propias)          | Path: `id`, Body: `{name, categoryId, comments?}`                |
+| DELETE | `/subcategories/{id}`                  | Eliminar subcategoría (soft delete)                      | Path: `id`                                                       |
+| GET    | `/subcategories/category/{categoryId}` | Listar subcategorías por categoría                       | Path: `categoryId`, Query: `page`, `size`, `sort`                |
 
 ### Categorías (requiere auth)
 
-| Método | Ruta               | Descripción                              |
-| ------ | ------------------ | ---------------------------------------- |
-| GET    | `/categories`      | Listar categorías activas paginadas      |
-| GET    | `/categories/{id}` | Obtener categoría por ID                 |
+| Método | Ruta               | Descripción                         | Parámetros                    |
+| ------ | ------------------ | ----------------------------------- | ----------------------------- |
+| GET    | `/categories`      | Listar categorías activas paginadas | Query: `page`, `size`, `sort` |
+| GET    | `/categories/{id}` | Obtener categoría por ID            | Path: `id`                    |
 
 ### Dashboard de usuario
 
-| Método | Ruta                                     | Descripción                                        |
-| ------ | ---------------------------------------- | -------------------------------------------------- |
-| GET    | `/dashboard/me/total-income`             | Total de ingresos del mes (parámetros: month, year) |
-| GET    | `/dashboard/me/total-expense`            | Total de gastos del mes                            |
-| GET    | `/dashboard/me/monthly-balance`          | Balance mensual de los últimos 12 meses            |
-| GET    | `/dashboard/me/expenses-by-category`     | Gastos agrupados por categoría                     |
-| GET    | `/dashboard/me/expenses-by-subcategory`  | Gastos agrupados por subcategoría (requiere categoryId) |
+| Método | Ruta                                    | Descripción                                                          | Parámetros                                               |
+| ------ | --------------------------------------- | -------------------------------------------------------------------- | -------------------------------------------------------- |
+| GET    | `/dashboard/me/summary-card`            | Resumen consolidado del mes (ingresos, gastos, balance, saving rate) | Query: `month` (1-12), `year` (requeridos)               |
+| GET    | `/dashboard/me/total-income`            | Total de ingresos del mes                                            | Query: `month`, `year` (requeridos)                      |
+| GET    | `/dashboard/me/total-expense`           | Total de gastos del mes                                              | Query: `month`, `year` (requeridos)                      |
+| GET    | `/dashboard/me/monthly-balance`         | Balance mensual de los últimos N meses                               | Query: `months` (3, 6 o 12, default: 3)                  |
+| GET    | `/dashboard/me/expenses-by-category`    | Gastos agrupados por categoría                                       | Query: `month`, `year` (requeridos)                      |
+| GET    | `/dashboard/me/expenses-by-subcategory` | Gastos agrupados por subcategoría dentro de una categoría            | Query: `categoryId`, `month`, `year` (requeridos)        |
+| GET    | `/dashboard/me/monthly-comparison`      | Glosas comparativas del mes vs anterior                              | Query: `month`, `year` (opcionales, default: mes actual) |
+| GET    | `/dashboard/me/top-expenses`            | Top 3 categorías y subcategorías con más gasto                       | Query: `month`, `year` (requeridos)                      |
 
 ### Dashboard de administrador
 
-| Método | Ruta                                            | Descripción                                          |
-| ------ | ----------------------------------------------- | ---------------------------------------------------- |
-| GET    | `/dashboard/admin/stats`                        | Estadísticas generales (usuarios activos, transacciones) |
-| GET    | `/dashboard/admin/user-evolution`               | Evolución de usuarios en rango de meses              |
-| GET    | `/dashboard/admin/transaction-evolution`        | Evolución de transacciones en rango de meses         |
-| GET    | `/dashboard/admin/top-users`                    | Top 5 usuarios por actividad                         |
-| GET    | `/dashboard/admin/money-movement`               | Movimientos de dinero (ingresos, gastos, balance)    |
-| GET    | `/dashboard/admin/expenses-by-category`         | Gastos por categoría (opcional: userId)              |
-| GET    | `/dashboard/admin/expenses-by-subcategory`      | Gastos por subcategoría (opcional: userId)           |
-| GET    | `/dashboard/admin/avg-income`                   | Promedio mensual de ingresos (últimos 12 meses)      |
-| GET    | `/dashboard/admin/avg-expense`                  | Promedio mensual de gastos (últimos 12 meses)        |
-| GET    | `/dashboard/admin/averages`                     | Promedios globales y por usuario                     |
-| GET    | `/dashboard/admin/activity-distribution`        | Distribución de usuarios por nivel de actividad      |
+| Método | Ruta                                       | Descripción                                              | Parámetros                                                                                                      |
+| ------ | ------------------------------------------ | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| GET    | `/dashboard/admin/stats`                   | Estadísticas generales (usuarios activos, transacciones) | —                                                                                                               |
+| GET    | `/dashboard/admin/user-evolution`          | Evolución de usuarios en rango de meses                  | Query: `monthFrom`, `yearFrom`, `monthTo`, `yearTo` (requeridos)                                                |
+| GET    | `/dashboard/admin/transaction-evolution`   | Evolución de transacciones en rango de meses             | Query: `monthFrom`, `yearFrom`, `monthTo`, `yearTo` (requeridos), `userId` (opcional)                           |
+| GET    | `/dashboard/admin/top-users`               | Top 5 usuarios por actividad                             | Query: `monthFrom`, `yearFrom`, `monthTo`, `yearTo` (requeridos)                                                |
+| GET    | `/dashboard/admin/money-movement`          | Movimientos de dinero (ingresos, gastos, balance)        | Query: `userId` (0=todos, opcional)                                                                             |
+| GET    | `/dashboard/admin/expenses-by-category`    | Gastos por categoría (admin)                             | Query: `monthFrom`, `yearFrom`, `monthTo`, `yearTo` (requeridos), `userId` (opcional)                           |
+| GET    | `/dashboard/admin/expenses-by-subcategory` | Gastos por subcategoría (admin)                          | Query: `categoryId` (requerido), `monthFrom`, `yearFrom`, `monthTo`, `yearTo` (requeridos), `userId` (opcional) |
+| GET    | `/dashboard/admin/avg-income`              | Promedio mensual de ingresos (últimos 12 meses)          | Query: `userId` (0=todos, opcional)                                                                             |
+| GET    | `/dashboard/admin/avg-expense`             | Promedio mensual de gastos (últimos 12 meses)            | Query: `userId` (0=todos, opcional)                                                                             |
+| GET    | `/dashboard/admin/averages`                | Promedios globales y por usuario                         | Query: `userId` (0=todos, opcional)                                                                             |
+| GET    | `/dashboard/admin/activity-distribution`   | Distribución de usuarios por nivel de actividad          | Query: `month` (1-12), `year` (requeridos)                                                                      |
 
 ### Admin - Gestión de usuarios
 
-| Método | Ruta                | Descripción                                       |
-| ------ | ------------------- | ------------------------------------------------- |
-| GET    | `/admin/users`      | Listar usuarios (filtros: rol, estado, paginación) |
-| GET    | `/admin/users/{id}` | Obtener usuario por ID                            |
-| PUT    | `/admin/users/{id}` | Actualizar usuario (nombre, email, rol, estado)   |
-| DELETE | `/admin/users/{id}` | Eliminar usuario (soft delete)                    |
+| Método | Ruta                | Descripción                                     | Parámetros                                                                    |
+| ------ | ------------------- | ----------------------------------------------- | ----------------------------------------------------------------------------- |
+| GET    | `/admin/users`      | Listar usuarios paginados                       | Query: `role` (USER/ADMIN), `status` (ACTIVE/BLOCKED), `page`, `size`, `sort` |
+| GET    | `/admin/users/{id}` | Obtener usuario por ID                          | Path: `id`                                                                    |
+| PUT    | `/admin/users/{id}` | Actualizar usuario (nombre, email, rol, estado) | Path: `id`, Body: `{name, email, role, status}`                               |
+| DELETE | `/admin/users/{id}` | Eliminar usuario (soft delete)                  | Path: `id`                                                                    |
 
 ### Admin - Gestión de categorías
 
-| Método | Ruta                    | Descripción                         |
-| ------ | ----------------------- | ----------------------------------- |
-| GET    | `/admin/categories`     | Listar categorías paginadas         |
-| POST   | `/admin/categories`     | Crear categoría                     |
-| GET    | `/admin/categories/{id}`| Obtener categoría por ID            |
-| PUT    | `/admin/categories/{id}`| Actualizar categoría                |
-| DELETE | `/admin/categories/{id}`| Eliminar categoría (soft delete)    |
+| Método | Ruta                     | Descripción                      | Parámetros                                                       |
+| ------ | ------------------------ | -------------------------------- | ---------------------------------------------------------------- |
+| GET    | `/admin/categories`      | Listar categorías paginadas      | Query: `page`, `size`, `sort`                                    |
+| POST   | `/admin/categories`      | Crear categoría                  | Body: `{name, type}` (INCOME/EXPENSE), Header: `Idempotency-Key` |
+| GET    | `/admin/categories/{id}` | Obtener categoría por ID         | Path: `id`                                                       |
+| PUT    | `/admin/categories/{id}` | Actualizar categoría             | Path: `id`, Body: `{name, type}`                                 |
+| DELETE | `/admin/categories/{id}` | Eliminar categoría (soft delete) | Path: `id`                                                       |
 
 ---
 
 ## Stack tecnológico
 
-| Capa              | Tecnología                                                             |
-| ----------------- | ---------------------------------------------------------------------- |
+| Capa              | Tecnología                                                            |
+| ----------------- | --------------------------------------------------------------------- |
 | **Estructura**    | HTML5 semántico (`<dialog>`, `<table>`, `aria-*`, `role`)             |
 | **Estilos**       | CSS3 (custom properties, responsive mobile-first, temas claro/oscuro) |
 | **Lógica**        | JavaScript vanilla (scripts secuenciales, namespace global)           |
 | **Gráficos**      | Chart.js 4.x (CDN)                                                    |
 | **Autenticación** | JWT (access + refresh token, cookie HttpOnly)                         |
 | **API**           | REST en Java/Spring Boot (`localhost:8080/api/v1`)                    |
-| **Moneda**        | EUR (€)                                                                |
+| **Moneda**        | EUR (€)                                                               |
 
 ---
 
 ## Diseño visual
 
-La identidad visual sigue el concepto **"La Ventana Clara"**: minimalismo funcional, sin ruido visual. Colores como herramientas de comunicación (verde=ingreso, rojo=gasto, índigo=acción). Superficies planas y tonales, jerarquía por tamaño y peso.
+La identidad visual sigue el concepto **"La Ventana Clara"**: minimalismo funcional, sin ruido visual. Colores como herramientas de comunicación (verde=ingreso, rojo=gasto, rojo oscuro=acción). Superficies planas y tonales, jerarquía por tamaño y peso.
 
 Para detalles completos, ver [DESIGN.md](DESIGN.md).
 
 ### Paleta de colores
 
-| Color                                      | Uso                                       |
-| ------------------------------------------ | ----------------------------------------- |
-| Índigo Sobrio `#4f46e5`                    | Acción principal (botones, links, foco)   |
-| Verde Ingreso `#059669`                    | Montos de ingreso, badges positivos       |
-| Rojo Gasto `#dc2626`                       | Montos de gasto, badges negativos         |
-| Ámbar Ocasional `#f59e0b`                  | Indicador de actividad "ocasional"        |
-| Fondo Página `#f0f2f5` / Dark `#0f172a`    | Superficie base (claro / oscuro)          |
-| Fondo Tarjeta `#ffffff` / Dark `#1e293b`   | Cards, tablas, sidebar, header            |
+| Color                                    | Uso                                     |
+| ---------------------------------------- | --------------------------------------- |
+| Rojo Principal `#8e2f37`                 | Acción principal (botones, links, foco) |
+| Verde Ingreso `#16a34a`                  | Montos de ingreso, badges positivos     |
+| Rojo Gasto `#dc2626`                     | Montos de gasto, badges negativos       |
+| Ámbar Advertencia `#f59e0b`              | Indicador de actividad "ocasional"      |
+| Fondo Página `#e4e4e4` / Dark `#0f172a`  | Superficie base (claro / oscuro)        |
+| Fondo Tarjeta `#ffffff` / Dark `#1e293b` | Cards, tablas, sidebar, header          |
 
 ### Temas
 
-- **Claro**: fondo gris suave `#f0f2f5`, tarjetas blancas, texto oscuro
+- **Claro**: fondo gris suave `#e4e4e4`, tarjetas blancas, texto oscuro
 - **Oscuro**: fondo azul muy oscuro `#0f172a`, tarjetas `#1e293b`, texto claro
 - Persistencia de preferencia en `localStorage`
 
 ---
 
-## Atribución y licencia
+## Derechos de Autor
 
-Los datos financieros son propiedad del usuario. La API backend es un proyecto propio.
+Mis Fichas es una aplicación web desarrollada por Franco Bonora con fines de demostración académica.
 
-© 2026 Franco Calderón
+El código fuente está disponible únicamente con fines educativos. No está permitido copiar, redistribuir ni usar este proyecto para fines comerciales sin autorización expresa del autor.
+
+© 2025 Franco Bonora. Todos los derechos reservados.

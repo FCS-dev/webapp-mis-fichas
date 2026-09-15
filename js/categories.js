@@ -139,10 +139,10 @@ function showCatForm(catId) {
 
   document
     .getElementById("catForm")
-    .addEventListener("submit", handleCatSubmit);
+    .addEventListener("submit", (e) => handleCatSubmit(e, catId));
 }
 
-async function handleCatSubmit(e) {
+async function handleCatSubmit(e, catId) {
   e.preventDefault();
   const errorEl = document.getElementById("catFormError");
   errorEl.textContent = "";
@@ -151,28 +151,18 @@ async function handleCatSubmit(e) {
       name: document.getElementById("catName").value.trim(),
       type: document.getElementById("catType").value,
     };
-    if (window.__editingCatId) {
-      await apiRequest(
-        "PUT",
-        `/admin/categories/${window.__editingCatId}`,
-        payload,
-      );
+    if (catId) {
+      await apiRequest("PUT", `/admin/categories/${catId}`, payload);
     } else {
       await apiRequest("POST", "/admin/categories", payload);
     }
     hideModal();
-    window.__editingCatId = null;
     showToast("Categor&iacute;a guardada correctamente", "success");
     invalidateCategoryCache();
     await loadCategoriesData();
   }).catch((err) => {
     errorEl.textContent = err.message;
   });
-}
-
-function editCat(id) {
-  window.__editingCatId = id;
-  showCatForm(id);
 }
 
 function deleteCat(id) {
@@ -191,5 +181,5 @@ function deleteCat(id) {
 window.changeCatPage = changeCatPage;
 window.handleCatPageSizeChange = handleCatPageSizeChange;
 window.showCatForm = showCatForm;
-window.editCat = editCat;
+window.editCat = showCatForm;
 window.deleteCat = deleteCat;
