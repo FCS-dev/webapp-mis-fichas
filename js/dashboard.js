@@ -38,7 +38,8 @@ let adminUsers = [];
 let adminLastUpdate = null;
 
 // Section 1: User evolution
-const _d = new Date(); _d.setMonth(_d.getMonth() - 6);
+const _d = new Date();
+_d.setMonth(_d.getMonth() - 6);
 const _6m = { month: _d.getMonth() + 1, year: _d.getFullYear() };
 let sec1MonthFrom = _6m.month;
 let sec1YearFrom = _6m.year;
@@ -135,6 +136,9 @@ function navigateTo(section) {
   else if (section === "subcategories") renderSubcategoriesSection();
   else if (section === "categories" && isAdmin()) renderCategoriesSection();
   else if (section === "categories") navigateTo("dashboard");
+  else if (section === "blocked-users" && isAdmin())
+    renderBlockedUsersSection();
+  else if (section === "blocked-users") navigateTo("dashboard");
 }
 
 // ===================================================================
@@ -158,6 +162,7 @@ function renderDashboardLayout() {
                     <button class="header-nav-link" data-section="transactions" onclick="window.navigateTo('transactions')">Transacciones</button>
                     <button class="header-nav-link" data-section="subcategories" onclick="window.navigateTo('subcategories')">Sub-Categor&iacute;as</button>
                     ${isAdmin() ? '<button class="header-nav-link" data-section="categories" onclick="window.navigateTo(\'categories\')">Categor&iacute;as</button>' : ""}
+                    ${isAdmin() ? '<button class="header-nav-link" data-section="blocked-users" onclick="window.navigateTo(\'blocked-users\')">Mantenimiento</button>' : ""}
                     ${!isAdmin() ? '<button class="header-nav-link" onclick="window.showTxForm()">Nueva Transacci&oacute;n</button>' : ""}
                 </nav>
                 <div class="header-right">
@@ -185,6 +190,7 @@ function renderDashboardLayout() {
                         <li><button class="sidebar-link" data-section="transactions" onclick="window.navigateTo('transactions')"><span class="icon">&#x1F4B0;</span> Transacciones</button></li>
                         <li><button class="sidebar-link" data-section="subcategories" onclick="window.navigateTo('subcategories')"><span class="icon">&#x1F3F7;</span> Sub-Categor&iacute;as</button></li>
                         ${isAdmin() ? '<li><button class="sidebar-link" data-section="categories" onclick="window.navigateTo(\'categories\')"><span class="icon">&#x1F4C1;</span> Categor&iacute;as</button></li>' : ""}
+                        ${isAdmin() ? '<li><button class="sidebar-link" data-section="blocked-users" onclick="window.navigateTo(\'blocked-users\')"><span class="icon">&#x1F512;</span> Mantenimiento</button></li>' : ""}
                         ${!isAdmin() ? '<li class="sidebar-separator"></li><li><button class="sidebar-link" onclick="window.showTxForm(); window.closeSidebar()"><span class="icon">&#x2795;</span> Nueva Transacci&oacute;n</button></li>' : ""}
                     </ul>
                     <button class="theme-toggle sidebar-theme-toggle" onclick="window.toggleTheme()" title="Cambiar tema" aria-label="Cambiar tema" aria-pressed="${isDark}">
@@ -232,7 +238,9 @@ async function handleLogout() {
       method: "POST",
       credentials: "include",
     });
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
   destroyAllCharts();
   clearTokens();
   window.location.hash = "#login";

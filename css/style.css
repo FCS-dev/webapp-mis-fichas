@@ -932,10 +932,21 @@ html.dark .toggle-thumb {
     animation: cardEnter 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.summary-card:nth-child(1) { animation-delay: 0ms; }
-.summary-card:nth-child(2) { animation-delay: 80ms; }
-.summary-card:nth-child(3) { animation-delay: 160ms; }
-.summary-card:nth-child(4) { animation-delay: 240ms; }
+.summary-card:nth-child(1) {
+    animation-delay: 0ms;
+}
+
+.summary-card:nth-child(2) {
+    animation-delay: 80ms;
+}
+
+.summary-card:nth-child(3) {
+    animation-delay: 160ms;
+}
+
+.summary-card:nth-child(4) {
+    animation-delay: 240ms;
+}
 
 .summary-card:hover {
     transform: translateY(-2px);
@@ -1051,6 +1062,32 @@ html.dark .toggle-thumb {
     border-bottom: 2px solid var(--border);
     white-space: nowrap;
     font-weight: var(--weight-semibold);
+}
+
+.sortable-header {
+    cursor: pointer;
+    user-select: none;
+}
+
+.sortable-header:hover {
+    color: var(--text);
+}
+
+.sort-header-content {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.sort-icon {
+    flex-shrink: 0;
+    color: var(--primary);
+}
+
+.btn-with-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
 
 .data-table td {
@@ -2521,25 +2558,13 @@ html.dark .toggle-thumb {
 @media (min-width: 1024px) {
     .fab-tx {
         display: none;
-        /* bottom: calc(var(--footer-height) + 16px);
-        left: auto;
-        right: 7%;
-        transform: none; */
     }
-
-    /* .fab-tx:hover {
-        transform: scale(1.05);
-    } */
 
     .admin-section-header {
         flex-direction: row;
         justify-content: space-between;
         align-items: flex-start;
     }
-
-    /* .stat-cards {
-        grid-template-columns: repeat(2, 1fr);
-    } */
 
     #montosCards {
         grid-template-columns: repeat(3, 1fr);
@@ -2661,6 +2686,11 @@ html.dark .toggle-thumb {
     .admin-section-filters {
         flex-direction: row;
         align-items: flex-end;
+    }
+
+    #section-mantenimiento {
+        width: 80%;
+        margin: 0 auto;
     }
 }
 

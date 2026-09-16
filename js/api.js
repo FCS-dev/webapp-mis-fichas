@@ -67,7 +67,7 @@ async function apiRefresh() {
 async function apiRequest(method, path, body) {
   const doRequest = async (token) => {
     const headers = {};
-    if (body !== undefined || method === "POST" || method === "PUT") {
+    if (body !== undefined) {
       headers["Content-Type"] = "application/json";
     }
     if (token) headers["Authorization"] = `Bearer ${token}`;
