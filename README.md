@@ -12,29 +12,37 @@ El frontend consume una **API REST** (`http://localhost:8080/api/v1`) con autent
 
 <img src="./assets/screenshots/desktop-admin-dashboard1-dark.webp" alt="Home de Mis Fichas ADMIN en escritorio" width="800">
 
-| Panel ADMIN: Evolución de registro de USER | Panel ADMIN: Transacciones por meses: INCOMES y EXPENSES |
-| ------------------------------------------ | -------------------------------------------------------- |
-|                                            |                                                          |
+### Panel ADMIN: Evolución de registro de USER
 
-| Panel ADMIN: Tablas comparativas de "Power USERS" | Panel ADMIN: Chart tipo donut sobre EXPENSES: Categorias y Sub-Categorias |
-| ------------------------------------------------- | ------------------------------------------------------------------------- |
-|                                                   |                                                                           |
+<img src="./assets/screenshots/desktop-admin-chart1-dark.webp" alt="chart Lineal, evolución de usuarios" width="700">
+
+### Panel ADMIN: Transacciones por meses: INCOMES y EXPENSES
+
+<img src="./assets/screenshots/desktop-admin-dashboard2-dark.webp" alt="chart de barras, comparativo entre meses de transacciones INCOMES y EXPENSES" width="700">
+
+### Panel ADMIN: Tablas comparativas de "Power USERS"
+
+<img src="./assets/screenshots/desktop-admin-dashboard4-dark.webp" alt="Tablas de USERS con mas actividad" width="700">
+
+### Panel ADMIN: Chart tipo donut sobre EXPENSES: Categorias y Sub-Categorias
+
+<img src="./assets/screenshots/desktop-admin-dashboard5-dark.webp" alt="Chart donuts de EXPENSES; Categorias y Sub-Categorias" width="700">
 
 ---
 
 ### Móvil
 
-| Login | Dashboard USER |
-| ----- | -------------- |
-|       |                |
+| Login                                                                                             | Dashboard USER                                                                                                   |
+| ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| <img src="./assets/screenshots/login-light.webp" alt="Ventana login para USER/ADMIN" width="450"> | <img src="./assets/screenshots/mobile-user-dashboard1-light.webp" alt="Dashboard principal de USER" width="450"> |
 
-| Dashboard USER 2 | Menu sidebar |
-| ---------------- | ------------ |
-|                  |              |
+| Dashboard USER 2                                                                                                   | Menu sidebar                                                                                            |
+| ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
+| <img src="./assets/screenshots/mobile-user-dashboard2-light.webp" alt="Dashboard principal de USER 2" width="450"> | <img src="./assets/screenshots/mobile-user-sidemenu-light.webp" alt="Menu sidebar de USER" width="450"> |
 
-| Modal de registro de Transación |
-| ------------------------------- |
-|                                 |
+| Modal de registro de Transación                                                                                                  |
+| -------------------------------------------------------------------------------------------------------------------------------- |
+| <img src="./assets/screenshots/mobile-user-new-transaccion-light.webp" alt="Modal de registro de nueva transacción" width="450"> |
 
 ---
 
