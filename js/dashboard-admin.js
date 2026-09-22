@@ -701,6 +701,7 @@ function renderSec1Chart(monthly) {
   const gridColor = getChartGridColor();
 
   if (chartUserGrowth) {
+    chartUserGrowth.options.maintainAspectRatio = false;
     chartUserGrowth.data.labels = labels;
     chartUserGrowth.data.datasets[0].data = monthly.map((d) => d.activeUsers);
     chartUserGrowth.data.datasets[1].data = monthly.map(
@@ -740,7 +741,7 @@ function renderSec1Chart(monthly) {
       },
       options: {
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         plugins: {
           legend: {
             position: "bottom",
@@ -1071,6 +1072,12 @@ function renderSec6(data) {
     </div>`;
   document.getElementById("sec6Cards").innerHTML = html;
 }
+
+window.addEventListener("orientationchange", () => {
+  setTimeout(() => {
+    if (chartUserGrowth) chartUserGrowth.resize();
+  }, 100);
+});
 
 window.handleApplySec1 = handleApplySec1;
 window.handleApplySec2 = handleApplySec2;

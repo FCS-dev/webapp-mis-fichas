@@ -1621,6 +1621,17 @@ html.dark .toggle-thumb {
     max-height: 220px;
 }
 
+/* #sec1Chart: stable size on mobile orientation changes */
+.dash-tab-panel[data-tab-panel="sec1"] .chart-wrapper {
+    aspect-ratio: 16 / 9;
+    height: auto;
+    min-height: 220px;
+}
+
+.dash-tab-panel[data-tab-panel="sec1"] .chart-wrapper canvas#sec1Chart {
+    max-height: none;
+}
+
 /* ===== Filter controls (mobile-first: column) ===== */
 .filter-controls {
     display: flex;
