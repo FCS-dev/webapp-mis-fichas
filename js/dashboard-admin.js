@@ -46,8 +46,15 @@ function renderAdminDashboardSection() {
             </div>
 
             <div class="dash-tab-panel active" data-tab-panel="sec1" role="tabpanel">
+                <div class="admin-filters-accordion" id="sec1FiltersAccordion">
+                    <button class="accordion-toggle" type="button" aria-expanded="false" aria-controls="sec1Filters" onclick="window.toggleFiltersAccordion('sec1FiltersAccordion')">
+                        Filtros
+                    </button>
+                    <div class="accordion-content">
+                        <div class="admin-section-filters" id="sec1Filters"></div>
+                    </div>
+                </div>
                 <p class="admin-section-criteria" id="sec1Criteria"></p>
-                <div class="admin-section-filters" id="sec1Filters"></div>
                 <div class="stat-cards" id="sec1Cards">
                     <div class="stat-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
                 </div>
@@ -55,8 +62,15 @@ function renderAdminDashboardSection() {
             </div>
 
             <div class="dash-tab-panel" data-tab-panel="sec2" role="tabpanel">
+                <div class="admin-filters-accordion" id="sec2FiltersAccordion">
+                    <button class="accordion-toggle" type="button" aria-expanded="false" aria-controls="sec2Filters" onclick="window.toggleFiltersAccordion('sec2FiltersAccordion')">
+                        Filtros
+                    </button>
+                    <div class="accordion-content">
+                        <div class="admin-section-filters" id="sec2Filters"></div>
+                    </div>
+                </div>
                 <p class="admin-section-criteria" id="sec2Criteria"></p>
-                <div class="admin-section-filters" id="sec2Filters"></div>
                 <div class="stat-cards" id="sec2Cards">
                     <div class="stat-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
                     <div class="stat-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
@@ -65,14 +79,28 @@ function renderAdminDashboardSection() {
             </div>
 
             <div class="dash-tab-panel" data-tab-panel="sec6" role="tabpanel">
+                <div class="admin-filters-accordion" id="sec6FiltersAccordion">
+                    <button class="accordion-toggle" type="button" aria-expanded="false" aria-controls="sec6Filters" onclick="window.toggleFiltersAccordion('sec6FiltersAccordion')">
+                        Filtros
+                    </button>
+                    <div class="accordion-content">
+                        <div class="admin-section-filters" id="sec6Filters"></div>
+                    </div>
+                </div>
                 <p class="admin-section-criteria" id="sec6Criteria"></p>
-                <div class="admin-section-filters" id="sec6Filters"></div>
                 <div id="sec6Cards"><div class="loading-message">Cargando…</div></div>
             </div>
 
             <div class="dash-tab-panel" data-tab-panel="sec5" role="tabpanel">
+                <div class="admin-filters-accordion" id="sec5FiltersAccordion">
+                    <button class="accordion-toggle" type="button" aria-expanded="false" aria-controls="sec5Filters" onclick="window.toggleFiltersAccordion('sec5FiltersAccordion')">
+                        Filtros
+                    </button>
+                    <div class="accordion-content">
+                        <div class="admin-section-filters" id="sec5Filters"></div>
+                    </div>
+                </div>
                 <p class="admin-section-criteria" id="sec5Criteria"></p>
-                <div class="admin-section-filters" id="sec5Filters"></div>
                 <div class="mini-tables" id="sec5Cards">
                     <div class="mini-table-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
                     <div class="mini-table-card"><div class="skeleton skeleton-text-sm"></div><div class="skeleton skeleton-card"></div></div>
@@ -81,8 +109,15 @@ function renderAdminDashboardSection() {
             </div>
 
             <div class="dash-tab-panel" data-tab-panel="expBreakdown" role="tabpanel">
+                <div class="admin-filters-accordion" id="expBreakdownFiltersAccordion">
+                    <button class="accordion-toggle" type="button" aria-expanded="false" aria-controls="expBreakdownFilters" onclick="window.toggleFiltersAccordion('expBreakdownFiltersAccordion')">
+                        Filtros
+                    </button>
+                    <div class="accordion-content">
+                        <div class="admin-section-filters" id="expBreakdownFilters"></div>
+                    </div>
+                </div>
                 <p class="admin-section-criteria" id="expBreakdownCriteria"></p>
-                <div class="admin-section-filters" id="expBreakdownFilters"></div>
                 <div class="dashboard-charts">
                     <div class="chart-card">
                         <p class="chart-title">Gastos por categor&iacute;a</p>
@@ -1073,6 +1108,15 @@ function renderSec6(data) {
     </div>`;
   document.getElementById("sec6Cards").innerHTML = html;
 }
+
+function toggleFiltersAccordion(accordionId) {
+  const accordion = document.getElementById(accordionId);
+  if (!accordion) return;
+  const isOpen = accordion.classList.toggle("open");
+  const btn = accordion.querySelector(".accordion-toggle");
+  if (btn) btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+}
+window.toggleFiltersAccordion = toggleFiltersAccordion;
 
 window.handleApplySec1 = handleApplySec1;
 window.handleApplySec2 = handleApplySec2;
