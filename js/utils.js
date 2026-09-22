@@ -90,4 +90,8 @@ function switchTab(tabId) {
             panel.setAttribute("aria-hidden", "true");
         }
     });
+
+    if (typeof window.resizeAllCharts === "function") {
+        setTimeout(window.resizeAllCharts, 50);
+    }
 }

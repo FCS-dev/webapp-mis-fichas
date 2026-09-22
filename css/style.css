@@ -1621,15 +1621,21 @@ html.dark .toggle-thumb {
     max-height: 220px;
 }
 
-/* #sec1Chart: stable size on mobile orientation changes */
-.dash-tab-panel[data-tab-panel="sec1"] .chart-wrapper {
-    aspect-ratio: 16 / 9;
-    height: auto;
-    min-height: 220px;
-}
+/* Mobile chart wrappers: stable size on orientation changes */
+@media (max-width: 1023px) {
+    .dash-tab-panel[data-tab-panel="sec1"] .chart-wrapper,
+    .dash-tab-panel[data-tab-panel="sec2"] .chart-wrapper,
+    .dash-tab-panel[data-tab-panel="balance"] .chart-wrapper {
+        aspect-ratio: 16 / 9;
+        height: auto;
+        min-height: 220px;
+    }
 
-.dash-tab-panel[data-tab-panel="sec1"] .chart-wrapper canvas#sec1Chart {
-    max-height: none;
+    .dash-tab-panel[data-tab-panel="sec1"] .chart-wrapper canvas#sec1Chart,
+    .dash-tab-panel[data-tab-panel="sec2"] .chart-wrapper canvas#sec2Chart,
+    .dash-tab-panel[data-tab-panel="balance"] .chart-wrapper canvas#balanceChart {
+        max-height: none;
+    }
 }
 
 /* ===== Filter controls (mobile-first: column) ===== */
@@ -2669,6 +2675,10 @@ html.dark .toggle-thumb {
 
     .chart-card-full .chart-wrapper {
         max-width: 60%;
+    }
+
+    .dash-tab-panel[data-tab-panel="sec1"] .chart-wrapper {
+        max-width: 70%;
     }
 
     .chart-wrapper {

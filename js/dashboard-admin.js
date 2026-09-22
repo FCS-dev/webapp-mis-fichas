@@ -830,6 +830,7 @@ function renderSec2Chart(monthly) {
   const gridColor = getChartGridColor();
 
   if (chartIncomeVsExpense) {
+    chartIncomeVsExpense.options.maintainAspectRatio = false;
     chartIncomeVsExpense.data.labels = labels;
     chartIncomeVsExpense.data.datasets[0].data = monthly.map((d) =>
       Number(d.incomeTotal),
@@ -865,7 +866,7 @@ function renderSec2Chart(monthly) {
       },
       options: {
         responsive: true,
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         plugins: {
           legend: {
             position: "bottom",
@@ -1072,12 +1073,6 @@ function renderSec6(data) {
     </div>`;
   document.getElementById("sec6Cards").innerHTML = html;
 }
-
-window.addEventListener("orientationchange", () => {
-  setTimeout(() => {
-    if (chartUserGrowth) chartUserGrowth.resize();
-  }, 100);
-});
 
 window.handleApplySec1 = handleApplySec1;
 window.handleApplySec2 = handleApplySec2;

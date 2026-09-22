@@ -174,6 +174,33 @@ function refreshChartTheme() {
 
 window.refreshChartTheme = refreshChartTheme;
 
+function resizeAllCharts() {
+  Object.values(_charts).forEach(([get]) => {
+    const chart = get();
+    if (!chart) return;
+    const canvas = chart.canvas;
+    if (canvas && canvas.offsetParent !== null) {
+      chart.resize();
+    }
+  });
+}
+window.resizeAllCharts = resizeAllCharts;
+
+function debounce(fn, ms) {
+  let t;
+  return (...args) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn(...args), ms);
+  };
+}
+
+window.addEventListener("resize", debounce(resizeAllCharts, 150));
+window.addEventListener("orientationchange", () => {
+  // iOS fires orientationchange before the viewport dimensions update
+  setTimeout(resizeAllCharts, 300);
+  setTimeout(resizeAllCharts, 600);
+});
+
 function renderSubcategoryDoughnut(canvasId, chartRefProp, data) {
   destroyChart(chartRefProp);
   const canvas = document.getElementById(canvasId);
