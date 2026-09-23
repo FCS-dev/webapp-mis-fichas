@@ -157,8 +157,8 @@ function renderDashboardLayout() {
                   <a href="#dashboard" onclick="window.navigateTo('dashboard')" class="header-logo">
                       <img class="header-logo-icon" src="${logoIcon}" alt="">
                       <span class="header-logo-text">Mis Fichas</span>
+                  </a>
                   <span class="header-user-name only-mobile">${escHtml(user?.name || "")}</span>
-                </a>
                 </div>
                 <nav class="header-nav" aria-label="Navegación principal">
                     <button class="header-nav-link active" data-section="dashboard" onclick="window.navigateTo('dashboard')">Dashboard</button>

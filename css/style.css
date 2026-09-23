@@ -900,6 +900,7 @@ html.dark .toggle-thumb {
 .footer-links {
     display: flex;
     gap: 16px;
+    justify-content: center;
     align-items: center;
 }
 
