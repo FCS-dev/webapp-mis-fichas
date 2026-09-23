@@ -11,7 +11,9 @@ function toggleTheme() {
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
     document.querySelectorAll('.theme-toggle').forEach(btn => {
         btn.setAttribute('aria-pressed', isDark);
-        btn.innerHTML = getThemeIcon(isDark);
+        const icon = btn.querySelector('.theme-toggle-icon');
+        if (icon) icon.innerHTML = getThemeIcon(isDark);
+        else btn.innerHTML = getThemeIcon(isDark);
     });
     if (window.refreshChartTheme) window.refreshChartTheme();
     updateLogoSrc();

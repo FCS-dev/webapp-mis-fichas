@@ -167,7 +167,7 @@ function renderDashboardLayout() {
                 </nav>
                 <div class="header-right">
                     <button class="theme-toggle" onclick="window.toggleTheme()" title="Cambiar tema" aria-label="Cambiar tema" aria-pressed="${isDark}">
-                        ${getThemeIcon(isDark)}
+                        <span class="theme-toggle-icon">${getThemeIcon(isDark)}</span>
                     </button>
                     <div class="header-user">
                         <span class="header-greeting">Hola,</span>
@@ -192,10 +192,14 @@ function renderDashboardLayout() {
                         ${isAdmin() ? '<li><button class="sidebar-link" data-section="categories" onclick="window.navigateTo(\'categories\')"><span class="icon">&#x1F4C1;</span> Categor&iacute;as</button></li>' : ""}
                         ${isAdmin() ? '<li><button class="sidebar-link" data-section="blocked-users" onclick="window.navigateTo(\'blocked-users\')"><span class="icon">&#x1F512;</span> Mantenimiento</button></li>' : ""}
                         ${!isAdmin() ? '<li class="sidebar-separator"></li><li><button class="sidebar-link" onclick="window.showTxForm(); window.closeSidebar()"><span class="icon">&#x2795;</span> Nueva Transacci&oacute;n</button></li>' : ""}
+                        <li class="sidebar-separator"></li>
+                        <li>
+                            <button class="sidebar-link theme-toggle sidebar-theme-toggle" onclick="window.toggleTheme()" title="Cambiar tema" aria-label="Cambiar tema" aria-pressed="${isDark}">
+                                <span class="icon theme-toggle-icon">${getThemeIcon(isDark)}</span>
+                                <span>Cambiar Tema</span>
+                            </button>
+                        </li>
                     </ul>
-                    <button class="theme-toggle sidebar-theme-toggle" onclick="window.toggleTheme()" title="Cambiar tema" aria-label="Cambiar tema" aria-pressed="${isDark}">
-                        ${getThemeIcon(isDark)}
-                    </button>
                 </nav>
                 <main class="dash-main" id="dashContent">
                     <p class="loading-message">Cargando…</p>
