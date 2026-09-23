@@ -153,10 +153,13 @@ function renderDashboardLayout() {
             <a href="#dashContent" class="skip-link">Saltar al contenido</a>
             <header class="dash-header">
                 <button class="sidebar-toggle" onclick="window.toggleSidebar()" aria-label="Menú">&#x2630;</button>
-                <a href="#dashboard" onclick="window.navigateTo('dashboard')" class="header-logo">
-                    <img class="header-logo-icon" src="${logoIcon}" alt="">
-                    <span class="header-logo-text">Mis Fichas</span>
+                <div class="header-center">
+                  <a href="#dashboard" onclick="window.navigateTo('dashboard')" class="header-logo">
+                      <img class="header-logo-icon" src="${logoIcon}" alt="">
+                      <span class="header-logo-text">Mis Fichas</span>
+                  <span class="header-user-name only-mobile">${escHtml(user?.name || "")}</span>
                 </a>
+                </div>
                 <nav class="header-nav" aria-label="Navegación principal">
                     <button class="header-nav-link active" data-section="dashboard" onclick="window.navigateTo('dashboard')">Dashboard</button>
                     <button class="header-nav-link" data-section="transactions" onclick="window.navigateTo('transactions')">Transacciones</button>
