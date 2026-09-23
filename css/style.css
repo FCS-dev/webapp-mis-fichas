@@ -497,7 +497,7 @@ html.dark .toggle-thumb {
 .dash-header {
     /* display: flex; */
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr auto 1fr;
     justify-content: space-between;
     align-items: center;
     gap: 12px;
@@ -515,15 +515,15 @@ html.dark .toggle-thumb {
     z-index: 100;
 }
 
-.dash-header> :nth-child(1) {
+.dash-header .sidebar-toggle {
     justify-self: start;
 }
 
-.dash-header> :nth-child(2) {
+.dash-header .header-logo {
     justify-self: center;
 }
 
-.dash-header> :nth-child(3) {
+.dash-header .header-right {
     justify-self: end;
 }
 

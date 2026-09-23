@@ -243,43 +243,67 @@ function renderPeriodFilters(cfg) {
         <label>Desde ${buildMonthInput(cfg.fromId, cfg.fromYear, cfg.fromMonth)}</label>
         <label>Hasta ${buildMonthInput(cfg.toId, cfg.toYear, cfg.toMonth)}</label>
         <button class="btn-primary" onclick="window.${cfg.applyHandler}()">Actualizar</button>`;
-  if (cfg.userSelectId) populateUserSelect(cfg.userSelectId, cfg.selectedUserId);
+  if (cfg.userSelectId)
+    populateUserSelect(cfg.userSelectId, cfg.selectedUserId);
   document.getElementById(cfg.criteriaId).textContent = criteriaText(
     cfg.userSelectId ? cfg.selectedUserId : null,
-    cfg.fromMonth, cfg.fromYear, cfg.toMonth, cfg.toYear,
+    cfg.fromMonth,
+    cfg.fromYear,
+    cfg.toMonth,
+    cfg.toYear,
   );
   initMonthPicker(`#${cfg.fromId}`, cfg.fromYear, cfg.fromMonth);
   initMonthPicker(`#${cfg.toId}`, cfg.toYear, cfg.toMonth);
 }
 
-function applyPeriodFilter(fromSel, toSel, criteriaId, assignFn, loadFn, userId) {
+function applyPeriodFilter(
+  fromSel,
+  toSel,
+  criteriaId,
+  assignFn,
+  loadFn,
+  userId,
+) {
   const r = readPeriodRange(fromSel, toSel);
   if (!r) return;
   assignFn(r);
   document.getElementById(criteriaId).textContent = criteriaText(
-    userId ?? null, r.mf, r.yf, r.mt, r.yt,
+    userId ?? null,
+    r.mf,
+    r.yf,
+    r.mt,
+    r.yt,
   );
   loadFn();
 }
 
 function renderSec1Filters() {
   renderPeriodFilters({
-    filtersId: "sec1Filters", criteriaId: "sec1Criteria",
-    fromId: "sec1MonthFrom", toId: "sec1MonthTo",
-    fromYear: sec1YearFrom, fromMonth: sec1MonthFrom,
-    toYear: sec1YearTo, toMonth: sec1MonthTo,
+    filtersId: "sec1Filters",
+    criteriaId: "sec1Criteria",
+    fromId: "sec1MonthFrom",
+    toId: "sec1MonthTo",
+    fromYear: sec1YearFrom,
+    fromMonth: sec1MonthFrom,
+    toYear: sec1YearTo,
+    toMonth: sec1MonthTo,
     applyHandler: "handleApplySec1",
   });
 }
 
 function renderSec2Filters() {
   renderPeriodFilters({
-    filtersId: "sec2Filters", criteriaId: "sec2Criteria",
-    fromId: "sec2MonthFrom", toId: "sec2MonthTo",
-    fromYear: sec2YearFrom, fromMonth: sec2MonthFrom,
-    toYear: sec2YearTo, toMonth: sec2MonthTo,
+    filtersId: "sec2Filters",
+    criteriaId: "sec2Criteria",
+    fromId: "sec2MonthFrom",
+    toId: "sec2MonthTo",
+    fromYear: sec2YearFrom,
+    fromMonth: sec2MonthFrom,
+    toYear: sec2YearTo,
+    toMonth: sec2MonthTo,
     applyHandler: "handleApplySec2",
-    userSelectId: "sec2UserSelect", selectedUserId: sec2UserId,
+    userSelectId: "sec2UserSelect",
+    selectedUserId: sec2UserId,
   });
 }
 
@@ -304,10 +328,14 @@ function updateMontosTitle() {
 
 function renderSec5Filters() {
   renderPeriodFilters({
-    filtersId: "sec5Filters", criteriaId: "sec5Criteria",
-    fromId: "sec5MonthFrom", toId: "sec5MonthTo",
-    fromYear: sec5YearFrom, fromMonth: sec5MonthFrom,
-    toYear: sec5YearTo, toMonth: sec5MonthTo,
+    filtersId: "sec5Filters",
+    criteriaId: "sec5Criteria",
+    fromId: "sec5MonthFrom",
+    toId: "sec5MonthTo",
+    fromYear: sec5YearFrom,
+    fromMonth: sec5MonthFrom,
+    toYear: sec5YearTo,
+    toMonth: sec5MonthTo,
     applyHandler: "handleApplySec5",
   });
 }
@@ -341,12 +369,17 @@ function populateUserSelect(selectId, selectedValue, defaultLabel) {
 // ===================================================================
 function renderExpBreakdownFilters() {
   renderPeriodFilters({
-    filtersId: "expBreakdownFilters", criteriaId: "expBreakdownCriteria",
-    fromId: "expBreakdownMonthFrom", toId: "expBreakdownMonthTo",
-    fromYear: expBreakdownYearFrom, fromMonth: expBreakdownMonthFrom,
-    toYear: expBreakdownYearTo, toMonth: expBreakdownMonthTo,
+    filtersId: "expBreakdownFilters",
+    criteriaId: "expBreakdownCriteria",
+    fromId: "expBreakdownMonthFrom",
+    toId: "expBreakdownMonthTo",
+    fromYear: expBreakdownYearFrom,
+    fromMonth: expBreakdownMonthFrom,
+    toYear: expBreakdownYearTo,
+    toMonth: expBreakdownMonthTo,
     applyHandler: "handleApplyExpBreakdown",
-    userSelectId: "expBreakdownUser", selectedUserId: expBreakdownUserId,
+    userSelectId: "expBreakdownUser",
+    selectedUserId: expBreakdownUserId,
   });
 }
 
@@ -354,10 +387,19 @@ function handleApplyExpBreakdown() {
   expBreakdownUserId = parseInt(
     document.getElementById("expBreakdownUser").value,
   );
-  applyPeriodFilter("#expBreakdownMonthFrom", "#expBreakdownMonthTo", "expBreakdownCriteria", r => {
-    expBreakdownMonthFrom = r.mf; expBreakdownYearFrom = r.yf;
-    expBreakdownMonthTo = r.mt; expBreakdownYearTo = r.yt;
-  }, loadExpBreakdownData, expBreakdownUserId);
+  applyPeriodFilter(
+    "#expBreakdownMonthFrom",
+    "#expBreakdownMonthTo",
+    "expBreakdownCriteria",
+    (r) => {
+      expBreakdownMonthFrom = r.mf;
+      expBreakdownYearFrom = r.yf;
+      expBreakdownMonthTo = r.mt;
+      expBreakdownYearTo = r.yt;
+    },
+    loadExpBreakdownData,
+    expBreakdownUserId,
+  );
 }
 
 async function loadExpBreakdownData(catExpenses) {
@@ -635,12 +677,12 @@ function renderAdminHeroCards(allData) {
 
   el.innerHTML = `
         <div class="admin-hero-card">
-            <span class="admin-hero-label">Usuarios activos</span>
+            <span class="admin-hero-label">Users Activos</span>
             <span class="admin-hero-value">${Number(activeUsers).toLocaleString("es-ES")}</span>
             ${usersChange}
         </div>
         <div class="admin-hero-card income">
-            <span class="admin-hero-label">Ingresos totales</span>
+            <span class="admin-hero-label">Total Ingresos</span>
             <span class="admin-hero-value">${totalIncome}</span>
             ${incomeChange}
         </div>
@@ -685,9 +727,18 @@ function updateAdminTimestamp() {
 // SECTION 1 — EVOLUCIÓN DE USUARIOS
 // ===================================================================
 function handleApplySec1() {
-  applyPeriodFilter("#sec1MonthFrom", "#sec1MonthTo", "sec1Criteria", r => {
-    sec1MonthFrom = r.mf; sec1YearFrom = r.yf; sec1MonthTo = r.mt; sec1YearTo = r.yt;
-  }, loadSec1Data);
+  applyPeriodFilter(
+    "#sec1MonthFrom",
+    "#sec1MonthTo",
+    "sec1Criteria",
+    (r) => {
+      sec1MonthFrom = r.mf;
+      sec1YearFrom = r.yf;
+      sec1MonthTo = r.mt;
+      sec1YearTo = r.yt;
+    },
+    loadSec1Data,
+  );
 }
 
 async function loadSec1Data() {
@@ -809,9 +860,19 @@ function renderSec1Chart(monthly) {
 // ===================================================================
 function handleApplySec2() {
   sec2UserId = parseInt(document.getElementById("sec2UserSelect").value);
-  applyPeriodFilter("#sec2MonthFrom", "#sec2MonthTo", "sec2Criteria", r => {
-    sec2MonthFrom = r.mf; sec2YearFrom = r.yf; sec2MonthTo = r.mt; sec2YearTo = r.yt;
-  }, loadSec2Data, sec2UserId);
+  applyPeriodFilter(
+    "#sec2MonthFrom",
+    "#sec2MonthTo",
+    "sec2Criteria",
+    (r) => {
+      sec2MonthFrom = r.mf;
+      sec2YearFrom = r.yf;
+      sec2MonthTo = r.mt;
+      sec2YearTo = r.yt;
+    },
+    loadSec2Data,
+    sec2UserId,
+  );
 }
 
 async function loadSec2Data() {
@@ -991,9 +1052,18 @@ function renderMontosCards(moneyData, avgData) {
 // SECTION 5 — TOP USUARIOS
 // ===================================================================
 function handleApplySec5() {
-  applyPeriodFilter("#sec5MonthFrom", "#sec5MonthTo", "sec5Criteria", r => {
-    sec5MonthFrom = r.mf; sec5YearFrom = r.yf; sec5MonthTo = r.mt; sec5YearTo = r.yt;
-  }, loadSec5Data);
+  applyPeriodFilter(
+    "#sec5MonthFrom",
+    "#sec5MonthTo",
+    "sec5Criteria",
+    (r) => {
+      sec5MonthFrom = r.mf;
+      sec5YearFrom = r.yf;
+      sec5MonthTo = r.mt;
+      sec5YearTo = r.yt;
+    },
+    loadSec5Data,
+  );
 }
 
 async function loadSec5Data() {
