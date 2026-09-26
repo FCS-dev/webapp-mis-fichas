@@ -828,6 +828,7 @@ function renderSec1Chart(monthly) {
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        layout: { padding: { left: 10, right: 10, top: 10, bottom: 10 } },
         plugins: {
           legend: {
             position: "bottom",
@@ -844,7 +845,7 @@ function renderSec1Chart(monthly) {
         scales: {
           x: { ticks: { color: textColor }, grid: { color: gridColor } },
           y: {
-            ticks: { color: textColor },
+            ticks: { color: textColor, padding: 10, maxTicksLimit: 6 },
             grid: { color: gridColor },
             beginAtZero: true,
           },
@@ -963,6 +964,7 @@ function renderSec2Chart(monthly) {
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        layout: { padding: { left: 10, right: 10, top: 10, bottom: 10 } },
         plugins: {
           legend: {
             position: "bottom",
@@ -979,7 +981,7 @@ function renderSec2Chart(monthly) {
         scales: {
           x: { ticks: { color: textColor }, grid: { color: gridColor } },
           y: {
-            ticks: { color: textColor },
+            ticks: { color: textColor, padding: 10, maxTicksLimit: 6 },
             grid: { color: gridColor },
             beginAtZero: true,
           },

@@ -94,7 +94,7 @@ function renderDashboardSection() {
                     </fieldset>
                 </div>
                 <div class="balance-section">
-                    <div class="chart-wrapper" style="flex:1;min-width:0"><canvas id="balanceChart" role="img" aria-label="Gráfico de balance mensual"></canvas></div>
+                    <div class="chart-wrapper"><canvas id="balanceChart" role="img" aria-label="Gráfico de balance mensual"></canvas></div>
                     <div class="monthly-summary-table" id="monthlySummaryTable">
                         <p class="empty-state">Cargando...</p>
                     </div>
@@ -464,17 +464,14 @@ function renderBalanceChart(data) {
       responsive: true,
       maintainAspectRatio: false,
       interaction: { mode: "index", intersect: false },
+      layout: { padding: { left: 10, right: 10, top: 10, bottom: 10 } },
       plugins: {
         legend: {
           position: "bottom",
           labels: { color: textColor, boxWidth: 12, padding: 12 },
         },
         datalabels: {
-          display: true,
-          align: "top",
-          anchor: "end",
-          formatter: formatK,
-          color: textColor,
+          display: false,
         },
       },
       scales: {
@@ -486,14 +483,14 @@ function renderBalanceChart(data) {
           position: "left",
           min: globalMin - padding,
           max: globalMax + padding,
-          ticks: { color: textColor },
+          ticks: { color: textColor, padding: 10, maxTicksLimit: 6 },
           grid: { color: gridColor },
         },
         y2: {
           position: "right",
+          display: false,
           min: globalMin - padding,
           max: globalMax + padding,
-          ticks: { color: textColor },
           grid: { display: false },
         },
       },

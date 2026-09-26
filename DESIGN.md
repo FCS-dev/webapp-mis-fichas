@@ -230,10 +230,10 @@ Header: grid `1fr auto 1fr` con logo izquierda, nav al centro, controles derecha
 Sidebar: `display: none` (completamente oculto). Main content: `position: fixed` entre header y footer, centrado con `max-width: 90%`. Footer: `position: fixed` bottom 0.
 
 **Responsive Breakpoints:**
-- **Móvil (<641px):** Sidebar off-screen, contenido a 16px padding, grids de 1 columna. Dash-tabs con scroll horizontal. Header: flex row simple. FAB bottom-center.
+- **Móvil (<641px):** Sidebar off-screen, contenido a 16px padding, grids de 1 columna. Dash-tabs con scroll horizontal. Header: flex row simple. FAB bottom-right en ≤640px para evitar solapamiento con cards de ancho completo; bottom-center en 641px–1023px.
 - **Tablet (641px+):** Sidebar off-screen, contenido a 18px padding, grids de 2-4 columnas. Header: grid 3 columnas (logo | nav | controls). Sidebar toggle oculto. Modal centrado.
 - **Small desktop (768px+):** Comparison cards y top expenses section van a 2 columnas.
-- **Desktop (1024px+):** Sidebar hidden, theme-toggle visible, contenido fixed centrado al 90% con padding 28px 36px. Footer fixed. FAB hidden. Layouts flex row para balance-section y sec6Cards.
+- **Desktop (1024px+):** Sidebar hidden, theme-toggle visible, contenido fixed centrado al 90% con padding 28px 36px. Footer fixed. FAB hidden. Layouts flex row para balance-section y sec6Cards. Dash-tabs permiten wrap y usan padding/font más compactos para que quepan 5 tabs.
 
 **Grids:**
 - Summary cards: `repeat(4, 1fr)` en tablet+
@@ -245,6 +245,8 @@ Sidebar: `display: none` (completamente oculto). Main content: `position: fixed`
 - Top expenses: `1fr 1fr` en 768px+
 
 **Spacing Rhythm:** Base de 4px. Pasos comunes: 4, 8, 12, 16, 20, 24, 32, 40px.
+
+**Content Area:** `.dash-content-area` envuelve los paneles de tabs del dashboard con `--radius-lg` y margen superior. Incluye un degradado de desvanecimiento `::after` que sugire overflow horizontal; el degradado se oculta cuando `.scroll-end` se aplica al contenedor de tabs.
 
 ## Elevation & Depth
 
@@ -303,6 +305,11 @@ Lenguaje de formas limpio y preciso. Bordes redondeados moderados que equilibran
 - **Comparison Card:** Fondo `--card-bg`, borde 1px solid `--border`, padding 16px 20px. Flex row con icono circular 48px a la izquierda. Borde izquierdo diferenciado: `--expense` para gasto, `--income` para ingreso.
 - **Auth Card:** Fondo `--card-bg`, radio 12px, padding 32px 24px (44px en tablet), max-width 380px. Shadow elevada. Hover: translateY(-2px).
 
+### Admin Cards
+- **Hero Card:** `.admin-hero-card` con fondo `--card-bg`, radio 8px, shadow ambient, texto centrado. Contiene `.admin-hero-label` (caption, `--text-secondary`) y `.admin-hero-value` (número en negrita). Layout: `.admin-hero-cards` grid `1fr` en móvil, `repeat(4, 1fr)` en tablet+.
+- **Stat Card:** `.stat-card` tarjeta tonal (`--input-bg`) que muestra una etiqueta de métrica, `.stat-card-value` y `.stat-card-change` con variantes `.up`/`.down`/`.neutral`.
+- **Montos Section:** `.admin-montos-section` agrupa `.admin-montos-header` (título + `.admin-montos-filter`) y `.admin-montos-grid` de tarjetas de montos.
+
 ### Inputs / Forms
 - **Style:** Fondo `--input-bg`, borde 1px solid `--border`, radio 8px, padding 10px 12px.
 - **Focus:** Borde cambia a `--primary`, focus ring `box-shadow: var(--shadow-focus)`.
@@ -310,19 +317,37 @@ Lenguaje de formas limpio y preciso. Bordes redondeados moderados que equilibran
 - **Error:** Texto en `--expense`, font-size 0.8125rem.
 - **Success:** Texto en `--income`, font-size 0.8125rem.
 
+### Filters
+- **Filter Section:** `.filter-section` card con fondo `--card-bg`, borde 1px `--border`, radio 8px, padding 14px. Usada para agrupar los controles de filtro.
+- **Filter Controls:** `.filter-controls` flex column en móvil, flex row en tablet+. Contiene `input[type="month"]` y selects con borde permanente de 1.5px solid `--primary`.
+- **Admin Section Filters:** `.admin-section-filters` usado en los paneles del dashboard de admin. Labels e inputs distribuidos en layout responsive; incluye select de usuario, select de mes "Desde", select de mes "Hasta" y botón "Actualizar".
+- **Admin Montos Filter:** `.admin-montos-filter` con select de usuario + botón actualizar, distribuido horizontalmente en tablet+.
+- **Section Header Row:** `.section-header-row` coloca el título de sección y la sección de filtros lado a lado en tablet+; apilados en móvil.
+
+### Accordion
+- **Pattern:** `.admin-filters-accordion` envuelve un botón `.accordion-toggle` y un `.accordion-content`.
+- **Toggle:** Flex row con space-between, fondo `--card-bg`, borde 1px `--border`, radio 8px. Muestra la etiqueta "Filtros" y un indicador de chevron.
+- **Content:** Oculto por defecto (`display: none`), se muestra cuando el padre tiene la clase `.open`. El toggle actualiza `aria-expanded`.
+- **Responsive behavior:** El accordion es colapsable en móvil/tablet; en desktop (≥1024px) `.accordion-toggle` está oculto y `.accordion-content` siempre es visible (`display: block !important`).
+
 ### Navigation — Sidebar
 - **Mobile/Tablet (<1024px):** Fijo off-screen (width 240px), slide-in con `transform: translateX(0)` al hacer clic en hamburger. Z-index 99. Shadow: `2px 0 12px rgba(0,0,0,0.2)`.
 - **Desktop (1024px+):** `display: none` (completamente oculto). El hamburger se oculta y el header-nav se muestra.
 - **Links:** Flex row, 14px 32px padding, 0.9rem, icon + texto con 10px gap.
 - **States:** Hover = fondo `--input-bg`. Active = fondo `--primary`, texto `--on-primary`.
 - **Overlay:** `rgba(0,0,0,0.4)` backdrop, z-index 98. Se oculta en desktop con `!important`.
-- **Theme toggle in sidebar:** Posicionado con `margin: 65vh auto 0` (centrado verticalmente).
+- **Theme toggle in sidebar:** `.sidebar-theme-toggle` rendered as the last item inside `.sidebar-nav`, styled like a `.sidebar-link` with icon + label.
 
 ### Navigation — Header
-- **Mobile (<641px):** Flex row space-between. Logo a la izquierda, controles a la derecha (hamburger, logout). Nav oculta. Padding 6px 16px.
-- **Tablet (641px+):** Grid 3 columnas (`1fr auto 1fr`). Logo izquierda, nav tabs al centro, controles derecha. Hamburger oculto. Padding 6px 20px.
-- **Desktop (1024px+):** Misma estructura que tablet. Theme-toggle visible. Header-greeting visible.
-- **Fixed:** `position: fixed`, top 0, z-index 100. Background `--card-bg` con border-bottom.
+- **Structure:** `.dash-header` usa `display: grid; grid-template-columns: 1fr auto 1fr;`.
+  - **Izquierda:** `.sidebar-toggle` (hamburger, visible solo en móvil/tablet).
+  - **Centro:** `.header-center` (flex column) que contiene `.header-logo` y `.header-user-name.only-mobile`.
+  - **Medio:** `.header-nav` (tabs horizontales: Dashboard, Transacciones, Sub-Categorías, Categorías/Mantenimiento para admin, "Nueva Transacción" para usuario).
+  - **Derecha:** `.header-right` con `.theme-toggle`, `.header-user-name` y `.btn-logout`.
+- **Mobile (<641px):** Hamburger visible; `.header-nav` oculto; `.theme-toggle` oculto; `.header-user-name` oculto salvo `.only-mobile` bajo el logo. Logout es solo un icono.
+- **Tablet (641px+):** Hamburger oculto; `.header-nav` visible como tabs horizontales; `.theme-toggle` sigue oculto; `.header-user-name` oculto.
+- **Desktop (1024px+):** `.theme-toggle` visible; `.header-user-name` visible; `.only-mobile` oculto; `.header-center` alinea `flex-start` para simetría con `.header-right`.
+- **Fixed:** `position: fixed`, top 0, z-index 100. Fondo `--card-bg` con `border-bottom`.
 
 ### Dash Tabs
 - **Mobile:** Overflow horizontal (`overflow-x: auto; overflow-y: hidden`), scroll con `-webkit-overflow-scrolling: touch`. Botones pill (radio 28px top), white-space nowrap.
@@ -354,7 +379,10 @@ Lenguaje de formas limpio y preciso. Bordes redondeados moderados que equilibran
 - **Animation:** `modalIn` — opacity 0→1, scale(0.95)+translateY(10px)→scale(1)+translateY(0) en 0.2s ease-out.
 
 ### FAB (Floating Action Button — Transacciones)
-- **Shape:** Fixed bottom-center en móvil (16px from bottom), height 52px, radio 28px (pill), z-index 50.
+- **Shape:** Fixed pill, height 52px, radio 28px, z-index 50.
+  - **≤640px:** bottom-right (right 16px, bottom 16px) para evitar solapamiento con cards de ancho completo.
+  - **641px–1023px:** bottom-center (left 50%, translateX(-50%), bottom 30px).
+  - **1024px+:** Hidden.
 - **Style:** Fondo transparente, borde 2px solid `--primary`, texto `--primary`. Outline, no filled.
 - **Hover:** Rellena con `--primary`, texto `--on-primary`, scale(1.05) + shadow `var(--shadow-fab-hover)`.
 - **Scrim (401px+):** Fondo `rgba(0,0,0,0.3)` para contraste.
@@ -375,8 +403,10 @@ Lenguaje de formas limpio y preciso. Bordes redondeados moderados que equilibran
 - **Typography:** 0.75rem, `--text-secondary`.
 
 ### Footer
-- **Mobile/Tablet:** Flex column centrado, padding 16px, border-top 1px solid `--border`, background `--card-bg`.
-- **Desktop (1024px+):** `position: fixed`, bottom 0, z-index 100, height `var(--footer-height)` (48px). Flex row con space-between.
+- **Container:** `.dash-footer` con `border-top` y sutil `box-shadow: 0 -2px 8px rgba(0,0,0,0.04)`. Fondo `--card-bg`.
+- **Inner:** `.footer-inner` usa grid: `grid-template-columns: 1fr` (móvil), `grid-template-columns: 1fr 1fr 1fr` (tablet+).
+- **Zonas:** `.footer-brand` (izquierda), `.footer-links` (centro), `.footer-copy` (derecha).
+- **Desktop (1024px+):** `.dash-footer` pasa a `position: fixed`, bottom 0, z-index 100, altura `var(--footer-height)` (48px).
 
 ### Auth Theme Toggle
 - **Position:** Dentro de `.auth-theme-row`, debajo de `.auth-card`, centrado.
@@ -386,9 +416,15 @@ Lenguaje de formas limpio y preciso. Bordes redondeados moderados que equilibran
 
 ### Charts
 - **Chart Card:** Fondo `--card-bg`, radio 8px, shadow ambient, padding 24px.
+- **Responsive Heights:** `#sec1Chart`, `#sec2Chart` y `#balanceChart` usan una estrategia de altura mobile-first:
+  - Base: `aspect-ratio: 16/9` con `min-height: 220px`.
+  - 401px+: `height: clamp(220px, calc(220px + (100vw - 401px) * 120 / 1039), 340px)`, centrados vertical y horizontalmente dentro del wrapper.
 - **Doughnut:** Sin borde (borderWidth: 0). Leyenda: bottom en móvil, right en desktop. Labels custom plugin con bold 11px, sombra para contraste.
-- **Line:** Fill con 6% opacity, tension 0.3, pointRadius 3. Balance usa borderDash [6, 3]. Data labels: align top, k-suffix para >=1000.
+- **Line:** Fill con 6% opacity, tension 0.3, pointRadius 3. Balance usa borderDash [6, 3]. Data labels deshabilitados en el balance chart para evitar solapamiento con el eje Y; se mantienen en admin sec1/sec2 con formato compacto.
 - **Bar:** Fill 70% opacity, borderRadius 4. beginAtZero.
+- **Axis Padding:** Todos los charts de línea/barras usan `layout.padding: 10` y `ticks.padding: 10` para evitar que etiquetas de ejes rocen bordes o datos. Eje Y limitado a ~6 ticks (`maxTicksLimit`) para mantener legibilidad en viewports estrechos.
+- **Range Selector:** `.range-checkboxes` con radios `.range-label` (3m/6m/12m) dentro del header del gráfico de balance.
+- **Balance Section:** `.balance-section` apila el gráfico y `.monthly-summary-table` verticalmente en móvil; cambia a flex row en desktop con el gráfico al 60% de ancho máximo y la tabla fija a 353px de ancho máximo.
 - **Palette:** 15 colores: primary, income, expense, amber, violet (#8b5cf6), pink (#ec4899), teal (#14b8a6), orange (#f97316), indigo (#6366f1), lime (#84cc16), cyan (#06b6d4), fuchsia (#d946ef), yellow (#eab308), blue (#3b82f6), green (#22c55e).
 
 ### Tree View (Subcategories)

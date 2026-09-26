@@ -1,98 +1,395 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-02T00:00:00Z",
+  "generatedAt": "2026-09-26T05:30:00.000Z",
   "title": "Design System: Mis Fichas",
   "extensions": {
     "colorMeta": {
       "primary": {
         "role": "primary",
-        "displayName": "Índigo Sobrio",
-        "canonical": "#4f46e5",
-        "tonalRamp": ["#1e1b4b", "#2e2993", "#3b36b0", "#4f46e5", "#6366f1", "#818cf8", "#a5b4fc", "#c7d2fe", "#e0e7ff"]
+        "displayName": "Rojo Oscuro",
+        "canonical": "#8e2f37",
+        "tonalRamp": [
+          "#000000",
+          "#000000",
+          "#1b080a",
+          "#541b20",
+          "#8e2f36",
+          "#c24751",
+          "#d58087",
+          "#e8babe",
+          "#fbf3f4"
+        ]
       },
       "primary-hover": {
         "role": "primary",
-        "displayName": "Índigo Hover",
-        "canonical": "#4338ca",
-        "tonalRamp": ["#1e1b4b", "#2e2993", "#3b36b0", "#4338ca", "#4f46e5", "#6366f1", "#818cf8", "#a5b4fc", "#e0e7ff"]
+        "displayName": "Rojo Oscuro Hover",
+        "canonical": "#6e2028",
+        "tonalRamp": [
+          "#000000",
+          "#000000",
+          "#000000",
+          "#320e12",
+          "#6e1f27",
+          "#a9313d",
+          "#ce5864",
+          "#df939b",
+          "#f1ced2"
+        ]
+      },
+      "on-primary": {
+        "role": "primary",
+        "displayName": "Sobre Primary",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#666666",
+          "#8c8c8c",
+          "#b2b2b2",
+          "#d8d8d8",
+          "#ffffff",
+          "#ffffff",
+          "#ffffff",
+          "#ffffff",
+          "#ffffff"
+        ]
       },
       "income": {
         "role": "financial",
         "displayName": "Verde Ingreso",
-        "canonical": "#059669",
-        "tonalRamp": ["#022c22", "#064e3b", "#047857", "#059669", "#10b981", "#34d399", "#6ee7b7", "#a7f3d0", "#d1fae5"]
+        "canonical": "#52998b",
+        "tonalRamp": [
+          "#000000",
+          "#010303",
+          "#1c3530",
+          "#37675d",
+          "#52998b",
+          "#7db9ad",
+          "#afd4cd",
+          "#e1efec",
+          "#ffffff"
+        ]
       },
       "expense": {
         "role": "financial",
         "displayName": "Rojo Gasto",
-        "canonical": "#dc2626",
-        "tonalRamp": ["#450a0a", "#7f1d1d", "#991b1b", "#dc2626", "#ef4444", "#f87171", "#fca5a5", "#fecaca", "#fee2e2"]
+        "canonical": "#ce3737",
+        "tonalRamp": [
+          "#000000",
+          "#190606",
+          "#561515",
+          "#942424",
+          "#ce3636",
+          "#dd7474",
+          "#ecb1b1",
+          "#fbefef",
+          "#ffffff"
+        ]
+      },
+      "warning": {
+        "role": "financial",
+        "displayName": "Ámbar",
+        "canonical": "#f59e0b",
+        "tonalRamp": [
+          "#000000",
+          "#191001",
+          "#623f04",
+          "#ac6e07",
+          "#f59e0a",
+          "#f8bb54",
+          "#fbd89d",
+          "#fef5e7",
+          "#ffffff"
+        ]
       },
       "bg": {
         "role": "neutral",
         "displayName": "Fondo Página",
-        "canonical": "#f0f2f5",
-        "tonalRamp": ["#111827", "#1f2937", "#374151", "#4b5563", "#6b7280", "#9ca3af", "#d1d5db", "#e5e7eb", "#f0f2f5"]
+        "canonical": "#dddddd",
+        "tonalRamp": [
+          "#444444",
+          "#6a6a6a",
+          "#909090",
+          "#b6b6b6",
+          "#dddddd",
+          "#ffffff",
+          "#ffffff",
+          "#ffffff",
+          "#ffffff"
+        ]
+      },
+      "bg-dark": {
+        "role": "neutral",
+        "displayName": "Fondo Página Dark",
+        "canonical": "#181715",
+        "tonalRamp": [
+          "#000000",
+          "#000000",
+          "#000000",
+          "#000000",
+          "#171615",
+          "#403e38",
+          "#69655c",
+          "#918b81",
+          "#b4b1aa"
+        ]
       },
       "card": {
         "role": "neutral",
         "displayName": "Fondo Tarjeta",
-        "canonical": "#ffffff",
-        "tonalRamp": ["#1f2937", "#374151", "#4b5563", "#6b7280", "#9ca3af", "#d1d5db", "#e5e7eb", "#f3f4f6", "#ffffff"]
+        "canonical": "#f2f2f2",
+        "tonalRamp": [
+          "#595959",
+          "#7f7f7f",
+          "#a5a5a5",
+          "#cbcbcb",
+          "#f2f2f2",
+          "#ffffff",
+          "#ffffff",
+          "#ffffff",
+          "#ffffff"
+        ]
+      },
+      "card-dark": {
+        "role": "neutral",
+        "displayName": "Fondo Tarjeta Dark",
+        "canonical": "#262522",
+        "tonalRamp": [
+          "#000000",
+          "#000000",
+          "#000000",
+          "#000000",
+          "#262522",
+          "#4e4c46",
+          "#76736a",
+          "#9c9990",
+          "#c0beb9"
+        ]
       },
       "text": {
         "role": "neutral",
         "displayName": "Texto Principal",
-        "canonical": "#1f2937",
-        "tonalRamp": ["#030712", "#111827", "#1f2937", "#374151", "#4b5563", "#6b7280", "#9ca3af", "#d1d5db", "#f3f4f6"]
+        "canonical": "#252525",
+        "tonalRamp": [
+          "#000000",
+          "#000000",
+          "#000000",
+          "#000000",
+          "#252525",
+          "#4b4b4b",
+          "#717171",
+          "#979797",
+          "#bebebe"
+        ]
+      },
+      "text-dark": {
+        "role": "neutral",
+        "displayName": "Texto Principal Dark",
+        "canonical": "#d3d3d3",
+        "tonalRamp": [
+          "#393939",
+          "#606060",
+          "#868686",
+          "#acacac",
+          "#d3d3d3",
+          "#f9f9f9",
+          "#ffffff",
+          "#ffffff",
+          "#ffffff"
+        ]
       },
       "text-secondary": {
         "role": "neutral",
         "displayName": "Texto Secundario",
-        "canonical": "#6b7280",
-        "tonalRamp": ["#111827", "#1f2937", "#374151", "#4b5563", "#6b7280", "#9ca3af", "#d1d5db", "#e5e7eb", "#f3f4f6"]
+        "canonical": "#746354",
+        "tonalRamp": [
+          "#000000",
+          "#000000",
+          "#1b1713",
+          "#473d33",
+          "#736354",
+          "#9c8977",
+          "#bdafa3",
+          "#ddd6d0",
+          "#fdfcfc"
+        ]
+      },
+      "text-secondary-dark": {
+        "role": "neutral",
+        "displayName": "Texto Secundario Dark",
+        "canonical": "#a39e94",
+        "tonalRamp": [
+          "#020202",
+          "#2b2925",
+          "#545049",
+          "#7e786c",
+          "#a39e94",
+          "#c6c3bd",
+          "#e9e8e6",
+          "#ffffff",
+          "#ffffff"
+        ]
       },
       "border": {
         "role": "neutral",
         "displayName": "Borde",
-        "canonical": "#e5e7eb",
-        "tonalRamp": ["#374151", "#4b5563", "#6b7280", "#9ca3af", "#d1d5db", "#e5e7eb", "#f3f4f6", "#ffffff", "#ffffff"]
+        "canonical": "#c8c8c8",
+        "tonalRamp": [
+          "#2f2f2f",
+          "#555555",
+          "#7b7b7b",
+          "#a1a1a1",
+          "#c8c8c8",
+          "#eeeeee",
+          "#ffffff",
+          "#ffffff",
+          "#ffffff"
+        ]
       },
-      "amber": {
-        "role": "financial",
-        "displayName": "Ámbar Ocasional",
-        "canonical": "#f59e0b",
-        "tonalRamp": ["#78350f", "#92400e", "#b45309", "#d97706", "#f59e0b", "#fbbf24", "#fcd34d", "#fde68a", "#fef3c7"]
+      "border-dark": {
+        "role": "neutral",
+        "displayName": "Borde Dark",
+        "canonical": "#3a3834",
+        "tonalRamp": [
+          "#000000",
+          "#000000",
+          "#000000",
+          "#11110f",
+          "#3a3834",
+          "#625e58",
+          "#8a857c",
+          "#aeaba5",
+          "#d2d0cd"
+        ]
+      },
+      "input-bg": {
+        "role": "neutral",
+        "displayName": "Fondo Input",
+        "canonical": "#e4e4e4",
+        "tonalRamp": [
+          "#4b4b4b",
+          "#717171",
+          "#979797",
+          "#bdbdbd",
+          "#e4e4e4",
+          "#ffffff",
+          "#ffffff",
+          "#ffffff",
+          "#ffffff"
+        ]
+      },
+      "input-bg-dark": {
+        "role": "neutral",
+        "displayName": "Fondo Input Dark",
+        "canonical": "#302e2a",
+        "tonalRamp": [
+          "#000000",
+          "#000000",
+          "#000000",
+          "#070606",
+          "#2f2d2a",
+          "#58554d",
+          "#817c71",
+          "#a6a199",
+          "#c9c7c2"
+        ]
       }
     },
     "typographyMeta": {
-      "display": { "displayName": "Display", "purpose": "Títulos de auth (login/register)." },
-      "headline": { "displayName": "Headline", "purpose": "Títulos de sección del dashboard, nombre de usuario." },
-      "title": { "displayName": "Title", "purpose": "Títulos de gráficos, encabezados de tabla." },
-      "body": { "displayName": "Body", "purpose": "Contenido de tablas, texto de modals, descripciones." },
-      "label": { "displayName": "Label", "purpose": "Labels de formularios, botones, badges." },
-      "caption": { "displayName": "Caption", "purpose": "Headers de tabla mini, fechas, badges de estado." }
+      "display": {
+        "displayName": "Display",
+        "purpose": "Títulos de auth (h1 del login)."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Títulos de sección del dashboard, nombre de usuario en header."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Títulos de gráficos, encabezados de tabla en desktop."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Contenido de tablas, texto de modales, descripciones."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Labels de formularios, botones, filtros, badges."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Headers de tabla mini, fechas pequeñas, badges de estado."
+      }
     },
     "shadows": [
-      { "name": "ambient", "value": "0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06)", "purpose": "Sombras diffusas en cards y tablas. Dark mode: 0 1px 3px rgba(0,0,0,0.3)." },
-      { "name": "sidebar", "value": "2px 0 12px rgba(0,0,0,0.2)", "purpose": "Sombra direccional en slide-in del sidebar móvil." },
-      { "name": "modal", "value": "0 20px 60px rgba(0,0,0,0.2)", "purpose": "Sombra de overlay para modales." },
-      { "name": "fab", "value": "0 4px 20px rgba(79,70,229,0.45)", "purpose": "Glow coloreado del botón flotante (FAB)." },
-      { "name": "fab-hover", "value": "0 6px 28px rgba(79,70,229,0.55)", "purpose": "Glow coloreado del FAB en hover." },
-      { "name": "focus-ring", "value": "0 0 0 2px rgba(79,70,229,0.25)", "purpose": "Anillo de foco accesible en inputs y filtros." }
+      {
+        "name": "ambient",
+        "value": "0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06)",
+        "purpose": "Sombras diffusas en cards y tablas. Dark mode: 0 1px 3px rgba(0,0,0,0.3)."
+      },
+      {
+        "name": "sidebar",
+        "value": "2px 0 12px rgba(0,0,0,0.2)",
+        "purpose": "Sombra direccional en slide-in del sidebar móvil."
+      },
+      {
+        "name": "modal",
+        "value": "0 20px 60px rgba(0,0,0,0.2)",
+        "purpose": "Sombra de overlay para modales."
+      },
+      {
+        "name": "focus-ring",
+        "value": "0 0 0 2px rgba(142,47,55,0.25)",
+        "purpose": "Anillo de foco accesible en inputs y filtros. Dark mode: 0 0 0 2px rgba(255,145,0,0.35)."
+      },
+      {
+        "name": "fab",
+        "value": "0 4px 20px rgba(142,47,55,0.45)",
+        "purpose": "Sombra del FAB en reposo."
+      },
+      {
+        "name": "fab-hover",
+        "value": "0 6px 28px rgba(142,47,55,0.55)",
+        "purpose": "Sombra del FAB en hover."
+      }
     ],
     "motion": [
-      { "name": "ease-standard", "value": "cubic-bezier(0.4, 0, 0.2, 1)", "purpose": "Easing por defecto para transiciones de estado." },
-      { "name": "ease-out", "value": "ease-out", "purpose": "Easing para entradas de elementos (modal, toast)." },
-      { "name": "duration-fast", "value": "0.2s", "purpose": "Transiciones de hover, focus, border." },
-      { "name": "duration-normal", "value": "0.3s", "purpose": "Transiciones de tema, sidebar, body background." }
+      {
+        "name": "ease-standard",
+        "value": "cubic-bezier(0.4, 0, 0.2, 1)",
+        "purpose": "Easing por defecto para transiciones de estado."
+      },
+      {
+        "name": "ease-out-expo",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Easing para entradas de cards y paneles."
+      },
+      {
+        "name": "duration-fast",
+        "value": "0.2s",
+        "purpose": "Transiciones de hover, focus, border."
+      },
+      {
+        "name": "duration-normal",
+        "value": "0.3s",
+        "purpose": "Transiciones de tema, sidebar, body background."
+      }
     ],
     "breakpoints": [
-      { "name": "mobile", "value": "0" },
-      { "name": "tablet", "value": "641px" },
-      { "name": "tablet-lg", "value": "768px" },
-      { "name": "desktop", "value": "1024px" },
-      { "name": "desktop-xl", "value": "2560px" }
+      {
+        "name": "mobile",
+        "value": "0"
+      },
+      {
+        "name": "tablet",
+        "value": "641px"
+      },
+      {
+        "name": "tablet-lg",
+        "value": "768px"
+      },
+      {
+        "name": "desktop",
+        "value": "1024px"
+      }
     ]
   },
   "components": [
@@ -100,9 +397,9 @@
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Botón principal de acción. Fondo índigo, texto blanco.",
+      "description": "Botón principal de acción. Fondo rojo oscuro, texto blanco.",
       "html": "<button class=\"ds-btn-primary\">Guardar</button>",
-      "css": ".ds-btn-primary { background: #4f46e5; color: #fff; padding: 10px 20px; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: background 0.2s; } .ds-btn-primary:hover { background: #4338ca; } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px rgba(79,70,229,0.25); } .ds-btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }"
+      "css": ".ds-btn-primary { background: #8e2f37; color: #ffffff; padding: 10px 20px; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: background 0.2s; } .ds-btn-primary:hover { background: #6e2028; } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px rgba(142,47,55,0.25); } .ds-btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }"
     },
     {
       "name": "Secondary Button",
@@ -110,23 +407,31 @@
       "refersTo": "button-secondary",
       "description": "Botón secundario outline. Borde gris, fondo transparente.",
       "html": "<button class=\"ds-btn-secondary\">Cancelar</button>",
-      "css": ".ds-btn-secondary { background: transparent; color: #1f2937; padding: 10px 20px; border: 1px solid #e5e7eb; border-radius: 8px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: background 0.2s; } .ds-btn-secondary:hover { background: #e5e7eb; } .ds-btn-secondary:focus-visible { outline: none; box-shadow: 0 0 0 2px rgba(79,70,229,0.25); }"
+      "css": ".ds-btn-secondary { background: transparent; color: #252525; padding: 10px 20px; border: 1px solid #c8c8c8; border-radius: 8px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: background 0.2s; } .ds-btn-secondary:hover { background: #c8c8c8; } .ds-btn-secondary:focus-visible { outline: none; box-shadow: 0 0 0 2px rgba(142,47,55,0.25); }"
+    },
+    {
+      "name": "Logout Button",
+      "kind": "button",
+      "refersTo": "button-logout",
+      "description": "Botón de logout en header. Icono outline, hover relleno rojo.",
+      "html": "<button class=\"ds-btn-logout\" aria-label=\"Cerrar sesión\">⎋</button>",
+      "css": ".ds-btn-logout { display: inline-flex; align-items: center; justify-content: center; padding: 6px; min-height: 44px; min-width: 44px; background: transparent; color: #746354; border: 1px solid #c8c8c8; border-radius: 8px; cursor: pointer; transition: background 0.2s, color 0.2s; } .ds-btn-logout:hover { background: #ce3737; color: #fff; border-color: #ce3737; }"
     },
     {
       "name": "Card Elevated",
       "kind": "card",
       "refersTo": "card",
-      "description": "Card con fondo blanco y sombra ambient. Para summary cards, chart cards.",
-      "html": "<div class=\"ds-card\"><h3>Ingresos</h3><p>$1,234.56</p></div>",
-      "css": ".ds-card { background: #ffffff; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06); padding: 20px; }"
+      "description": "Card con fondo card-bg y sombra ambient. Para summary cards, chart cards.",
+      "html": "<div class=\"ds-card\"><h3>Ingresos</h3><p>€1,234.56</p></div>",
+      "css": ".ds-card { background: #f2f2f2; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06); padding: 20px; }"
     },
     {
       "name": "Card Tonal",
       "kind": "card",
       "refersTo": "card-tonal",
       "description": "Card con fondo tonal (input-bg). Para stat-cards, mini-tables.",
-      "html": "<div class=\"ds-card-tonal\"><span class=\"ds-label\">Promedio</span><span class=\"ds-value\">$456.78</span></div>",
-      "css": ".ds-card-tonal { background: #f9fafb; border-radius: 8px; padding: 14px; text-align: center; } .ds-card-tonal .ds-label { display: block; font-size: 0.75rem; color: #6b7280; margin-bottom: 4px; } .ds-card-tonal .ds-value { font-size: 1.4rem; font-weight: 700; color: #1f2937; }"
+      "html": "<div class=\"ds-card-tonal\"><span class=\"ds-label\">Promedio</span><span class=\"ds-value\">€456.78</span></div>",
+      "css": ".ds-card-tonal { background: #e4e4e4; border-radius: 8px; padding: 18px; text-align: center; } .ds-card-tonal .ds-label { display: block; font-size: 0.75rem; color: #746354; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; } .ds-card-tonal .ds-value { font-size: 1.4rem; font-weight: 700; color: #252525; }"
     },
     {
       "name": "Input Field",
@@ -134,7 +439,15 @@
       "refersTo": "input",
       "description": "Campo de formulario con fondo tonal y borde sutil.",
       "html": "<div class=\"ds-input-group\"><label class=\"ds-input-label\">Monto</label><input class=\"ds-input\" type=\"text\" placeholder=\"0.00\"></div>",
-      "css": ".ds-input-group { display: flex; flex-direction: column; gap: 4px; } .ds-input-label { font-size: 0.85rem; font-weight: 500; color: #1f2937; } .ds-input { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; font-size: 0.9rem; color: #1f2937; transition: border 0.2s, box-shadow 0.2s; } .ds-input:focus { border-color: #4f46e5; box-shadow: 0 0 0 2px rgba(79,70,229,0.25); outline: none; } .ds-input::placeholder { color: #9ca3af; }"
+      "css": ".ds-input-group { display: flex; flex-direction: column; gap: 4px; } .ds-input-label { font-size: 0.8125rem; font-weight: 500; color: #746354; } .ds-input { background: #e4e4e4; border: 1px solid #c8c8c8; border-radius: 8px; padding: 10px 12px; font-size: 0.9rem; color: #252525; transition: border 0.2s, box-shadow 0.2s; } .ds-input:focus { border-color: #8e2f37; box-shadow: 0 0 0 2px rgba(142,47,55,0.25); outline: none; } .ds-input::placeholder { color: #746354; }"
+    },
+    {
+      "name": "Filter Control",
+      "kind": "input",
+      "refersTo": "filter-control",
+      "description": "Select o input de filtro con borde primario permanente.",
+      "html": "<select class=\"ds-filter-control\"><option>Mes</option></select>",
+      "css": ".ds-filter-control { padding: 8px 14px; border: 1.5px solid #8e2f37; border-radius: 8px; background: #e4e4e4; color: #252525; font-size: 0.8125rem; font-weight: 500; cursor: pointer; transition: box-shadow 0.2s; } .ds-filter-control:hover, .ds-filter-control:focus { box-shadow: 0 0 0 2px rgba(142,47,55,0.25); outline: none; }"
     },
     {
       "name": "Badge Income",
@@ -142,7 +455,7 @@
       "refersTo": "badge-income",
       "description": "Badge de tipo ingreso. Fondo verde translúcido, texto verde.",
       "html": "<span class=\"ds-badge-income\">INGRESO</span>",
-      "css": ".ds-badge-income { display: inline-block; background: rgba(5,150,105,0.12); color: #059669; padding: 2px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }"
+      "css": ".ds-badge-income { display: inline-block; background: rgba(82,153,139,0.12); color: #52998b; padding: 2px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }"
     },
     {
       "name": "Badge Expense",
@@ -150,15 +463,23 @@
       "refersTo": "badge-expense",
       "description": "Badge de tipo gasto. Fondo rojo translúcido, texto rojo.",
       "html": "<span class=\"ds-badge-expense\">GASTO</span>",
-      "css": ".ds-badge-expense { display: inline-block; background: rgba(220,38,38,0.12); color: #dc2626; padding: 2px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }"
+      "css": ".ds-badge-expense { display: inline-block; background: rgba(206,55,55,0.12); color: #ce3737; padding: 2px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }"
+    },
+    {
+      "name": "Accordion",
+      "kind": "custom",
+      "refersTo": "accordion",
+      "description": "Acordeón de filtros. Colapsable en móvil/tablet, siempre visible en desktop.",
+      "html": "<div class=\"ds-accordion\"><button class=\"ds-accordion-toggle\" type=\"button\" aria-expanded=\"false\" aria-controls=\"filters\">Filtros <span>▼</span></button><div class=\"ds-accordion-content\" id=\"filters\">Contenido del filtro</div></div>",
+      "css": ".ds-accordion { border-radius: 8px; overflow: hidden; } .ds-accordion-toggle { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 12px 16px; background: #f2f2f2; border: 1px solid #c8c8c8; border-radius: 8px; font-size: 0.9rem; font-weight: 500; color: #252525; cursor: pointer; } .ds-accordion-content { display: none; padding: 12px; background: #f2f2f2; border-top: 1px solid #c8c8c8; } .ds-accordion.open .ds-accordion-content { display: block; }"
     },
     {
       "name": "Sidebar Link",
       "kind": "nav",
       "refersTo": "sidebar-link",
-      "description": "Enlace de navegación del sidebar. Hover con fondo tonal, active con fondo índigo.",
-      "html": "<nav class=\"ds-sidebar\"><ul><li><a class=\"ds-sidebar-link ds-sidebar-link--active\" href=\"#\"><span class=\"ds-sidebar-icon\">◉</span> Panel</a></li><li><a class=\"ds-sidebar-link\" href=\"#\"><span class=\"ds-sidebar-icon\">↕</span> Transacciones</a></li></ul></nav>",
-      "css": ".ds-sidebar { width: 240px; background: #ffffff; padding: 12px 0; } .ds-sidebar ul { list-style: none; margin: 0; padding: 0; } .ds-sidebar-link { display: flex; align-items: center; gap: 10px; padding: 12px 32px; font-size: 0.9rem; color: #1f2937; text-decoration: none; transition: background 0.2s; cursor: pointer; } .ds-sidebar-link:hover { background: #f9fafb; } .ds-sidebar-link--active { background: #4f46e5; color: #ffffff; } .ds-sidebar-icon { font-size: 1.1rem; }"
+      "description": "Enlace de navegación del sidebar. Hover con fondo tonal, active con fondo primary.",
+      "html": "<nav class=\"ds-sidebar\"><ul><li><a class=\"ds-sidebar-link ds-sidebar-link--active\" href=\"#\"><span class=\"ds-sidebar-icon\">◉</span> Panel</a></li></ul></nav>",
+      "css": ".ds-sidebar { width: 240px; background: #f2f2f2; padding: 12px 0; } .ds-sidebar ul { list-style: none; margin: 0; padding: 0; } .ds-sidebar-link { display: flex; align-items: center; gap: 10px; padding: 14px 32px; font-size: 0.9rem; color: #252525; text-decoration: none; transition: background 0.15s; cursor: pointer; } .ds-sidebar-link:hover { background: #e4e4e4; } .ds-sidebar-link--active { background: #8e2f37; color: #ffffff; } .ds-sidebar-icon { font-size: 1.1rem; }"
     },
     {
       "name": "Toast",
@@ -166,42 +487,65 @@
       "refersTo": "toast",
       "description": "Notificación flotante. Success verde, error rojo.",
       "html": "<div class=\"ds-toast ds-toast--success\">Transacción guardada</div>",
-      "css": ".ds-toast { position: fixed; top: 16px; right: 16px; z-index: 300; padding: 12px 20px; border-radius: 8px; font-size: 0.9rem; font-weight: 500; color: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.1); animation: ds-toast-in 0.3s ease-out; } .ds-toast--success { background: #059669; } .ds-toast--error { background: #dc2626; } @keyframes ds-toast-in { from { opacity: 0; transform: translateX(100%); } to { opacity: 1; transform: translateX(0); } }"
+      "css": ".ds-toast { position: fixed; top: 16px; right: 16px; z-index: 300; padding: 14px 24px; border-radius: 8px; font-size: 0.9rem; font-weight: 500; color: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.1); animation: ds-toast-in 0.3s ease-out; max-width: 360px; } .ds-toast--success { background: #52998b; } .ds-toast--error { background: #ce3737; } @keyframes ds-toast-in { from { opacity: 0; transform: translateX(100%); } to { opacity: 1; transform: translateX(0); } }"
     },
     {
       "name": "FAB",
       "kind": "button",
       "refersTo": "fab",
-      "description": "Botón de acción flotante. Pill shape, glow índigo.",
-      "html": "<button class=\"ds-fab\" title=\"Nueva transacción\"><span class=\"ds-fab-icon\">+</span><span class=\"ds-fab-label\">Nueva transacción</span></button>",
-      "css": ".ds-fab { position: fixed; bottom: 28px; right: 28px; z-index: 50; display: flex; align-items: center; gap: 8px; height: 52px; padding: 0 20px; background: #4f46e5; color: #ffffff; border: none; border-radius: 28px; font-size: 0.9rem; font-weight: 600; cursor: pointer; box-shadow: 0 4px 20px rgba(79,70,229,0.45); transition: transform 0.2s, box-shadow 0.2s; } .ds-fab:hover { transform: scale(1.05); box-shadow: 0 6px 28px rgba(79,70,229,0.55); } .ds-fab-icon { font-size: 1.5rem; line-height: 1; }"
+      "description": "Botón de acción flotante. Pill shape, glow primary. Bottom-right en móvil pequeño (≤640px) para evitar solapamiento con cards de ancho completo; bottom-center en tablet.",
+      "html": "<button class=\"ds-fab\" title=\"Nueva transacción\"><span class=\"ds-fab-icon\">+</span><span class=\"ds-fab-label\">Nueva</span></button>",
+      "css": ".ds-fab { position: fixed; bottom: 16px; right: 16px; left: auto; transform: none; z-index: 50; display: flex; align-items: center; gap: 8px; height: 52px; padding: 0 20px; background: transparent; color: #8e2f37; border: 2px solid #8e2f37; border-radius: 28px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: transform 0.2s, background 0.2s, color 0.2s; } .ds-fab:hover { background: #8e2f37; color: #ffffff; transform: scale(1.05); box-shadow: 0 6px 28px rgba(142,47,55,0.55); } @media (min-width: 641px) { .ds-fab { left: 50%; right: auto; transform: translateX(-50%); bottom: 30px; background: rgba(0,0,0,0.3); } .ds-fab:hover { transform: translateX(-50%) scale(1.05); } }"
     }
   ],
   "narrative": {
     "northStar": "La Ventana Clara",
-    "overview": "Mis Fichas es una ventana limpia a la realidad financiera del usuario. El diseño se aparta de los dashboards genéricos saturados de datos y gradientes, optando por una estética donde la información habla por sí misma. Cada elemento existe para comunicar, no para decorar.\n\nLa personalidad es minimalista funcional: sin ruido visual, sin adornos innecesarios. Los colores son herramientas de comunicación (verde para ingreso, rojo para gasto, índigo para acción), no paletas decorativas. El espacio en blanco es tan informativo como el contenido.",
+    "overview": "Mis Fichas es una ventana limpia a la realidad financiera del usuario. El diseño se aparta de los dashboards genéricos saturados de datos y gradientes, optando por una estética donde la información habla por sí misma. Cada elemento existe para comunicar, no para decorar.\n\nLa personalidad es minimalista funcional: sin ruido visual, sin adornos innecesarios. Los colores son herramientas de comunicación (verde para ingreso, rojo para gasto, rojo oscuro para acción), no paletas decorativas. El espacio en blanco es tan informativo como el contenido.",
     "keyCharacteristics": [
-      "Tono sobrio y confiable con índigo como acento de acción",
+      "Tono sobrio y confiable con rojo oscuro (#8e2f37) como acento de acción",
       "Superficies planas y tonales, sin sombras pronunciadas",
       "Jerarquía clara por tamaño, peso y posición, no por decoración",
       "Consistencia absoluta entre componentes similares",
       "Responsive progresivo: móvil primero, desktop como extensión natural"
     ],
     "rules": [
-      { "name": "The Traffic Light Rule", "body": "Verde es ingreso, rojo es gasto, índigo es acción del sistema. Estos tres colores nunca se usan para otros propósitos. Su consistencia es la comprensión instantánea.", "section": "colors" },
-      { "name": "The Tonal Card Rule", "body": "Las tarjetas informativas (stat-cards, mini-tables, avg-cards) usan --input-bg como fondo, no --card-bg. La elevación se comunica por tono, no por sombra.", "section": "colors" },
-      { "name": "The Flat-By-Default Rule", "body": "Las superficies están planas en reposo. Las sombras aparecen solo en overlays (sidebar, modal) y elementos interactivos destacados (FAB). Las cards confían en el tono, no en la sombra, para su jerarquía.", "section": "elevation" },
-      { "name": "The Consistent Corner Rule", "body": "Todos los contenedores de mismo nivel usan el mismo radio. Cards = 8px, modales = 12px, FAB = pill. No hay mezcla de radios en componentes del mismo tipo.", "section": "shapes" },
-      { "name": "The Number Hierarchy Rule", "body": "Los montos monetarios siempre usan font-weight: 600 o 700. Los datos financieros deben ser lo más visualmente pesado en cualquier vista.", "section": "typography" }
+      {
+        "name": "The Traffic Light Rule",
+        "body": "Verde es ingreso, rojo es gasto, rojo oscuro es acción del sistema. Estos tres colores nunca se usan para otros propósitos. Su consistencia es la comprensión instantánea.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tonal Card Rule",
+        "body": "Las tarjetas informativas (stat-cards, mini-tables, avg-cards) usan --input-bg como fondo, no --card-bg. La elevación se comunica por tono, no por sombra.",
+        "section": "colors"
+      },
+      {
+        "name": "The Flat-By-Default Rule",
+        "body": "Las superficies están planas en reposo. Las sombras aparecen solo en overlays (sidebar, modal). Las cards confían en el tono, no en la sombra, para su jerarquía.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Consistent Corner Rule",
+        "body": "Todos los contenedores de mismo nivel usan el mismo radio. Cards = 8px, modales = 12px, FAB = pill. No hay mezcla de radios en componentes del mismo tipo.",
+        "section": "shapes"
+      },
+      {
+        "name": "The Number Hierarchy Rule",
+        "body": "Los montos monetarios siempre usan font-weight: 600 o 700. Los datos financieros deben ser lo más visualmente pesado en cualquier vista.",
+        "section": "typography"
+      }
     ],
     "dos": [
       "Do usar --input-bg para tarjetas informativas tonales (stat-cards, mini-tables). Nunca --card-bg.",
-      "Do mantener el semáforo: verde=ingreso, rojo=gasto, índigo=acción. Sin excepciones.",
+      "Do mantener el semáforo: verde=ingreso, rojo=gasto, rojo oscuro=acción. Sin excepciones.",
       "Do usar font-weight 600-700 para montos monetarios. Los números deben ser lo más visualmente pesado.",
       "Do usar radio 8px para cards y contenedores principales, 12px para modales y badges.",
-      "Do aplicar el flat-by-default: sombras solo en overlays y FAB, no en cards del contenido.",
-      "Do usar la paleta oscura #0f172a como fondo dark, no negro puro #000.",
-      "Do mantener padding consistente: 20px para cards elevadas, 14px para tonal cards."
+      "Do aplicar el flat-by-default: sombras solo en overlays, no en cards del contenido.",
+      "Do usar la paleta oscura #181715 como fondo dark, no negro puro #000.",
+      "Do mantener padding consistente: 20px para cards elevadas, 18px para tonal cards.",
+      "Do usar overflow-y: hidden junto con overflow-x: auto en contenedores de scroll horizontal.",
+      "Do usar font-variant-numeric: tabular-nums en montos y porcentajes para alineación de columnas.",
+      "Do respetar prefers-reduced-motion: reduce — todas las animaciones se desactivan."
     ],
     "donts": [
       "Don't usar gradientes decorativos. La paleta es funcional, no estética.",
@@ -209,8 +553,11 @@
       "Don't usar verde o rojo para elementos que no sean financieros (ingreso/gasto).",
       "Don't mezclar radios de border en componentes del mismo nivel.",
       "Don't usar --primary en badges de tipo (usa --income o --expense).",
-      "Don't crear variantes de botones que no existen. El sistema tiene primary, secondary, icon, y logout.",
-      "Don't usar animaciones excesivas. Solo modalIn, toastIn, y transiciones de tema (0.2-0.3s)."
+      "Don't crear variantes de botones que no existen. El sistema tiene primary, danger, secondary, icon, y logout.",
+      "Don't usar animaciones excesivas. Solo modalIn, toastIn, cardEnter, fadeSlideIn, y transiciones de tema (0.2-0.3s).",
+      "Don't posicionar el theme-toggle de auth con position: absolute fuera del card. Siempre dentro de .auth-theme-row.",
+      "Don't usar negro puro #000 como fondo dark. Usa #181715.",
+      "Don't olvidar min-height: 44px / min-width: 44px en targets táctiles (hamburger, modal close, theme toggle)."
     ]
   }
 }
